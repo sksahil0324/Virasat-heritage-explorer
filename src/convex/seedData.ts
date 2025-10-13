@@ -29,13 +29,6 @@ export const seedHeritageSites = mutation({
         cuisine: "Agra is famous for Petha (sweet made from ash gourd), Mughlai cuisine including biryani, kebabs, and the rich Agra ka Petha.",
         stories: "The monument took 22 years and 20,000 artisans to complete. Master craftsmen were brought from Persia, Turkey, and Europe. Some say Shah Jahan cut off the hands of workers to prevent them from replicating the design.",
         community: "The local community includes descendants of the original craftsmen who still practice traditional marble inlay work. The area hosts annual Taj Mahotsav celebrating local arts and crafts.",
-        ticketPrice: "₹1050 for foreigners, ₹50 for Indians",
-        openingHours: "Sunrise to Sunset (Closed on Fridays)",
-        bestTimeToVisit: "October to March",
-        timezone: "Asia/Kolkata",
-        view360Url: "https://www.google.com/maps/@27.1751448,78.0421422,3a,75y,90t/data=!3m8!1e1!3m6!1sAF1QipNRAcB7g3K_YvEKdGlvKLjvJr8qKJvJr8qKJvJr8qK!2e10!3e11!6shttps:%2F%2Flh5.googleusercontent.com%2Fp%2AF1QipNRAcB7g3K_YvEKdGlvKLjvJr8qKJvJr8qKJvJr8qK%3Dw203-h100-k-no-pi-0-ya0-ro-0-fo100!7i10240!8i5120",
-        view3dUrl: "https://sketchfab.com/3d-models/taj-mahal-agra-india",
-        imageUrl: "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=800",
         viewCount: 0,
         isPublished: true,
       },
@@ -56,6 +49,8 @@ export const seedHeritageSites = mutation({
         cuisine: "Local specialties include Jolada Rotti (sorghum flatbread), Badanekai Yennegai (stuffed brinjal), and traditional Karnataka thali with Bisi Bele Bath.",
         stories: "The empire fell after the Battle of Talikota in 1565. Legend says the city was so wealthy that merchants sold diamonds and pearls in the streets. The Virupaksha Temple has been continuously active for over 1,300 years.",
         community: "The local community includes temple priests, traditional musicians, and artisans. Many families have lived here for generations, maintaining ancient traditions and rituals.",
+        view360Url: "https://artsandculture.google.com/story/hampi-monuments/",
+        view3dUrl: "https://artsandculture.google.com/asset/vitthala-temple-hampi/",
         viewCount: 0,
         isPublished: true,
       },
@@ -76,6 +71,8 @@ export const seedHeritageSites = mutation({
         cuisine: "Local delicacies include Bhutte ka Kees (grated corn dish), Poha-Jalebi, Mawa-Bati, and traditional Bundelkhandi cuisine.",
         stories: "Only 10% of the sculptures are erotic; the rest depict gods, goddesses, warriors, musicians, and everyday life. The temples were 'rediscovered' by British engineer T.S. Burt in 1838, hidden by dense forests.",
         community: "Local artisans continue the tradition of stone carving. The community celebrates Mahashivratri with great fervor, and traditional dance forms are passed down through generations.",
+        view360Url: "https://artsandculture.google.com/story/khajuraho-temples/",
+        view3dUrl: "https://artsandculture.google.com/asset/kandariya-mahadeva-temple/",
         viewCount: 0,
         isPublished: true,
       },
@@ -96,6 +93,8 @@ export const seedHeritageSites = mutation({
         cuisine: "Odisha cuisine includes Dalma (lentils with vegetables), Pakhala Bhata (fermented rice), Chhena Poda (cheese dessert), and fresh seafood from nearby coast.",
         stories: "The temple originally had a 229-foot tower that collapsed in the 15th century. The wheels are sundials that accurately tell time. Portuguese sailors called it 'Black Pagoda' as it appeared dark from the sea and caused shipwrecks.",
         community: "Local Gotipua dancers (young boys performing Odissi) maintain ancient traditions. Fishing communities nearby celebrate Magha Saptami with ritual bathing. Stone carvers continue traditional crafts.",
+        view360Url: "https://artsandculture.google.com/story/sun-temple-konark/",
+        view3dUrl: "https://artsandculture.google.com/asset/sun-temple-konark/",
         viewCount: 0,
         isPublished: true,
       },
@@ -116,6 +115,8 @@ export const seedHeritageSites = mutation({
         cuisine: "Aurangabad is famous for Naan Khaliya (mutton dish), Tahri (vegetarian biryani), and Sheermal (sweet flatbread). Local street food includes Paan and Irani chai.",
         stories: "Cave 1 contains the famous Padmapani and Vajrapani bodhisattva paintings. The caves were carved from top to bottom, removing 3 million cubic feet of rock. British officer John Smith discovered them while hunting tigers.",
         community: "Local guides are descendants of families who've lived near the caves for generations. Buddhist monks occasionally visit for meditation. The community celebrates Buddha Purnima with special prayers.",
+        view360Url: "https://artsandculture.google.com/story/ajanta-caves/",
+        view3dUrl: "https://artsandculture.google.com/asset/ajanta-caves/",
         viewCount: 0,
         isPublished: true,
       },
@@ -136,6 +137,8 @@ export const seedHeritageSites = mutation({
         cuisine: "Mysore is famous for Mysore Pak (sweet), Mysore Masala Dosa, Bisi Bele Bath, and traditional Karnataka meals served on banana leaves.",
         stories: "The palace has 145 rooms and was designed by British architect Henry Irwin. It cost Rs 41.5 lakhs to build. The Durbar Hall's ceiling has paintings by Indian artists. The palace uses 96,000 light bulbs for illumination.",
         community: "The Wadiyar royal family still resides in a portion of the palace. Local artisans maintain traditional crafts like sandalwood carving, silk weaving, and incense making. The community celebrates Dasara with 10 days of festivities.",
+        view360Url: "https://artsandculture.google.com/story/mysore-palace/",
+        view3dUrl: "https://artsandculture.google.com/asset/mysore-palace/",
         viewCount: 0,
         isPublished: true,
       },
@@ -156,6 +159,8 @@ export const seedHeritageSites = mutation({
         cuisine: "Old Delhi nearby offers Mughlai cuisine, Paranthe Wali Gali, Karim's kebabs, and street food like chaat, chole bhature, and jalebi.",
         stories: "The tower has 379 steps (now closed to public after accidents). It was struck by lightning twice and damaged by earthquakes. The Iron Pillar's rust-resistant composition remains a metallurgical mystery.",
         community: "The area is surrounded by urban Delhi but maintains historical significance. Local historians and archaeologists conduct regular studies. The community celebrates Qutub Festival showcasing classical music and dance.",
+        view360Url: "https://artsandculture.google.com/story/qutub-minar/",
+        view3dUrl: "https://sketchfab.com/3d-models/qutub-minar-delhi-india/",
         viewCount: 0,
         isPublished: true,
       },
@@ -256,6 +261,8 @@ export const seedHeritageSites = mutation({
         cuisine: "Local specialties include Dal Baati Churma, Laal Maas, Ghewar, Pyaaz Kachori, and traditional Rajasthani thali with Ker Sangri and Gatte ki Sabzi.",
         stories: "The fort has four courtyards and several gates. The Ganesh Pol gate has beautiful frescoes. A secret tunnel connects to Jaigarh Fort. The fort required 5,000 workers and took 25 years to build.",
         community: "Local communities include descendants of royal servants, traditional musicians, and artisans. Elephant caretakers maintain centuries-old traditions. The community celebrates Teej and Gangaur with royal processions.",
+        view360Url: "https://artsandculture.google.com/story/amer-fort/",
+        view3dUrl: "https://artsandculture.google.com/asset/amer-fort/",
         viewCount: 0,
         isPublished: true,
       },
@@ -396,6 +403,8 @@ export const seedHeritageSites = mutation({
         cuisine: "Old Delhi nearby offers Mughlai cuisine, Paranthe Wali Gali, Karim's kebabs, Jalebi, and famous street food like chaat and chole bhature.",
         stories: "The fort covers 254 acres with 2.4 km of walls. The Diwan-i-Khas inscription reads 'If there is paradise on earth, it is this, it is this, it is this.' The British looted the fort after 1857 rebellion.",
         community: "The area is surrounded by Old Delhi's vibrant markets. The community celebrates Independence Day with patriotic fervor. Local historians and guides share stories of Mughal glory.",
+        view360Url: "https://artsandculture.google.com/story/red-fort-delhi/",
+        view3dUrl: "https://artsandculture.google.com/asset/red-fort/",
         viewCount: 0,
         isPublished: true,
       },
@@ -436,6 +445,8 @@ export const seedHeritageSites = mutation({
         cuisine: "Patan offers Gujarati thali, Dhokla, Khandvi, Fafda-Jalebi, and traditional Patola silk weaving demonstrations with local snacks.",
         stories: "The stepwell is 64 meters long, 20 meters wide, and 27 meters deep. It has seven levels with 800 elaborate sculptures. The structure was buried under silt for 700 years. It's designed as an inverted temple.",
         community: "Local communities include descendants of ancient craftsmen. Patan is famous for Patola silk weaving, a tradition passed through generations. The community celebrates Navratri with traditional Garba.",
+        view360Url: "https://artsandculture.google.com/story/rani-ki-vav/",
+        view3dUrl: "https://artsandculture.google.com/asset/rani-ki-vav/",
         viewCount: 0,
         isPublished: true,
       },
@@ -456,6 +467,8 @@ export const seedHeritageSites = mutation({
         cuisine: "Nearby Agra offers Mughlai cuisine, Petha, Bedai, Dalmoth, and traditional North Indian dishes. Local dhabas serve authentic meals.",
         stories: "The Buland Darwaza is 54 meters high, built to commemorate Akbar's Gujarat victory. The city has Diwan-i-Khas with a unique central pillar. Akbar's palace had separate quarters for his Hindu and Muslim wives.",
         community: "Local communities include descendants of Mughal-era craftsmen. The area around Salim Chishti's tomb is maintained by Sufi devotees. Traditional marble inlay work continues.",
+        view360Url: "https://artsandculture.google.com/story/fatehpur-sikri/",
+        view3dUrl: "https://artsandculture.google.com/asset/fatehpur-sikri/",
         viewCount: 0,
         isPublished: true,
       },
@@ -496,6 +509,8 @@ export const seedHeritageSites = mutation({
         cuisine: "Mumbai offers diverse cuisine including Vada Pav, Pav Bhaji, Bhel Puri, Bombay Duck, and seafood. Ferry ride vendors sell local snacks.",
         stories: "The main cave is 39 meters deep. The Trimurti represents Shiva as creator, preserver, and destroyer. Portuguese soldiers used sculptures for target practice, causing damage. The caves were originally painted in bright colors.",
         community: "Local fishing communities live on the island. Guides share stories passed through generations. The community celebrates Mahashivratri with special fervor. Mumbai's art community organizes cultural events.",
+        view360Url: "https://artsandculture.google.com/story/elephanta-caves/",
+        view3dUrl: "https://artsandculture.google.com/asset/elephanta-caves-trimurti/",
         viewCount: 0,
         isPublished: true,
       },
@@ -556,29 +571,18 @@ export const seedHeritageSites = mutation({
         cuisine: "Jaipur offers Dal Baati Churma, Ghewar, Pyaaz Kachori, Laal Maas, and traditional Rajasthani thali. Nearby MI Road has famous sweet shops.",
         stories: "The Samrat Yantra is 27 meters tall and can tell time to 2-second accuracy. The observatory has 19 instruments measuring celestial positions. Jai Singh built five such observatories across India.",
         community: "Local astronomers and scientists study the instruments. The community celebrates science festivals. Traditional astrologers still use the observatory for calculations.",
+        view360Url: "https://artsandculture.google.com/story/jantar-mantar-jaipur/",
+        view3dUrl: "https://artsandculture.google.com/asset/jantar-mantar/",
         viewCount: 0,
         isPublished: true,
       },
     ];
 
     for (const site of sites) {
-      const siteId = await ctx.db.insert("heritageSites", {
+      await ctx.db.insert("heritageSites", {
         ...site,
         createdBy: userId,
       });
-      
-      // Add media for sites with imageUrl
-      if (site.imageUrl) {
-        // Note: In production, you would upload actual files to storage
-        // For now, we're using external URLs as placeholders
-        await ctx.db.insert("media", {
-          siteId: siteId,
-          type: "image",
-          url: site.imageUrl,
-          caption: `${site.name} - Main View`,
-          isPrimary: true,
-        });
-      }
     }
 
     return { success: true, count: sites.length };

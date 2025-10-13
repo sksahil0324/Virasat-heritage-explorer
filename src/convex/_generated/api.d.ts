@@ -22,6 +22,7 @@ import type * as heritageSites from "../heritageSites.js";
 import type * as http from "../http.js";
 import type * as media from "../media.js";
 import type * as seedData from "../seedData.js";
+import type * as updateRemainingUrls from "../updateRemainingUrls.js";
 import type * as users from "../users.js";
 
 /**
@@ -42,6 +43,7 @@ declare const fullApi: ApiFromModules<{
   http: typeof http;
   media: typeof media;
   seedData: typeof seedData;
+  updateRemainingUrls: typeof updateRemainingUrls;
   users: typeof users;
 }>;
 export declare const api: FilterApi<

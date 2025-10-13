@@ -7,40 +7,68 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useAuth } from "@/hooks/use-auth";
 import { useMutation, useQuery } from "convex/react";
 import { motion } from "framer-motion";
-import { BarChart3, Eye, Globe, Headphones, Loader2, Plus, Trash2 } from "lucide-react";
+import { BarChart3, Eye, Globe, Headphones, Loader2, Plus, Trash2, Edit, Upload, Music } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
+
+type SiteFormData = {
+  name: string;
+  description: string;
+  historicalSignificance: string;
+  category: "temple" | "fort" | "palace" | "monument" | "museum" | "archaeological" | "natural" | "other";
+  state: string;
+  city: string;
+  latitude: number | undefined;
+  longitude: number | undefined;
+  isUNESCO: boolean;
+  timePeriod: string;
+  visitorGuidelines: string;
+  isPublished: boolean;
+  ticketPrice: string;
+  openingHours: string;
+  bestTimeToVisit: string;
+  timezone: string;
+  view360Url: string;
+  view3dUrl: string;
+  folkTales: string;
+  culturalHeritage: string;
+  cuisine: string;
+  stories: string;
+  community: string;
+};
 
 export default function AdminDashboard() {
   const { isLoading: authLoading, user } = useAuth();
   const navigate = useNavigate();
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [editingSiteId, setEditingSiteId] = useState<Id<"heritageSites"> | null>(null);
+  const [uploadingAudio, setUploadingAudio] = useState(false);
+  const [uploadingMedia, setUploadingMedia] = useState(false);
 
   const sites = useQuery(api.heritageSites.listAll);
   const stats = useQuery(api.heritageSites.getStats);
+  const editingSite = useQuery(
+    api.heritageSites.getById,
+    editingSiteId ? { id: editingSiteId } : "skip"
+  );
+  
   const createSite = useMutation(api.heritageSites.create);
+  const updateSite = useMutation(api.heritageSites.update);
   const deleteSite = useMutation(api.heritageSites.remove);
+  const generateUploadUrl = useMutation(api.media.generateUploadUrl);
+  const addMedia = useMutation(api.media.add);
+  const generateAudioUploadUrl = useMutation(api.audio.generateUploadUrl);
+  const addAudio = useMutation(api.audio.add);
 
-  const [formData, setFormData] = useState<{
-    name: string;
-    description: string;
-    historicalSignificance: string;
-    category: "temple" | "fort" | "palace" | "monument" | "museum" | "archaeological" | "natural" | "other";
-    state: string;
-    city: string;
-    latitude: number | undefined;
-    longitude: number | undefined;
-    isUNESCO: boolean;
-    timePeriod: string;
-    visitorGuidelines: string;
-    isPublished: boolean;
-  }>({
+  const [formData, setFormData] = useState<SiteFormData>({
     name: "",
     description: "",
     historicalSignificance: "",
@@ -53,6 +81,17 @@ export default function AdminDashboard() {
     timePeriod: "",
     visitorGuidelines: "",
     isPublished: false,
+    ticketPrice: "",
+    openingHours: "",
+    bestTimeToVisit: "",
+    timezone: "",
+    view360Url: "",
+    view3dUrl: "",
+    folkTales: "",
+    culturalHeritage: "",
+    cuisine: "",
+    stories: "",
+    community: "",
   });
 
   if (authLoading) {
@@ -68,27 +107,86 @@ export default function AdminDashboard() {
     return null;
   }
 
+  const resetForm = () => {
+    setFormData({
+      name: "",
+      description: "",
+      historicalSignificance: "",
+      category: "monument",
+      state: "",
+      city: "",
+      latitude: undefined,
+      longitude: undefined,
+      isUNESCO: false,
+      timePeriod: "",
+      visitorGuidelines: "",
+      isPublished: false,
+      ticketPrice: "",
+      openingHours: "",
+      bestTimeToVisit: "",
+      timezone: "",
+      view360Url: "",
+      view3dUrl: "",
+      folkTales: "",
+      culturalHeritage: "",
+      cuisine: "",
+      stories: "",
+      community: "",
+    });
+  };
+
   const handleCreateSite = async () => {
     try {
-      await createSite(formData);
+      await createSite({
+        ...formData,
+        latitude: formData.latitude || undefined,
+        longitude: formData.longitude || undefined,
+        timePeriod: formData.timePeriod || undefined,
+        visitorGuidelines: formData.visitorGuidelines || undefined,
+        ticketPrice: formData.ticketPrice || undefined,
+        openingHours: formData.openingHours || undefined,
+        bestTimeToVisit: formData.bestTimeToVisit || undefined,
+        timezone: formData.timezone || undefined,
+        view360Url: formData.view360Url || undefined,
+        view3dUrl: formData.view3dUrl || undefined,
+      });
       toast.success("Heritage site created successfully");
       setIsCreateDialogOpen(false);
-      setFormData({
-        name: "",
-        description: "",
-        historicalSignificance: "",
-        category: "monument",
-        state: "",
-        city: "",
-        latitude: undefined,
-        longitude: undefined,
-        isUNESCO: false,
-        timePeriod: "",
-        visitorGuidelines: "",
-        isPublished: false,
-      });
+      resetForm();
     } catch (error) {
       toast.error("Failed to create site");
+    }
+  };
+
+  const handleEditSite = (siteId: Id<"heritageSites">) => {
+    setEditingSiteId(siteId);
+    setIsEditDialogOpen(true);
+  };
+
+  const handleUpdateSite = async () => {
+    if (!editingSiteId) return;
+
+    try {
+      await updateSite({
+        id: editingSiteId,
+        ...formData,
+        latitude: formData.latitude || undefined,
+        longitude: formData.longitude || undefined,
+        timePeriod: formData.timePeriod || undefined,
+        visitorGuidelines: formData.visitorGuidelines || undefined,
+        ticketPrice: formData.ticketPrice || undefined,
+        openingHours: formData.openingHours || undefined,
+        bestTimeToVisit: formData.bestTimeToVisit || undefined,
+        timezone: formData.timezone || undefined,
+        view360Url: formData.view360Url || undefined,
+        view3dUrl: formData.view3dUrl || undefined,
+      });
+      toast.success("Site updated successfully");
+      setIsEditDialogOpen(false);
+      setEditingSiteId(null);
+      resetForm();
+    } catch (error) {
+      toast.error("Failed to update site");
     }
   };
 
@@ -102,6 +200,385 @@ export default function AdminDashboard() {
       toast.error("Failed to delete site");
     }
   };
+
+  const handleMediaUpload = async (siteId: Id<"heritageSites">, file: File, type: "image" | "video", isPrimary: boolean = false) => {
+    try {
+      setUploadingMedia(true);
+      const uploadUrl = await generateUploadUrl();
+      const result = await fetch(uploadUrl, {
+        method: "POST",
+        headers: { "Content-Type": file.type },
+        body: file,
+      });
+      const { storageId } = await result.json();
+      
+      await addMedia({
+        siteId,
+        type,
+        storageId,
+        isPrimary,
+      });
+      
+      toast.success("Media uploaded successfully");
+    } catch (error) {
+      toast.error("Failed to upload media");
+    } finally {
+      setUploadingMedia(false);
+    }
+  };
+
+  const handleAudioUpload = async (siteId: Id<"heritageSites">, file: File, language: string) => {
+    try {
+      setUploadingAudio(true);
+      const uploadUrl = await generateAudioUploadUrl();
+      const result = await fetch(uploadUrl, {
+        method: "POST",
+        headers: { "Content-Type": file.type },
+        body: file,
+      });
+      const { storageId } = await result.json();
+      
+      await addAudio({
+        siteId,
+        storageId,
+        language,
+      });
+      
+      toast.success("Audio uploaded successfully");
+    } catch (error) {
+      toast.error("Failed to upload audio");
+    } finally {
+      setUploadingAudio(false);
+    }
+  };
+
+  // Populate form when editing
+  if (editingSite && isEditDialogOpen && formData.name === "") {
+    setFormData({
+      name: editingSite.name,
+      description: editingSite.description,
+      historicalSignificance: editingSite.historicalSignificance,
+      category: editingSite.category,
+      state: editingSite.state,
+      city: editingSite.city,
+      latitude: editingSite.latitude,
+      longitude: editingSite.longitude,
+      isUNESCO: editingSite.isUNESCO,
+      timePeriod: editingSite.timePeriod || "",
+      visitorGuidelines: editingSite.visitorGuidelines || "",
+      isPublished: editingSite.isPublished,
+      ticketPrice: editingSite.ticketPrice || "",
+      openingHours: editingSite.openingHours || "",
+      bestTimeToVisit: editingSite.bestTimeToVisit || "",
+      timezone: editingSite.timezone || "",
+      view360Url: editingSite.view360Url || "",
+      view3dUrl: editingSite.view3dUrl || "",
+      folkTales: editingSite.folkTales || "",
+      culturalHeritage: editingSite.culturalHeritage || "",
+      cuisine: editingSite.cuisine || "",
+      stories: editingSite.stories || "",
+      community: editingSite.community || "",
+    });
+  }
+
+  const SiteFormFields = () => (
+    <Tabs defaultValue="basic" className="w-full">
+      <TabsList className="grid w-full grid-cols-4">
+        <TabsTrigger value="basic">Basic Info</TabsTrigger>
+        <TabsTrigger value="visitor">Visitor Info</TabsTrigger>
+        <TabsTrigger value="cultural">Cultural</TabsTrigger>
+        <TabsTrigger value="media">Media</TabsTrigger>
+      </TabsList>
+
+      <TabsContent value="basic" className="space-y-4 mt-4">
+        <div className="space-y-2">
+          <Label htmlFor="name">Site Name *</Label>
+          <Input
+            id="name"
+            value={formData.name}
+            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+            placeholder="Taj Mahal"
+          />
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="category">Category *</Label>
+            <Select
+              value={formData.category}
+              onValueChange={(value: "temple" | "fort" | "palace" | "monument" | "museum" | "archaeological" | "natural" | "other") => 
+                setFormData({ ...formData, category: value })
+              }
+            >
+              <SelectTrigger>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="temple">Temple</SelectItem>
+                <SelectItem value="fort">Fort</SelectItem>
+                <SelectItem value="palace">Palace</SelectItem>
+                <SelectItem value="monument">Monument</SelectItem>
+                <SelectItem value="museum">Museum</SelectItem>
+                <SelectItem value="archaeological">Archaeological</SelectItem>
+                <SelectItem value="natural">Natural</SelectItem>
+                <SelectItem value="other">Other</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="timePeriod">Time Period</Label>
+            <Input
+              id="timePeriod"
+              value={formData.timePeriod}
+              onChange={(e) => setFormData({ ...formData, timePeriod: e.target.value })}
+              placeholder="17th Century"
+            />
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="state">State *</Label>
+            <Input
+              id="state"
+              value={formData.state}
+              onChange={(e) => setFormData({ ...formData, state: e.target.value })}
+              placeholder="Uttar Pradesh"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="city">City *</Label>
+            <Input
+              id="city"
+              value={formData.city}
+              onChange={(e) => setFormData({ ...formData, city: e.target.value })}
+              placeholder="Agra"
+            />
+          </div>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="description">Description *</Label>
+          <Textarea
+            id="description"
+            value={formData.description}
+            onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+            placeholder="Brief description of the site..."
+            rows={3}
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="historicalSignificance">Historical Significance *</Label>
+          <Textarea
+            id="historicalSignificance"
+            value={formData.historicalSignificance}
+            onChange={(e) => setFormData({ ...formData, historicalSignificance: e.target.value })}
+            placeholder="Historical context and importance..."
+            rows={3}
+          />
+        </div>
+
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2">
+            <Switch
+              id="unesco"
+              checked={formData.isUNESCO}
+              onCheckedChange={(checked) => setFormData({ ...formData, isUNESCO: checked })}
+            />
+            <Label htmlFor="unesco">UNESCO World Heritage Site</Label>
+          </div>
+
+          <div className="flex items-center space-x-2">
+            <Switch
+              id="published"
+              checked={formData.isPublished}
+              onCheckedChange={(checked) => setFormData({ ...formData, isPublished: checked })}
+            />
+            <Label htmlFor="published">Published</Label>
+          </div>
+        </div>
+      </TabsContent>
+
+      <TabsContent value="visitor" className="space-y-4 mt-4">
+        <div className="space-y-2">
+          <Label htmlFor="ticketPrice">Ticket Price</Label>
+          <Input
+            id="ticketPrice"
+            value={formData.ticketPrice}
+            onChange={(e) => setFormData({ ...formData, ticketPrice: e.target.value })}
+            placeholder="₹50 for Indians, ₹1000 for foreigners"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="openingHours">Opening Hours</Label>
+          <Input
+            id="openingHours"
+            value={formData.openingHours}
+            onChange={(e) => setFormData({ ...formData, openingHours: e.target.value })}
+            placeholder="6:00 AM - 6:30 PM (Closed on Fridays)"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="bestTimeToVisit">Best Time to Visit</Label>
+          <Input
+            id="bestTimeToVisit"
+            value={formData.bestTimeToVisit}
+            onChange={(e) => setFormData({ ...formData, bestTimeToVisit: e.target.value })}
+            placeholder="October to March"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="timezone">Timezone</Label>
+          <Input
+            id="timezone"
+            value={formData.timezone}
+            onChange={(e) => setFormData({ ...formData, timezone: e.target.value })}
+            placeholder="Asia/Kolkata"
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="visitorGuidelines">Visitor Guidelines</Label>
+          <Textarea
+            id="visitorGuidelines"
+            value={formData.visitorGuidelines}
+            onChange={(e) => setFormData({ ...formData, visitorGuidelines: e.target.value })}
+            placeholder="Guidelines for visitors..."
+            rows={3}
+          />
+        </div>
+      </TabsContent>
+
+      <TabsContent value="cultural" className="space-y-4 mt-4">
+        <div className="space-y-2">
+          <Label htmlFor="culturalHeritage">Cultural Heritage</Label>
+          <Textarea
+            id="culturalHeritage"
+            value={formData.culturalHeritage}
+            onChange={(e) => setFormData({ ...formData, culturalHeritage: e.target.value })}
+            placeholder="Cultural significance and heritage..."
+            rows={3}
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="folkTales">Folk Tales</Label>
+          <Textarea
+            id="folkTales"
+            value={formData.folkTales}
+            onChange={(e) => setFormData({ ...formData, folkTales: e.target.value })}
+            placeholder="Traditional stories and legends..."
+            rows={3}
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="cuisine">Local Cuisine</Label>
+          <Textarea
+            id="cuisine"
+            value={formData.cuisine}
+            onChange={(e) => setFormData({ ...formData, cuisine: e.target.value })}
+            placeholder="Local food and culinary traditions..."
+            rows={3}
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="stories">Stories</Label>
+          <Textarea
+            id="stories"
+            value={formData.stories}
+            onChange={(e) => setFormData({ ...formData, stories: e.target.value })}
+            placeholder="Historical stories and anecdotes..."
+            rows={3}
+          />
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="community">Community</Label>
+          <Textarea
+            id="community"
+            value={formData.community}
+            onChange={(e) => setFormData({ ...formData, community: e.target.value })}
+            placeholder="Local community and traditions..."
+            rows={3}
+          />
+        </div>
+      </TabsContent>
+
+      <TabsContent value="media" className="space-y-4 mt-4">
+        <div className="space-y-2">
+          <Label htmlFor="view360Url">360° View URL</Label>
+          <Input
+            id="view360Url"
+            value={formData.view360Url}
+            onChange={(e) => setFormData({ ...formData, view360Url: e.target.value })}
+            placeholder="https://example.com/360-view"
+          />
+          <p className="text-xs text-muted-foreground">
+            Embed URL for 360° panoramic view (e.g., from Google Street View, Matterport)
+          </p>
+        </div>
+
+        <div className="space-y-2">
+          <Label htmlFor="view3dUrl">3D Model URL</Label>
+          <Input
+            id="view3dUrl"
+            value={formData.view3dUrl}
+            onChange={(e) => setFormData({ ...formData, view3dUrl: e.target.value })}
+            placeholder="https://example.com/3d-model"
+          />
+          <p className="text-xs text-muted-foreground">
+            Embed URL for 3D model viewer (e.g., Sketchfab)
+          </p>
+        </div>
+
+        {editingSiteId && (
+          <div className="space-y-4 pt-4 border-t">
+            <div className="space-y-2">
+              <Label>Upload Images/Videos</Label>
+              <Input
+                type="file"
+                accept="image/*,video/*"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file && editingSiteId) {
+                    const type = file.type.startsWith("image/") ? "image" : "video";
+                    handleMediaUpload(editingSiteId, file, type);
+                  }
+                }}
+                disabled={uploadingMedia}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label>Upload Audio Guide</Label>
+              <div className="flex gap-2">
+                <Input
+                  type="file"
+                  accept="audio/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file && editingSiteId) {
+                      handleAudioUpload(editingSiteId, file, "English");
+                    }
+                  }}
+                  disabled={uploadingAudio}
+                  className="flex-1"
+                />
+              </div>
+            </div>
+          </div>
+        )}
+      </TabsContent>
+    </Tabs>
+  );
 
   return (
     <div className="min-h-screen bg-background">
@@ -236,6 +713,13 @@ export default function AdminDashboard() {
                         <Button
                           variant="outline"
                           size="sm"
+                          onClick={() => handleEditSite(site._id)}
+                        >
+                          <Edit className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
                           onClick={() => handleDeleteSite(site._id)}
                         >
                           <Trash2 className="h-4 w-4" />
@@ -251,142 +735,23 @@ export default function AdminDashboard() {
       </div>
 
       {/* Create Site Dialog */}
-      <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <Dialog open={isCreateDialogOpen} onOpenChange={(open) => {
+        setIsCreateDialogOpen(open);
+        if (!open) resetForm();
+      }}>
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Add New Heritage Site</DialogTitle>
-            <DialogDescription>Create a new heritage site entry</DialogDescription>
+            <DialogDescription>Create a new heritage site entry with complete information</DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Site Name *</Label>
-              <Input
-                id="name"
-                value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                placeholder="Taj Mahal"
-              />
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="category">Category *</Label>
-                <Select
-                  value={formData.category}
-                  onValueChange={(value: "temple" | "fort" | "palace" | "monument" | "museum" | "archaeological" | "natural" | "other") => setFormData({ ...formData, category: value })}
-                >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="temple">Temple</SelectItem>
-                    <SelectItem value="fort">Fort</SelectItem>
-                    <SelectItem value="palace">Palace</SelectItem>
-                    <SelectItem value="monument">Monument</SelectItem>
-                    <SelectItem value="museum">Museum</SelectItem>
-                    <SelectItem value="archaeological">Archaeological</SelectItem>
-                    <SelectItem value="natural">Natural</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="timePeriod">Time Period</Label>
-                <Input
-                  id="timePeriod"
-                  value={formData.timePeriod}
-                  onChange={(e) => setFormData({ ...formData, timePeriod: e.target.value })}
-                  placeholder="17th Century"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="state">State *</Label>
-                <Input
-                  id="state"
-                  value={formData.state}
-                  onChange={(e) => setFormData({ ...formData, state: e.target.value })}
-                  placeholder="Uttar Pradesh"
-                />
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="city">City *</Label>
-                <Input
-                  id="city"
-                  value={formData.city}
-                  onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-                  placeholder="Agra"
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="description">Description *</Label>
-              <Textarea
-                id="description"
-                value={formData.description}
-                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                placeholder="Brief description of the site..."
-                rows={3}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="historicalSignificance">Historical Significance *</Label>
-              <Textarea
-                id="historicalSignificance"
-                value={formData.historicalSignificance}
-                onChange={(e) =>
-                  setFormData({ ...formData, historicalSignificance: e.target.value })
-                }
-                placeholder="Historical context and importance..."
-                rows={3}
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="visitorGuidelines">Visitor Guidelines</Label>
-              <Textarea
-                id="visitorGuidelines"
-                value={formData.visitorGuidelines}
-                onChange={(e) =>
-                  setFormData({ ...formData, visitorGuidelines: e.target.value })
-                }
-                placeholder="Guidelines for visitors..."
-                rows={2}
-              />
-            </div>
-
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-2">
-                <Switch
-                  id="unesco"
-                  checked={formData.isUNESCO}
-                  onCheckedChange={(checked) => setFormData({ ...formData, isUNESCO: checked })}
-                />
-                <Label htmlFor="unesco">UNESCO World Heritage Site</Label>
-              </div>
-
-              <div className="flex items-center space-x-2">
-                <Switch
-                  id="published"
-                  checked={formData.isPublished}
-                  onCheckedChange={(checked) =>
-                    setFormData({ ...formData, isPublished: checked })
-                  }
-                />
-                <Label htmlFor="published">Publish immediately</Label>
-              </div>
-            </div>
-          </div>
+          <SiteFormFields />
 
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
+            <Button variant="outline" onClick={() => {
+              setIsCreateDialogOpen(false);
+              resetForm();
+            }}>
               Cancel
             </Button>
             <Button
@@ -400,6 +765,46 @@ export default function AdminDashboard() {
               }
             >
               Create Site
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Site Dialog */}
+      <Dialog open={isEditDialogOpen} onOpenChange={(open) => {
+        setIsEditDialogOpen(open);
+        if (!open) {
+          setEditingSiteId(null);
+          resetForm();
+        }
+      }}>
+        <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Edit Heritage Site</DialogTitle>
+            <DialogDescription>Update site information, media, and audio content</DialogDescription>
+          </DialogHeader>
+
+          <SiteFormFields />
+
+          <DialogFooter>
+            <Button variant="outline" onClick={() => {
+              setIsEditDialogOpen(false);
+              setEditingSiteId(null);
+              resetForm();
+            }}>
+              Cancel
+            </Button>
+            <Button
+              onClick={handleUpdateSite}
+              disabled={
+                !formData.name ||
+                !formData.description ||
+                !formData.historicalSignificance ||
+                !formData.state ||
+                !formData.city
+              }
+            >
+              Update Site
             </Button>
           </DialogFooter>
         </DialogContent>

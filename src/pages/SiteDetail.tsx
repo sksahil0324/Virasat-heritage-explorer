@@ -2,12 +2,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useAuth } from "@/hooks/use-auth";
 import { useMutation, useQuery } from "convex/react";
 import { motion } from "framer-motion";
-import { ArrowLeft, Heart, Loader2, MapPin, Play, Volume2 } from "lucide-react";
+import { ArrowLeft, Heart, Loader2, MapPin, Play, Volume2, Clock, Ticket, Calendar, Globe } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
@@ -123,18 +124,64 @@ export default function SiteDetail() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Main Content */}
             <div className="lg:col-span-2 space-y-6">
-              {/* Hero Image */}
-              {primaryImage && (
-                <Card>
-                  <CardContent className="p-0">
-                    <img
-                      src={primaryImage.url}
-                      alt={site.name}
-                      className="w-full h-[400px] object-cover rounded-lg"
-                    />
-                  </CardContent>
-                </Card>
-              )}
+              {/* Immersive Views */}
+              <Card>
+                <CardContent className="p-0">
+                  <Tabs defaultValue="image" className="w-full">
+                    <div className="p-4 border-b">
+                      <TabsList className="grid w-full grid-cols-3">
+                        <TabsTrigger value="image">Photo</TabsTrigger>
+                        <TabsTrigger value="360" disabled={!site.view360Url}>360° View</TabsTrigger>
+                        <TabsTrigger value="3d" disabled={!site.view3dUrl}>3D Model</TabsTrigger>
+                      </TabsList>
+                    </div>
+                    
+                    <TabsContent value="image" className="m-0">
+                      {primaryImage ? (
+                        <img
+                          src={primaryImage.url}
+                          alt={site.name}
+                          className="w-full h-[400px] object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-[400px] bg-muted flex items-center justify-center">
+                          <p className="text-muted-foreground">No image available</p>
+                        </div>
+                      )}
+                    </TabsContent>
+                    
+                    <TabsContent value="360" className="m-0">
+                      {site.view360Url ? (
+                        <iframe
+                          src={site.view360Url}
+                          className="w-full h-[400px] border-0"
+                          allowFullScreen
+                          title="360° View"
+                        />
+                      ) : (
+                        <div className="w-full h-[400px] bg-muted flex items-center justify-center">
+                          <p className="text-muted-foreground">360° view not available</p>
+                        </div>
+                      )}
+                    </TabsContent>
+                    
+                    <TabsContent value="3d" className="m-0">
+                      {site.view3dUrl ? (
+                        <iframe
+                          src={site.view3dUrl}
+                          className="w-full h-[400px] border-0"
+                          allowFullScreen
+                          title="3D Model"
+                        />
+                      ) : (
+                        <div className="w-full h-[400px] bg-muted flex items-center justify-center">
+                          <p className="text-muted-foreground">3D model not available</p>
+                        </div>
+                      )}
+                    </TabsContent>
+                  </Tabs>
+                </CardContent>
+              </Card>
 
               {/* Description */}
               <Card>
@@ -158,14 +205,116 @@ export default function SiteDetail() {
                 </CardContent>
               </Card>
 
-              {/* Visitor Guidelines */}
-              {site.visitorGuidelines && (
+              {/* Visitor Information */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Visitor Information</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {site.ticketPrice && (
+                      <div className="flex items-start gap-3 p-3 border rounded-lg">
+                        <Ticket className="h-5 w-5 text-primary mt-0.5" />
+                        <div>
+                          <p className="text-sm font-medium">Ticket Price</p>
+                          <p className="text-sm text-muted-foreground">{site.ticketPrice}</p>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {site.openingHours && (
+                      <div className="flex items-start gap-3 p-3 border rounded-lg">
+                        <Clock className="h-5 w-5 text-primary mt-0.5" />
+                        <div>
+                          <p className="text-sm font-medium">Opening Hours</p>
+                          <p className="text-sm text-muted-foreground">{site.openingHours}</p>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {site.bestTimeToVisit && (
+                      <div className="flex items-start gap-3 p-3 border rounded-lg">
+                        <Calendar className="h-5 w-5 text-primary mt-0.5" />
+                        <div>
+                          <p className="text-sm font-medium">Best Time to Visit</p>
+                          <p className="text-sm text-muted-foreground">{site.bestTimeToVisit}</p>
+                        </div>
+                      </div>
+                    )}
+                    
+                    {site.timezone && (
+                      <div className="flex items-start gap-3 p-3 border rounded-lg">
+                        <Globe className="h-5 w-5 text-primary mt-0.5" />
+                        <div>
+                          <p className="text-sm font-medium">Local Time</p>
+                          <p className="text-sm text-muted-foreground">
+                            {new Date().toLocaleTimeString('en-IN', { 
+                              timeZone: site.timezone,
+                              hour: '2-digit',
+                              minute: '2-digit',
+                              hour12: true
+                            })} ({site.timezone})
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                  
+                  {site.visitorGuidelines && (
+                    <div className="pt-4 border-t">
+                      <p className="text-sm font-medium mb-2">Guidelines</p>
+                      <p className="text-sm text-muted-foreground leading-relaxed">{site.visitorGuidelines}</p>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              {/* Cultural Information */}
+              {(site.folkTales || site.culturalHeritage || site.cuisine || site.stories || site.community) && (
                 <Card>
                   <CardHeader>
-                    <CardTitle>Visitor Guidelines</CardTitle>
+                    <CardTitle>Cultural Heritage</CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-muted-foreground leading-relaxed">{site.visitorGuidelines}</p>
+                    <Tabs defaultValue="heritage" className="w-full">
+                      <TabsList className="grid w-full grid-cols-5">
+                        {site.culturalHeritage && <TabsTrigger value="heritage">Heritage</TabsTrigger>}
+                        {site.folkTales && <TabsTrigger value="tales">Folk Tales</TabsTrigger>}
+                        {site.cuisine && <TabsTrigger value="cuisine">Cuisine</TabsTrigger>}
+                        {site.stories && <TabsTrigger value="stories">Stories</TabsTrigger>}
+                        {site.community && <TabsTrigger value="community">Community</TabsTrigger>}
+                      </TabsList>
+                      
+                      {site.culturalHeritage && (
+                        <TabsContent value="heritage" className="mt-4">
+                          <p className="text-muted-foreground leading-relaxed">{site.culturalHeritage}</p>
+                        </TabsContent>
+                      )}
+                      
+                      {site.folkTales && (
+                        <TabsContent value="tales" className="mt-4">
+                          <p className="text-muted-foreground leading-relaxed">{site.folkTales}</p>
+                        </TabsContent>
+                      )}
+                      
+                      {site.cuisine && (
+                        <TabsContent value="cuisine" className="mt-4">
+                          <p className="text-muted-foreground leading-relaxed">{site.cuisine}</p>
+                        </TabsContent>
+                      )}
+                      
+                      {site.stories && (
+                        <TabsContent value="stories" className="mt-4">
+                          <p className="text-muted-foreground leading-relaxed">{site.stories}</p>
+                        </TabsContent>
+                      )}
+                      
+                      {site.community && (
+                        <TabsContent value="community" className="mt-4">
+                          <p className="text-muted-foreground leading-relaxed">{site.community}</p>
+                        </TabsContent>
+                      )}
+                    </Tabs>
                   </CardContent>
                 </Card>
               )}

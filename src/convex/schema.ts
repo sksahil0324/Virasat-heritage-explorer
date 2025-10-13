@@ -74,6 +74,12 @@ const schema = defineSchema(
       cuisine: v.optional(v.string()),
       stories: v.optional(v.string()),
       community: v.optional(v.string()),
+      ticketPrice: v.optional(v.string()),
+      openingHours: v.optional(v.string()),
+      bestTimeToVisit: v.optional(v.string()),
+      timezone: v.optional(v.string()),
+      view360Url: v.optional(v.string()),
+      view3dUrl: v.optional(v.string()),
     })
       .index("by_state", ["state"])
       .index("by_category", ["category"])

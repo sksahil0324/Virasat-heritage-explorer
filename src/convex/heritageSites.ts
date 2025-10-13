@@ -115,6 +115,12 @@ export const create = mutation({
     timePeriod: v.optional(v.string()),
     visitorGuidelines: v.optional(v.string()),
     isPublished: v.boolean(),
+    ticketPrice: v.optional(v.string()),
+    openingHours: v.optional(v.string()),
+    bestTimeToVisit: v.optional(v.string()),
+    timezone: v.optional(v.string()),
+    view360Url: v.optional(v.string()),
+    view3dUrl: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const user = await getCurrentUser(ctx);
@@ -159,6 +165,12 @@ export const update = mutation({
     timePeriod: v.optional(v.string()),
     visitorGuidelines: v.optional(v.string()),
     isPublished: v.optional(v.boolean()),
+    ticketPrice: v.optional(v.string()),
+    openingHours: v.optional(v.string()),
+    bestTimeToVisit: v.optional(v.string()),
+    timezone: v.optional(v.string()),
+    view360Url: v.optional(v.string()),
+    view3dUrl: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const user = await getCurrentUser(ctx);

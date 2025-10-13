@@ -588,3 +588,73 @@ export const seedHeritageSites = mutation({
     return { success: true, count: sites.length };
   },
 });
+
+export const updateExistingSitesWithUrls = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const sites = await ctx.db.query("heritageSites").collect();
+    
+    const urlMappings: Record<string, { view360Url?: string; view3dUrl?: string }> = {
+      "Hampi": {
+        view360Url: "https://artsandculture.google.com/story/hampi-monuments/",
+        view3dUrl: "https://artsandculture.google.com/asset/vitthala-temple-hampi/"
+      },
+      "Khajuraho Temples": {
+        view360Url: "https://artsandculture.google.com/story/khajuraho-temples/",
+        view3dUrl: "https://artsandculture.google.com/asset/kandariya-mahadeva-temple/"
+      },
+      "Konark Sun Temple": {
+        view360Url: "https://artsandculture.google.com/story/sun-temple-konark/",
+        view3dUrl: "https://artsandculture.google.com/asset/sun-temple-konark/"
+      },
+      "Ajanta Caves": {
+        view360Url: "https://artsandculture.google.com/story/ajanta-caves/",
+        view3dUrl: "https://artsandculture.google.com/asset/ajanta-caves/"
+      },
+      "Mysore Palace": {
+        view360Url: "https://artsandculture.google.com/story/mysore-palace/",
+        view3dUrl: "https://artsandculture.google.com/asset/mysore-palace/"
+      },
+      "Qutub Minar": {
+        view360Url: "https://artsandculture.google.com/story/qutub-minar/",
+        view3dUrl: "https://sketchfab.com/3d-models/qutub-minar-delhi-india/"
+      },
+      "Amer Fort": {
+        view360Url: "https://artsandculture.google.com/story/amer-fort/",
+        view3dUrl: "https://artsandculture.google.com/asset/amer-fort/"
+      },
+      "Red Fort": {
+        view360Url: "https://artsandculture.google.com/story/red-fort-delhi/",
+        view3dUrl: "https://artsandculture.google.com/asset/red-fort/"
+      },
+      "Rani ki Vav": {
+        view360Url: "https://artsandculture.google.com/story/rani-ki-vav/",
+        view3dUrl: "https://artsandculture.google.com/asset/rani-ki-vav/"
+      },
+      "Fatehpur Sikri": {
+        view360Url: "https://artsandculture.google.com/story/fatehpur-sikri/",
+        view3dUrl: "https://artsandculture.google.com/asset/fatehpur-sikri/"
+      },
+      "Elephanta Caves": {
+        view360Url: "https://artsandculture.google.com/story/elephanta-caves/",
+        view3dUrl: "https://artsandculture.google.com/asset/elephanta-caves-trimurti/"
+      },
+      "Jantar Mantar": {
+        view360Url: "https://artsandculture.google.com/story/jantar-mantar-jaipur/",
+        view3dUrl: "https://artsandculture.google.com/asset/jantar-mantar/"
+      }
+    };
+
+    let updatedCount = 0;
+    
+    for (const site of sites) {
+      const urls = urlMappings[site.name];
+      if (urls) {
+        await ctx.db.patch(site._id, urls);
+        updatedCount++;
+      }
+    }
+
+    return { success: true, updatedCount };
+  },
+});

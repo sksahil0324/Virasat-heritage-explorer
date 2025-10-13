@@ -19,6 +19,8 @@ export default function SiteDetail() {
   const { isAuthenticated, user } = useAuth();
   const audioRef = useRef<HTMLAudioElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [iframe360Error, setIframe360Error] = useState(false);
+  const [iframe3dError, setIframe3dError] = useState(false);
 
   const site = useQuery(api.heritageSites.getById, id ? { id: id as Id<"heritageSites"> } : "skip");
   const isFavorited = useQuery(
@@ -152,12 +154,19 @@ export default function SiteDetail() {
                     
                     <TabsContent value="360" className="m-0">
                       {site.view360Url ? (
-                        <iframe
-                          src={site.view360Url}
-                          className="w-full h-[400px] border-0"
-                          allowFullScreen
-                          title="360° View"
-                        />
+                        <div className="w-full h-[400px] bg-muted flex flex-col items-center justify-center p-6 text-center">
+                          <Globe className="h-16 w-16 text-primary mb-4" />
+                          <h3 className="text-lg font-semibold mb-2">360° Virtual Tour</h3>
+                          <p className="text-sm text-muted-foreground mb-4">
+                            Experience this heritage site in immersive 360° view
+                          </p>
+                          <Button
+                            onClick={() => window.open(site.view360Url, "_blank")}
+                            size="lg"
+                          >
+                            Open Virtual Tour
+                          </Button>
+                        </div>
                       ) : (
                         <div className="w-full h-[400px] bg-muted flex items-center justify-center">
                           <p className="text-muted-foreground">360° view not available</p>
@@ -167,12 +176,19 @@ export default function SiteDetail() {
                     
                     <TabsContent value="3d" className="m-0">
                       {site.view3dUrl ? (
-                        <iframe
-                          src={site.view3dUrl}
-                          className="w-full h-[400px] border-0"
-                          allowFullScreen
-                          title="3D Model"
-                        />
+                        <div className="w-full h-[400px] bg-muted flex flex-col items-center justify-center p-6 text-center">
+                          <Globe className="h-16 w-16 text-primary mb-4" />
+                          <h3 className="text-lg font-semibold mb-2">3D Model View</h3>
+                          <p className="text-sm text-muted-foreground mb-4">
+                            Explore the 3D model of this heritage site
+                          </p>
+                          <Button
+                            onClick={() => window.open(site.view3dUrl, "_blank")}
+                            size="lg"
+                          >
+                            Open 3D Model
+                          </Button>
+                        </div>
                       ) : (
                         <div className="w-full h-[400px] bg-muted flex items-center justify-center">
                           <p className="text-muted-foreground">3D model not available</p>

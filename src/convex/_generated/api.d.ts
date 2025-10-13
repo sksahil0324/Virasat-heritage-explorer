@@ -13,6 +13,7 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as addMorePhotos from "../addMorePhotos.js";
 import type * as addSampleImages from "../addSampleImages.js";
 import type * as audio from "../audio.js";
 import type * as auth_emailOtp from "../auth/emailOtp.js";
@@ -34,6 +35,7 @@ import type * as users from "../users.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  addMorePhotos: typeof addMorePhotos;
   addSampleImages: typeof addSampleImages;
   audio: typeof audio;
   "auth/emailOtp": typeof auth_emailOtp;

@@ -133,9 +133,21 @@ export default function Explore() {
             {/* Auth Buttons */}
             <div className="flex items-center gap-3">
               {isAuthenticated && (
-                <Button variant="ghost" onClick={() => navigate("/favorites")}>
-                  <Heart className="h-4 w-4 mr-2" />
-                  Favorites
+                <>
+                  <Button variant="ghost" onClick={() => navigate("/favorites")}>
+                    <Heart className="h-4 w-4 mr-2" />
+                    Favorites
+                  </Button>
+                  <Button variant="outline" onClick={() => navigate("/admin")} className="border-primary/50">
+                    <Globe className="h-4 w-4 mr-2" />
+                    Admin
+                  </Button>
+                </>
+              )}
+              {!isAuthenticated && (
+                <Button variant="outline" onClick={() => navigate("/admin")} className="border-amber-500/50">
+                  <Globe className="h-4 w-4 mr-2" />
+                  Admin Login
                 </Button>
               )}
             </div>

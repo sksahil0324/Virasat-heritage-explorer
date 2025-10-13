@@ -111,13 +111,21 @@ export default function Landing() {
               {!isLoading && (
                 <>
                   {isAuthenticated ? (
-                    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                      <Button onClick={() => navigate("/explore")} size="sm" className="relative overflow-hidden group">
-                        <span className="relative z-10">Dashboard</span>
-                        <ArrowRight className="ml-2 h-4 w-4 relative z-10" />
-                        <div className="absolute inset-0 bg-gradient-to-r from-primary to-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                      </Button>
-                    </motion.div>
+                    <>
+                      <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                        <Button onClick={() => navigate("/explore")} size="sm" className="relative overflow-hidden group">
+                          <span className="relative z-10">Dashboard</span>
+                          <ArrowRight className="ml-2 h-4 w-4 relative z-10" />
+                          <div className="absolute inset-0 bg-gradient-to-r from-primary to-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        </Button>
+                      </motion.div>
+                      <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                        <Button onClick={() => navigate("/admin")} size="sm" variant="outline" className="border-primary/50">
+                          <Shield className="mr-2 h-4 w-4" />
+                          Admin
+                        </Button>
+                      </motion.div>
+                    </>
                   ) : (
                     <>
                       <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
@@ -130,6 +138,12 @@ export default function Landing() {
                           <span className="relative z-10">Get Started</span>
                           <ArrowRight className="ml-2 h-4 w-4 relative z-10" />
                           <div className="absolute inset-0 bg-gradient-to-r from-primary to-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                        </Button>
+                      </motion.div>
+                      <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                        <Button onClick={() => navigate("/admin")} size="sm" variant="outline" className="border-amber-500/50">
+                          <Shield className="mr-2 h-4 w-4" />
+                          Admin Login
                         </Button>
                       </motion.div>
                     </>

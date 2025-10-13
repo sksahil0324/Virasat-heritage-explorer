@@ -86,16 +86,48 @@ export default function InteractiveMap() {
         </CardHeader>
         <CardContent>
           <div className="relative w-full h-[600px] bg-gradient-to-br from-muted/20 via-muted/10 to-background rounded-lg overflow-hidden border-2 border-primary/20">
-            {/* Better India Map Background with gradient overlay */}
-            <div className="absolute inset-0 flex items-center justify-center">
-              <svg viewBox="0 0 100 100" className="w-full h-full opacity-20">
-                {/* More accurate India outline */}
+            {/* Accurate India Map Background */}
+            <div className="absolute inset-0 flex items-center justify-center p-8">
+              <svg viewBox="0 0 200 280" className="w-full h-full opacity-15" preserveAspectRatio="xMidYMid meet">
+                {/* Detailed India outline - more geographically accurate */}
                 <path
-                  d="M 28,10 L 32,12 L 35,14 L 38,13 L 42,15 L 45,17 L 48,16 L 52,18 L 55,22 L 58,24 L 62,26 L 64,30 L 62,34 L 60,36 L 58,38 L 56,40 L 54,42 L 52,45 L 50,48 L 48,52 L 46,55 L 44,58 L 42,60 L 40,63 L 38,66 L 36,68 L 34,70 L 32,72 L 30,74 L 28,75 L 30,76 L 32,77 L 34,76 L 36,74 L 38,72 L 40,70 L 42,68 L 40,66 L 38,64 L 36,62 L 34,60 L 32,58 L 30,56 L 28,54 L 26,52 L 24,50 L 22,48 L 20,46 L 18,44 L 16,42 L 15,40 L 14,38 L 16,36 L 18,34 L 20,32 L 22,30 L 24,28 L 26,26 L 28,24 L 26,22 L 24,20 L 22,18 L 20,16 L 22,14 L 24,12 L 26,10 Z"
+                  d="M 85,5 L 90,8 L 95,10 L 100,9 L 105,12 L 110,15 L 115,18 L 120,20 L 125,25 L 130,30 L 135,35 L 138,40 L 140,45 L 142,50 L 143,55 L 142,60 L 140,65 L 138,70 L 135,75 L 132,80 L 130,85 L 128,90 L 126,95 L 124,100 L 122,105 L 120,110 L 118,115 L 116,120 L 114,125 L 112,130 L 110,135 L 108,140 L 106,145 L 104,150 L 102,155 L 100,160 L 98,165 L 96,170 L 94,175 L 92,180 L 90,185 L 88,190 L 86,195 L 84,200 L 82,205 L 80,210 L 78,215 L 76,220 L 74,225 L 72,230 L 70,235 L 68,240 L 66,245 L 64,250 L 62,255 L 60,260 L 58,265 L 56,268 L 54,270 L 52,268 L 50,265 L 48,262 L 46,258 L 44,254 L 42,250 L 40,246 L 38,242 L 36,238 L 34,234 L 32,230 L 30,226 L 28,222 L 26,218 L 24,214 L 22,210 L 20,206 L 18,202 L 16,198 L 14,194 L 12,190 L 10,186 L 8,182 L 6,178 L 5,174 L 4,170 L 3,166 L 2,162 L 2,158 L 3,154 L 4,150 L 6,146 L 8,142 L 10,138 L 12,134 L 15,130 L 18,126 L 21,122 L 24,118 L 27,114 L 30,110 L 33,106 L 36,102 L 39,98 L 42,94 L 45,90 L 48,86 L 51,82 L 54,78 L 57,74 L 60,70 L 63,66 L 66,62 L 69,58 L 72,54 L 75,50 L 78,46 L 80,42 L 82,38 L 84,34 L 85,30 L 86,26 L 86,22 L 85,18 L 84,14 L 83,10 L 84,8 Z"
                   fill="currentColor"
                   stroke="currentColor"
-                  strokeWidth="0.3"
-                  className="text-primary/30"
+                  strokeWidth="0.5"
+                  className="text-primary/40"
+                />
+                {/* Add Kashmir region */}
+                <path
+                  d="M 85,5 L 88,3 L 92,2 L 96,3 L 98,5 L 99,8 L 98,11 L 96,13 L 93,14 L 90,13 L 87,11 L 85,8 Z"
+                  fill="currentColor"
+                  stroke="currentColor"
+                  strokeWidth="0.5"
+                  className="text-primary/40"
+                />
+                {/* Add Northeast region detail */}
+                <path
+                  d="M 140,45 L 145,48 L 150,52 L 153,56 L 155,60 L 156,64 L 155,68 L 153,72 L 150,75 L 146,77 L 142,78 L 140,75 L 139,70 L 139,65 L 140,60 L 141,55 L 140,50 Z"
+                  fill="currentColor"
+                  stroke="currentColor"
+                  strokeWidth="0.5"
+                  className="text-primary/40"
+                />
+                {/* Add Andaman & Nicobar Islands */}
+                <path
+                  d="M 130,200 L 132,202 L 133,205 L 132,208 L 130,210 L 128,208 L 127,205 L 128,202 Z M 128,215 L 130,217 L 131,220 L 130,223 L 128,225 L 126,223 L 125,220 L 126,217 Z"
+                  fill="currentColor"
+                  stroke="currentColor"
+                  strokeWidth="0.5"
+                  className="text-primary/40"
+                />
+                {/* Add Lakshadweep Islands */}
+                <path
+                  d="M 15,180 L 17,181 L 17,183 L 16,184 L 14,183 L 14,181 Z M 12,185 L 14,186 L 14,188 L 13,189 L 11,188 L 11,186 Z"
+                  fill="currentColor"
+                  stroke="currentColor"
+                  strokeWidth="0.5"
+                  className="text-primary/40"
                 />
               </svg>
             </div>

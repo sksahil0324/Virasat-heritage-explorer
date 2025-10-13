@@ -9,6 +9,8 @@ import ParticleBackground from "@/components/ParticleBackground";
 import HolographicCard from "@/components/HolographicCard";
 import FloatingElement from "@/components/FloatingElement";
 import AnimatedSection from "@/components/AnimatedSection";
+import { toast } from "sonner";
+import { downloadSourceCode } from "@/lib/downloadSource";
 
 export default function Landing() {
   const { isAuthenticated, isLoading } = useAuth();
@@ -46,6 +48,17 @@ export default function Landing() {
       description: "Expert-verified information and visitor guidelines",
     },
   ];
+
+  const handleDownloadSource = async () => {
+    try {
+      toast.loading("Preparing source code download...");
+      await downloadSourceCode();
+      toast.success("Source code downloaded successfully!");
+    } catch (error) {
+      toast.error("Failed to download source code");
+      console.error(error);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-background relative overflow-hidden">
@@ -99,7 +112,11 @@ export default function Landing() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
               >
-                <Button variant="ghost" className="text-sm">
+                <Button 
+                  variant="ghost" 
+                  className="text-sm"
+                  onClick={handleDownloadSource}
+                >
                   <Download className="h-4 w-4 mr-2" />
                   Download Source
                 </Button>

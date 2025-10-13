@@ -6,8 +6,8 @@ import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { useQuery } from "convex/react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MapPin, X, Navigation, Info } from "lucide-react";
-import { useState, useEffect } from "react";
+import { MapPin, X, Navigation, Info, ZoomIn, ZoomOut, RotateCcw } from "lucide-react";
+import { useState } from "react";
 import { useNavigate } from "react-router";
 
 interface Site {
@@ -26,7 +26,9 @@ export default function InteractiveMap() {
   const navigate = useNavigate();
   const sites = useQuery(api.heritageSites.list, {});
   const [selectedSite, setSelectedSite] = useState<Site | null>(null);
-  const [hoveredState, setHoveredState] = useState<string | null>(null);
+  const [selectedState, setSelectedState] = useState<string | null>(null);
+  const [scale, setScale] = useState(1);
+  const [showConnections, setShowConnections] = useState(true);
 
   // Group sites by state
   const sitesByState = sites?.reduce((acc, site) => {
@@ -37,38 +39,35 @@ export default function InteractiveMap() {
     return acc;
   }, {} as Record<string, typeof sites>);
 
-  // Improved Indian states with better coordinates for visualization
-  const statePositions: Record<string, { x: number; y: number }> = {
-    "Jammu and Kashmir": { x: 25, y: 8 },
-    "Himachal Pradesh": { x: 28, y: 14 },
-    "Punjab": { x: 25, y: 16 },
-    "Uttarakhand": { x: 32, y: 16 },
-    "Haryana": { x: 28, y: 20 },
-    "Delhi": { x: 30, y: 21 },
-    "Uttar Pradesh": { x: 36, y: 26 },
-    "Rajasthan": { x: 22, y: 28 },
-    "Bihar": { x: 44, y: 28 },
-    "Gujarat": { x: 16, y: 36 },
-    "Madhya Pradesh": { x: 30, y: 36 },
-    "Jharkhand": { x: 46, y: 36 },
-    "West Bengal": { x: 50, y: 33 },
-    "Maharashtra": { x: 24, y: 48 },
-    "Chhattisgarh": { x: 38, y: 46 },
-    "Odisha": { x: 46, y: 48 },
-    "Telangana": { x: 32, y: 56 },
-    "Andhra Pradesh": { x: 34, y: 62 },
-    "Karnataka": { x: 28, y: 60 },
-    "Goa": { x: 24, y: 58 },
-    "Tamil Nadu": { x: 32, y: 70 },
-    "Kerala": { x: 28, y: 72 },
-    "Assam": { x: 58, y: 28 },
-    "Meghalaya": { x: 56, y: 31 },
-    "Manipur": { x: 60, y: 33 },
-    "Tripura": { x: 56, y: 34 },
-    "Mizoram": { x: 58, y: 36 },
-    "Nagaland": { x: 60, y: 30 },
-    "Arunachal Pradesh": { x: 62, y: 24 },
-    "Sikkim": { x: 50, y: 26 },
+  // State definitions with positions and info
+  const stateData: Record<string, { x: number; y: number; width: number; height: number; color: string; desc: string; highlights: string }> = {
+    "Jammu and Kashmir": { x: 400, y: 50, width: 120, height: 80, color: "#4a6fa5", desc: "Known for its stunning Himalayan landscapes, Dal Lake, and rich cultural heritage.", highlights: "Dal Lake, Gulmarg, Vaishno Devi" },
+    "Himachal Pradesh": { x: 450, y: 140, width: 100, height: 60, color: "#5b8ead", desc: "Famous for hill stations like Shimla and Manali, and adventure sports.", highlights: "Shimla, Manali, Dharamshala" },
+    "Punjab": { x: 400, y: 210, width: 80, height: 50, color: "#ff9a76", desc: "The land of five rivers, known for its vibrant culture and delicious cuisine.", highlights: "Golden Temple, Wagah Border, Bhangra" },
+    "Haryana": { x: 480, y: 210, width: 70, height: 50, color: "#ffb396", desc: "Known for its agricultural prosperity and historical sites.", highlights: "Chandigarh, Kurukshetra, Surajkund" },
+    "Uttarakhand": { x: 520, y: 140, width: 70, height: 70, color: "#6d98ba", desc: "The 'Land of the Gods', home to Char Dham pilgrimage sites.", highlights: "Rishikesh, Haridwar, Nainital" },
+    "Uttar Pradesh": { x: 450, y: 270, width: 140, height: 80, color: "#ff6b6b", desc: "India's most populous state, home to the Taj Mahal and Varanasi.", highlights: "Taj Mahal, Varanasi, Lucknow" },
+    "Madhya Pradesh": { x: 350, y: 360, width: 150, height: 100, color: "#ff9a76", desc: "The 'Heart of India', known for its historical monuments and wildlife.", highlights: "Khajuraho, Sanchi, Kanha National Park" },
+    "Rajasthan": { x: 250, y: 270, width: 180, height: 80, color: "#ffb396", desc: "The 'Land of Kings', famous for its palaces, forts, and desert.", highlights: "Jaipur, Udaipur, Jaisalmer" },
+    "Gujarat": { x: 180, y: 360, width: 150, height: 60, color: "#4a6fa5", desc: "Birthplace of Mahatma Gandhi, known for its business culture and festivals.", highlights: "Statue of Unity, Rann of Kutch, Gir Forest" },
+    "Maharashtra": { x: 250, y: 430, width: 130, height: 80, color: "#5b8ead", desc: "India's financial capital, known for Bollywood and diverse culture.", highlights: "Mumbai, Pune, Ajanta & Ellora Caves" },
+    "Karnataka": { x: 280, y: 520, width: 120, height: 70, color: "#6d98ba", desc: "Known for its IT industry, historical sites, and diverse landscapes.", highlights: "Bangalore, Mysore, Hampi" },
+    "Tamil Nadu": { x: 350, y: 600, width: 100, height: 80, color: "#4a6fa5", desc: "Famous for its Dravidian-style temples, classical arts, and cuisine.", highlights: "Chennai, Madurai, Mahabalipuram" },
+    "Kerala": { x: 250, y: 600, width: 90, height: 60, color: "#5b8ead", desc: "'God's Own Country', known for backwaters, beaches, and Ayurveda.", highlights: "Backwaters, Kochi, Munnar" },
+    "Andhra Pradesh": { x: 320, y: 520, width: 80, height: 70, color: "#6d98ba", desc: "Known for Tirupati temple, spicy cuisine, and Kuchipudi dance.", highlights: "Tirupati, Amaravati, Araku Valley" },
+    "West Bengal": { x: 550, y: 360, width: 80, height: 60, color: "#ff6b6b", desc: "Known for its cultural capital Kolkata, literature, and Durga Puja.", highlights: "Kolkata, Darjeeling, Sundarbans" },
+    "Bihar": { x: 550, y: 430, width: 70, height: 50, color: "#ff9a76", desc: "One of India's oldest inhabited places, with rich historical significance.", highlights: "Bodh Gaya, Nalanda, Patna" },
+    "Odisha": { x: 500, y: 490, width: 80, height: 60, color: "#ffb396", desc: "Famous for Jagannath Temple, classical dance, and tribal culture.", highlights: "Puri, Konark, Bhubaneswar" },
+    "Assam": { x: 630, y: 360, width: 70, height: 50, color: "#4a6fa5", desc: "Known for tea plantations, Kaziranga National Park, and silk.", highlights: "Kaziranga, Guwahati, Majuli Island" },
+    "Delhi": { x: 500, y: 240, width: 40, height: 40, color: "#ffd166", desc: "India's capital, a blend of ancient history and modern development.", highlights: "Red Fort, Qutub Minar, India Gate" },
+  };
+
+  const handleZoomIn = () => setScale(Math.min(scale + 0.2, 3));
+  const handleZoomOut = () => setScale(Math.max(scale - 0.2, 0.5));
+  const handleReset = () => {
+    setScale(1);
+    setSelectedState(null);
+    setSelectedSite(null);
   };
 
   return (
@@ -81,145 +80,242 @@ export default function InteractiveMap() {
             Heritage Sites Across India
           </CardTitle>
           <CardDescription>
-            Click on markers to explore sites • {sites?.length || 0} sites mapped
+            Click on states or markers to explore sites • {sites?.length || 0} sites mapped
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="relative w-full h-[600px] bg-gradient-to-br from-muted/20 via-muted/10 to-background rounded-lg overflow-hidden border-2 border-primary/20">
-            {/* Accurate India Map Background */}
-            <div className="absolute inset-0 flex items-center justify-center p-8">
-              <svg viewBox="0 0 200 280" className="w-full h-full opacity-15" preserveAspectRatio="xMidYMid meet">
-                {/* Detailed India outline - more geographically accurate */}
-                <path
-                  d="M 85,5 L 90,8 L 95,10 L 100,9 L 105,12 L 110,15 L 115,18 L 120,20 L 125,25 L 130,30 L 135,35 L 138,40 L 140,45 L 142,50 L 143,55 L 142,60 L 140,65 L 138,70 L 135,75 L 132,80 L 130,85 L 128,90 L 126,95 L 124,100 L 122,105 L 120,110 L 118,115 L 116,120 L 114,125 L 112,130 L 110,135 L 108,140 L 106,145 L 104,150 L 102,155 L 100,160 L 98,165 L 96,170 L 94,175 L 92,180 L 90,185 L 88,190 L 86,195 L 84,200 L 82,205 L 80,210 L 78,215 L 76,220 L 74,225 L 72,230 L 70,235 L 68,240 L 66,245 L 64,250 L 62,255 L 60,260 L 58,265 L 56,268 L 54,270 L 52,268 L 50,265 L 48,262 L 46,258 L 44,254 L 42,250 L 40,246 L 38,242 L 36,238 L 34,234 L 32,230 L 30,226 L 28,222 L 26,218 L 24,214 L 22,210 L 20,206 L 18,202 L 16,198 L 14,194 L 12,190 L 10,186 L 8,182 L 6,178 L 5,174 L 4,170 L 3,166 L 2,162 L 2,158 L 3,154 L 4,150 L 6,146 L 8,142 L 10,138 L 12,134 L 15,130 L 18,126 L 21,122 L 24,118 L 27,114 L 30,110 L 33,106 L 36,102 L 39,98 L 42,94 L 45,90 L 48,86 L 51,82 L 54,78 L 57,74 L 60,70 L 63,66 L 66,62 L 69,58 L 72,54 L 75,50 L 78,46 L 80,42 L 82,38 L 84,34 L 85,30 L 86,26 L 86,22 L 85,18 L 84,14 L 83,10 L 84,8 Z"
-                  fill="currentColor"
-                  stroke="currentColor"
-                  strokeWidth="0.5"
-                  className="text-primary/40"
-                />
-                {/* Add Kashmir region */}
-                <path
-                  d="M 85,5 L 88,3 L 92,2 L 96,3 L 98,5 L 99,8 L 98,11 L 96,13 L 93,14 L 90,13 L 87,11 L 85,8 Z"
-                  fill="currentColor"
-                  stroke="currentColor"
-                  strokeWidth="0.5"
-                  className="text-primary/40"
-                />
-                {/* Add Northeast region detail */}
-                <path
-                  d="M 140,45 L 145,48 L 150,52 L 153,56 L 155,60 L 156,64 L 155,68 L 153,72 L 150,75 L 146,77 L 142,78 L 140,75 L 139,70 L 139,65 L 140,60 L 141,55 L 140,50 Z"
-                  fill="currentColor"
-                  stroke="currentColor"
-                  strokeWidth="0.5"
-                  className="text-primary/40"
-                />
-                {/* Add Andaman & Nicobar Islands */}
-                <path
-                  d="M 130,200 L 132,202 L 133,205 L 132,208 L 130,210 L 128,208 L 127,205 L 128,202 Z M 128,215 L 130,217 L 131,220 L 130,223 L 128,225 L 126,223 L 125,220 L 126,217 Z"
-                  fill="currentColor"
-                  stroke="currentColor"
-                  strokeWidth="0.5"
-                  className="text-primary/40"
-                />
-                {/* Add Lakshadweep Islands */}
-                <path
-                  d="M 15,180 L 17,181 L 17,183 L 16,184 L 14,183 L 14,181 Z M 12,185 L 14,186 L 14,188 L 13,189 L 11,188 L 11,186 Z"
-                  fill="currentColor"
-                  stroke="currentColor"
-                  strokeWidth="0.5"
-                  className="text-primary/40"
-                />
+          <div className="relative w-full h-[600px] bg-gradient-to-br from-primary/5 via-secondary/5 to-background rounded-lg overflow-hidden border-2 border-primary/20">
+            {/* SVG Map */}
+            <div className="absolute inset-0 flex items-center justify-center p-4">
+              <svg 
+                viewBox="0 0 1000 800" 
+                className="w-full h-full"
+                style={{ transform: `scale(${scale})`, transition: "transform 0.3s ease" }}
+              >
+                <defs>
+                  <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="oklch(0.12 0.02 240)" />
+                    <stop offset="100%" stopColor="oklch(0.15 0.02 240)" />
+                  </linearGradient>
+                  <filter id="glow">
+                    <feGaussianBlur stdDeviation="3.5" result="coloredBlur"/>
+                    <feMerge>
+                      <feMergeNode in="coloredBlur"/>
+                      <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                  </filter>
+                </defs>
+
+                {/* Background */}
+                <rect width="100%" height="100%" fill="url(#bgGradient)" opacity="0.3" />
+
+                {/* Animated connections */}
+                {showConnections && (
+                  <g stroke="rgba(91, 192, 190, 0.3)" strokeWidth="2" fill="none">
+                    <motion.path
+                      d="M460,90 Q500,120 540,150"
+                      initial={{ pathLength: 0 }}
+                      animate={{ pathLength: 1 }}
+                      transition={{ duration: 2, ease: "easeInOut" }}
+                    />
+                    <motion.path
+                      d="M500,200 Q520,230 540,260"
+                      initial={{ pathLength: 0 }}
+                      animate={{ pathLength: 1 }}
+                      transition={{ duration: 2, delay: 0.2, ease: "easeInOut" }}
+                    />
+                    <motion.path
+                      d="M380,310 Q400,340 420,370"
+                      initial={{ pathLength: 0 }}
+                      animate={{ pathLength: 1 }}
+                      transition={{ duration: 2, delay: 0.4, ease: "easeInOut" }}
+                    />
+                    <motion.path
+                      d="M320,330 Q350,400 380,470"
+                      initial={{ pathLength: 0 }}
+                      animate={{ pathLength: 1 }}
+                      transition={{ duration: 2, delay: 0.6, ease: "easeInOut" }}
+                    />
+                    <motion.path
+                      d="M450,500 Q480,550 510,600"
+                      initial={{ pathLength: 0 }}
+                      animate={{ pathLength: 1 }}
+                      transition={{ duration: 2, delay: 0.8, ease: "easeInOut" }}
+                    />
+                  </g>
+                )}
+
+                {/* States */}
+                {Object.entries(stateData).map(([stateName, data]) => (
+                  <motion.rect
+                    key={stateName}
+                    x={data.x}
+                    y={data.y}
+                    width={data.width}
+                    height={data.height}
+                    rx="10"
+                    fill={selectedState === stateName ? "#ffd166" : data.color}
+                    filter="url(#glow)"
+                    className="cursor-pointer transition-all"
+                    whileHover={{ scale: 1.05, opacity: 0.9 }}
+                    onClick={() => setSelectedState(stateName)}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 0.8 }}
+                    transition={{ duration: 0.5 }}
+                  />
+                ))}
+
+                {/* Heritage Site Markers */}
+                {sites?.map((site, index) => {
+                  const stateInfo = stateData[site.state];
+                  if (!stateInfo) return null;
+
+                  const stateIndex = sitesByState?.[site.state]?.indexOf(site) || 0;
+                  const totalInState = sitesByState?.[site.state]?.length || 1;
+                  
+                  const angle = (stateIndex / totalInState) * Math.PI * 2;
+                  const radius = totalInState > 1 ? 15 : 0;
+                  const offsetX = Math.cos(angle) * radius;
+                  const offsetY = Math.sin(angle) * radius;
+
+                  const x = stateInfo.x + stateInfo.width / 2 + offsetX;
+                  const y = stateInfo.y + stateInfo.height / 2 + offsetY;
+
+                  return (
+                    <g
+                      key={site._id}
+                      transform={`translate(${x}, ${y})`}
+                      className="cursor-pointer"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedSite(site);
+                      }}
+                    >
+                      <motion.circle
+                        r="6"
+                        fill={site.isUNESCO ? "#ffd166" : "#5bc0be"}
+                        initial={{ scale: 0 }}
+                        animate={{ scale: 1 }}
+                        transition={{ delay: index * 0.02 }}
+                      >
+                        <animate attributeName="r" values="6;9;6" dur="2s" repeatCount="indefinite" />
+                        <animate attributeName="opacity" values="1;0.7;1" dur="2s" repeatCount="indefinite" />
+                      </motion.circle>
+                      {selectedSite?._id === site._id && (
+                        <motion.circle
+                          r="12"
+                          fill="none"
+                          stroke="#ffd166"
+                          strokeWidth="2"
+                          initial={{ scale: 0, opacity: 0 }}
+                          animate={{ scale: 1.5, opacity: 0 }}
+                          transition={{ duration: 1.5, repeat: Infinity }}
+                        />
+                      )}
+                    </g>
+                  );
+                })}
+
+                {/* Major Cities */}
+                <g>
+                  <g transform="translate(500, 260)">
+                    <circle r="5" fill="#ffd166">
+                      <animate attributeName="r" values="5;8;5" dur="2s" repeatCount="indefinite" />
+                    </circle>
+                    <text x="10" y="5" fill="#ffd166" fontSize="12">Delhi</text>
+                  </g>
+                  <g transform="translate(300, 470)">
+                    <circle r="5" fill="#ffd166">
+                      <animate attributeName="r" values="5;8;5" dur="2s" repeatCount="indefinite" />
+                    </circle>
+                    <text x="10" y="5" fill="#ffd166" fontSize="12">Mumbai</text>
+                  </g>
+                  <g transform="translate(400, 650)">
+                    <circle r="5" fill="#ffd166">
+                      <animate attributeName="r" values="5;8;5" dur="2s" repeatCount="indefinite" />
+                    </circle>
+                    <text x="10" y="5" fill="#ffd166" fontSize="12">Chennai</text>
+                  </g>
+                  <g transform="translate(580, 390)">
+                    <circle r="5" fill="#ffd166">
+                      <animate attributeName="r" values="5;8;5" dur="2s" repeatCount="indefinite" />
+                    </circle>
+                    <text x="10" y="5" fill="#ffd166" fontSize="12">Kolkata</text>
+                  </g>
+                </g>
               </svg>
             </div>
 
-            {/* Site Markers with improved spacing */}
-            {sites?.map((site, index) => {
-              const position = statePositions[site.state] || { x: 50, y: 50 };
-              const stateIndex = sitesByState?.[site.state]?.indexOf(site) || 0;
-              const totalInState = sitesByState?.[site.state]?.length || 1;
-              
-              // Better circular distribution for multiple sites in same state
-              const angle = (stateIndex / totalInState) * Math.PI * 2;
-              const radius = totalInState > 1 ? 2 : 0;
-              const offsetX = Math.cos(angle) * radius;
-              const offsetY = Math.sin(angle) * radius;
+            {/* Controls */}
+            <div className="absolute bottom-4 left-4 flex gap-2">
+              <Button size="sm" variant="secondary" onClick={handleZoomIn}>
+                <ZoomIn className="h-4 w-4" />
+              </Button>
+              <Button size="sm" variant="secondary" onClick={handleZoomOut}>
+                <ZoomOut className="h-4 w-4" />
+              </Button>
+              <Button size="sm" variant="secondary" onClick={handleReset}>
+                <RotateCcw className="h-4 w-4" />
+              </Button>
+              <Button 
+                size="sm" 
+                variant="secondary" 
+                onClick={() => setShowConnections(!showConnections)}
+              >
+                {showConnections ? "Hide" : "Show"} Connections
+              </Button>
+            </div>
 
-              return (
-                <motion.div
-                  key={site._id}
-                  initial={{ scale: 0, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ delay: index * 0.02, type: "spring", stiffness: 200 }}
-                  className="absolute cursor-pointer group z-10"
-                  style={{
-                    left: `${position.x + offsetX}%`,
-                    top: `${position.y + offsetY}%`,
-                    transform: "translate(-50%, -50%)",
-                  }}
-                  onClick={() => setSelectedSite(site)}
-                  onMouseEnter={() => setHoveredState(site.state)}
-                  onMouseLeave={() => setHoveredState(null)}
-                >
-                  <motion.div
-                    whileHover={{ scale: 1.4 }}
-                    whileTap={{ scale: 0.9 }}
-                    className="relative"
-                  >
-                    <MapPin
-                      className={`h-7 w-7 drop-shadow-2xl transition-all duration-300 ${
-                        site.isUNESCO
-                          ? "text-yellow-400 fill-yellow-400"
-                          : "text-primary fill-primary"
-                      } ${selectedSite?._id === site._id ? "scale-125" : ""}`}
-                    />
-                    {/* Pulse effect for selected site */}
-                    {selectedSite?._id === site._id && (
-                      <motion.div
-                        className="absolute inset-0 rounded-full"
-                        animate={{
-                          scale: [1, 1.5, 1],
-                          opacity: [0.5, 0, 0.5],
-                        }}
-                        transition={{
-                          duration: 2,
-                          repeat: Infinity,
-                          ease: "easeInOut",
-                        }}
-                      >
-                        <div className={`w-full h-full rounded-full ${
-                          site.isUNESCO ? "bg-yellow-400" : "bg-primary"
-                        }`} />
-                      </motion.div>
-                    )}
-                    {hoveredState === site.state && (
-                      <motion.div
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-background/95 backdrop-blur border-2 border-primary/30 rounded-lg shadow-xl whitespace-nowrap text-xs font-medium z-20"
-                      >
-                        {site.name}
-                      </motion.div>
-                    )}
-                  </motion.div>
-                </motion.div>
-              );
-            })}
-
-            {/* Enhanced Legend */}
-            <div className="absolute bottom-4 left-4 bg-background/95 backdrop-blur-md border-2 border-primary/20 rounded-xl p-4 shadow-2xl">
-              <div className="text-xs font-semibold mb-3 text-primary">Legend</div>
-              <div className="flex flex-col gap-2 text-xs">
+            {/* Legend */}
+            <div className="absolute bottom-4 right-4 bg-background/95 backdrop-blur-md border-2 border-primary/20 rounded-xl p-3 shadow-2xl">
+              <div className="text-xs font-semibold mb-2 text-primary">Legend</div>
+              <div className="flex flex-col gap-1.5 text-xs">
                 <div className="flex items-center gap-2">
-                  <MapPin className="h-5 w-5 text-yellow-400 fill-yellow-400" />
-                  <span className="font-medium">UNESCO Site</span>
+                  <div className="w-3 h-3 rounded-full bg-[#ffd166]" />
+                  <span>UNESCO Site</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <MapPin className="h-5 w-5 text-primary fill-primary" />
-                  <span className="font-medium">Heritage Site</span>
+                  <div className="w-3 h-3 rounded-full bg-[#5bc0be]" />
+                  <span>Heritage Site</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="w-3 h-3 rounded-full bg-[#ffd166] animate-pulse" />
+                  <span>Major City</span>
                 </div>
               </div>
             </div>
           </div>
+
+          {/* State Info Display */}
+          {selectedState && stateData[selectedState] && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mt-4 p-4 bg-secondary/20 rounded-lg border border-primary/20"
+            >
+              <div className="flex items-start justify-between mb-2">
+                <h4 className="font-semibold text-lg text-primary">{selectedState}</h4>
+                <Button size="sm" variant="ghost" onClick={() => setSelectedState(null)}>
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+              <p className="text-sm text-muted-foreground mb-2">{stateData[selectedState].desc}</p>
+              <div className="flex flex-wrap gap-2">
+                {stateData[selectedState].highlights.split(", ").map((highlight) => (
+                  <Badge key={highlight} variant="secondary" className="text-xs">
+                    {highlight}
+                  </Badge>
+                ))}
+              </div>
+              {sitesByState?.[selectedState] && (
+                <div className="mt-3">
+                  <p className="text-sm font-medium mb-1">
+                    {sitesByState[selectedState].length} Heritage {sitesByState[selectedState].length === 1 ? "Site" : "Sites"}
+                  </p>
+                </div>
+              )}
+            </motion.div>
+          )}
         </CardContent>
       </Card>
 
@@ -286,7 +382,7 @@ export default function InteractiveMap() {
               >
                 <MapPin className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
                 <p className="text-sm text-muted-foreground">
-                  Click on any marker on the map to view site details
+                  Click on any marker or state on the map to view details
                 </p>
               </motion.div>
             )}
@@ -294,7 +390,7 @@ export default function InteractiveMap() {
         </CardContent>
       </Card>
 
-      {/* States List */}
+      {/* Sites by State */}
       <Card className="lg:col-span-3">
         <CardHeader>
           <CardTitle>Sites by State</CardTitle>
@@ -310,7 +406,7 @@ export default function InteractiveMap() {
                     key={state}
                     whileHover={{ scale: 1.02 }}
                     className="p-4 border-2 border-primary/20 rounded-lg hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer"
-                    onClick={() => setHoveredState(state)}
+                    onClick={() => setSelectedState(state)}
                   >
                     <h4 className="font-medium mb-2">{state}</h4>
                     <p className="text-sm text-muted-foreground">

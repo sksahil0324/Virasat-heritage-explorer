@@ -105,8 +105,13 @@ export default function AdminDashboard() {
   }
 
   if (!user) {
-    navigate("/auth?redirect=/admin");
-    return null;
+    // Redirect to auth page with admin redirect parameter
+    window.location.href = "/auth?redirect=/admin";
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
   }
 
   if (user.role !== "admin") {
@@ -122,13 +127,16 @@ export default function AdminDashboard() {
           <CardContent className="space-y-4">
             <div className="p-4 bg-muted rounded-lg">
               <p className="text-sm mb-3">
-                You are logged in as: <strong>{user.email}</strong>
+                You are logged in as: <strong>{user.email || "No email found"}</strong>
               </p>
               <p className="text-sm mb-3">
                 To gain admin access, run this command in your terminal:
               </p>
               <code className="block p-3 bg-background rounded text-xs break-all">
-                npx convex run makeAdmin:makeUserAdmin '{`{"email": "${user.email}"}`}'
+                {user.email 
+                  ? `npx convex run makeAdmin:makeUserAdmin '{"email": "${user.email}"}'`
+                  : "Please sign in with an email account (not as guest) to become an admin"
+                }
               </code>
             </div>
             <div className="flex gap-2">

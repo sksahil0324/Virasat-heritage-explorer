@@ -37,38 +37,38 @@ export default function InteractiveMap() {
     return acc;
   }, {} as Record<string, typeof sites>);
 
-  // Indian states with approximate coordinates for visualization
+  // Improved Indian states with better coordinates for visualization
   const statePositions: Record<string, { x: number; y: number }> = {
-    "Jammu and Kashmir": { x: 20, y: 10 },
-    "Himachal Pradesh": { x: 25, y: 15 },
-    "Punjab": { x: 22, y: 18 },
-    "Uttarakhand": { x: 30, y: 18 },
-    "Haryana": { x: 25, y: 22 },
-    "Delhi": { x: 26, y: 23 },
-    "Uttar Pradesh": { x: 35, y: 28 },
-    "Rajasthan": { x: 18, y: 30 },
-    "Bihar": { x: 45, y: 30 },
-    "Gujarat": { x: 12, y: 38 },
-    "Madhya Pradesh": { x: 30, y: 38 },
-    "Jharkhand": { x: 48, y: 38 },
-    "West Bengal": { x: 52, y: 35 },
-    "Maharashtra": { x: 20, y: 50 },
-    "Chhattisgarh": { x: 38, y: 48 },
-    "Odisha": { x: 48, y: 50 },
-    "Telangana": { x: 32, y: 58 },
-    "Andhra Pradesh": { x: 35, y: 62 },
-    "Karnataka": { x: 25, y: 62 },
-    "Goa": { x: 20, y: 60 },
-    "Tamil Nadu": { x: 32, y: 72 },
-    "Kerala": { x: 25, y: 72 },
-    "Assam": { x: 60, y: 30 },
-    "Meghalaya": { x: 58, y: 33 },
-    "Manipur": { x: 62, y: 35 },
-    "Tripura": { x: 58, y: 38 },
-    "Mizoram": { x: 60, y: 40 },
-    "Nagaland": { x: 62, y: 32 },
-    "Arunachal Pradesh": { x: 65, y: 25 },
-    "Sikkim": { x: 52, y: 25 },
+    "Jammu and Kashmir": { x: 25, y: 8 },
+    "Himachal Pradesh": { x: 28, y: 14 },
+    "Punjab": { x: 25, y: 16 },
+    "Uttarakhand": { x: 32, y: 16 },
+    "Haryana": { x: 28, y: 20 },
+    "Delhi": { x: 30, y: 21 },
+    "Uttar Pradesh": { x: 36, y: 26 },
+    "Rajasthan": { x: 22, y: 28 },
+    "Bihar": { x: 44, y: 28 },
+    "Gujarat": { x: 16, y: 36 },
+    "Madhya Pradesh": { x: 30, y: 36 },
+    "Jharkhand": { x: 46, y: 36 },
+    "West Bengal": { x: 50, y: 33 },
+    "Maharashtra": { x: 24, y: 48 },
+    "Chhattisgarh": { x: 38, y: 46 },
+    "Odisha": { x: 46, y: 48 },
+    "Telangana": { x: 32, y: 56 },
+    "Andhra Pradesh": { x: 34, y: 62 },
+    "Karnataka": { x: 28, y: 60 },
+    "Goa": { x: 24, y: 58 },
+    "Tamil Nadu": { x: 32, y: 70 },
+    "Kerala": { x: 28, y: 72 },
+    "Assam": { x: 58, y: 28 },
+    "Meghalaya": { x: 56, y: 31 },
+    "Manipur": { x: 60, y: 33 },
+    "Tripura": { x: 56, y: 34 },
+    "Mizoram": { x: 58, y: 36 },
+    "Nagaland": { x: 60, y: 30 },
+    "Arunachal Pradesh": { x: 62, y: 24 },
+    "Sikkim": { x: 50, y: 26 },
   };
 
   return (
@@ -85,34 +85,43 @@ export default function InteractiveMap() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="relative w-full h-[600px] bg-muted/30 rounded-lg overflow-hidden border">
-            {/* Simplified India Map Background */}
-            <div className="absolute inset-0 flex items-center justify-center opacity-10">
-              <svg viewBox="0 0 100 100" className="w-full h-full">
+          <div className="relative w-full h-[600px] bg-gradient-to-br from-muted/20 via-muted/10 to-background rounded-lg overflow-hidden border-2 border-primary/20">
+            {/* Better India Map Background with gradient overlay */}
+            <div className="absolute inset-0 flex items-center justify-center">
+              <svg viewBox="0 0 100 100" className="w-full h-full opacity-20">
+                {/* More accurate India outline */}
                 <path
-                  d="M 20,10 L 30,15 L 35,20 L 40,18 L 50,25 L 55,30 L 60,28 L 65,35 L 60,40 L 55,45 L 50,50 L 45,55 L 40,60 L 35,65 L 30,70 L 28,75 L 32,78 L 35,75 L 40,72 L 42,68 L 38,65 L 35,62 L 30,60 L 25,58 L 22,55 L 20,50 L 18,45 L 15,40 L 12,35 L 15,30 L 18,25 L 20,20 Z"
+                  d="M 28,10 L 32,12 L 35,14 L 38,13 L 42,15 L 45,17 L 48,16 L 52,18 L 55,22 L 58,24 L 62,26 L 64,30 L 62,34 L 60,36 L 58,38 L 56,40 L 54,42 L 52,45 L 50,48 L 48,52 L 46,55 L 44,58 L 42,60 L 40,63 L 38,66 L 36,68 L 34,70 L 32,72 L 30,74 L 28,75 L 30,76 L 32,77 L 34,76 L 36,74 L 38,72 L 40,70 L 42,68 L 40,66 L 38,64 L 36,62 L 34,60 L 32,58 L 30,56 L 28,54 L 26,52 L 24,50 L 22,48 L 20,46 L 18,44 L 16,42 L 15,40 L 14,38 L 16,36 L 18,34 L 20,32 L 22,30 L 24,28 L 26,26 L 28,24 L 26,22 L 24,20 L 22,18 L 20,16 L 22,14 L 24,12 L 26,10 Z"
                   fill="currentColor"
                   stroke="currentColor"
-                  strokeWidth="0.5"
+                  strokeWidth="0.3"
+                  className="text-primary/30"
                 />
               </svg>
             </div>
 
-            {/* Site Markers */}
+            {/* Site Markers with improved spacing */}
             {sites?.map((site, index) => {
               const position = statePositions[site.state] || { x: 50, y: 50 };
-              const offset = (index % 3) * 3; // Slight offset for multiple sites in same state
+              const stateIndex = sitesByState?.[site.state]?.indexOf(site) || 0;
+              const totalInState = sitesByState?.[site.state]?.length || 1;
+              
+              // Better circular distribution for multiple sites in same state
+              const angle = (stateIndex / totalInState) * Math.PI * 2;
+              const radius = totalInState > 1 ? 2 : 0;
+              const offsetX = Math.cos(angle) * radius;
+              const offsetY = Math.sin(angle) * radius;
 
               return (
                 <motion.div
                   key={site._id}
                   initial={{ scale: 0, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
-                  transition={{ delay: index * 0.02 }}
-                  className="absolute cursor-pointer group"
+                  transition={{ delay: index * 0.02, type: "spring", stiffness: 200 }}
+                  className="absolute cursor-pointer group z-10"
                   style={{
-                    left: `${position.x + offset}%`,
-                    top: `${position.y + offset}%`,
+                    left: `${position.x + offsetX}%`,
+                    top: `${position.y + offsetY}%`,
                     transform: "translate(-50%, -50%)",
                   }}
                   onClick={() => setSelectedSite(site)}
@@ -120,22 +129,41 @@ export default function InteractiveMap() {
                   onMouseLeave={() => setHoveredState(null)}
                 >
                   <motion.div
-                    whileHover={{ scale: 1.3 }}
+                    whileHover={{ scale: 1.4 }}
                     whileTap={{ scale: 0.9 }}
                     className="relative"
                   >
                     <MapPin
-                      className={`h-6 w-6 ${
+                      className={`h-7 w-7 drop-shadow-2xl transition-all duration-300 ${
                         site.isUNESCO
-                          ? "text-yellow-500 fill-yellow-500"
+                          ? "text-yellow-400 fill-yellow-400"
                           : "text-primary fill-primary"
-                      } drop-shadow-lg transition-colors`}
+                      } ${selectedSite?._id === site._id ? "scale-125" : ""}`}
                     />
+                    {/* Pulse effect for selected site */}
+                    {selectedSite?._id === site._id && (
+                      <motion.div
+                        className="absolute inset-0 rounded-full"
+                        animate={{
+                          scale: [1, 1.5, 1],
+                          opacity: [0.5, 0, 0.5],
+                        }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          ease: "easeInOut",
+                        }}
+                      >
+                        <div className={`w-full h-full rounded-full ${
+                          site.isUNESCO ? "bg-yellow-400" : "bg-primary"
+                        }`} />
+                      </motion.div>
+                    )}
                     {hoveredState === site.state && (
                       <motion.div
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
-                        className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-background border rounded shadow-lg whitespace-nowrap text-xs z-10"
+                        className="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 bg-background/95 backdrop-blur border-2 border-primary/30 rounded-lg shadow-xl whitespace-nowrap text-xs font-medium z-20"
                       >
                         {site.name}
                       </motion.div>
@@ -145,17 +173,17 @@ export default function InteractiveMap() {
               );
             })}
 
-            {/* Legend */}
-            <div className="absolute bottom-4 left-4 bg-background/95 backdrop-blur border rounded-lg p-3 shadow-lg">
-              <div className="text-xs font-medium mb-2">Legend</div>
-              <div className="flex flex-col gap-1.5 text-xs">
+            {/* Enhanced Legend */}
+            <div className="absolute bottom-4 left-4 bg-background/95 backdrop-blur-md border-2 border-primary/20 rounded-xl p-4 shadow-2xl">
+              <div className="text-xs font-semibold mb-3 text-primary">Legend</div>
+              <div className="flex flex-col gap-2 text-xs">
                 <div className="flex items-center gap-2">
-                  <MapPin className="h-4 w-4 text-yellow-500 fill-yellow-500" />
-                  <span>UNESCO Site</span>
+                  <MapPin className="h-5 w-5 text-yellow-400 fill-yellow-400" />
+                  <span className="font-medium">UNESCO Site</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <MapPin className="h-4 w-4 text-primary fill-primary" />
-                  <span>Heritage Site</span>
+                  <MapPin className="h-5 w-5 text-primary fill-primary" />
+                  <span className="font-medium">Heritage Site</span>
                 </div>
               </div>
             </div>
@@ -249,7 +277,7 @@ export default function InteractiveMap() {
                   <motion.div
                     key={state}
                     whileHover={{ scale: 1.02 }}
-                    className="p-4 border rounded-lg hover:border-primary/50 transition-colors cursor-pointer"
+                    className="p-4 border-2 border-primary/20 rounded-lg hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer"
                     onClick={() => setHoveredState(state)}
                   >
                     <h4 className="font-medium mb-2">{state}</h4>

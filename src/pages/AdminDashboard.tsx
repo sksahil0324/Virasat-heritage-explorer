@@ -45,7 +45,7 @@ type SiteFormData = {
 };
 
 export default function AdminDashboard() {
-  const { isLoading: authLoading, user } = useAuth();
+  const { isLoading: authLoading, user, signOut } = useAuth();
   const navigate = useNavigate();
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
@@ -127,19 +127,44 @@ export default function AdminDashboard() {
           <CardContent className="space-y-4">
             <div className="p-4 bg-muted rounded-lg">
               <p className="text-sm mb-3">
-                You are logged in as: <strong>{user.email || "No email found"}</strong>
+                You are logged in as: <strong>{user.email || "Guest (No email)"}</strong>
               </p>
-              <p className="text-sm mb-3">
-                To gain admin access, run this command in your terminal:
-              </p>
-              <code className="block p-3 bg-background rounded text-xs break-all">
-                {user.email 
-                  ? `npx convex run makeAdmin:makeUserAdmin '{"email": "${user.email}"}'`
-                  : "Please sign in with an email account (not as guest) to become an admin"
-                }
-              </code>
+              {user.email ? (
+                <>
+                  <p className="text-sm mb-3">
+                    To gain admin access, run this command in your terminal:
+                  </p>
+                  <code className="block p-3 bg-background rounded text-xs break-all">
+                    npx convex run makeAdmin:makeUserAdmin '{"{"}\"email\": \"{user.email}\"{"}"}' 
+                  </code>
+                  <p className="text-sm mt-3 text-muted-foreground">
+                    After running the command, click "Refresh Page" below.
+                  </p>
+                </>
+              ) : (
+                <>
+                  <p className="text-sm mb-3 text-amber-600 font-medium">
+                    ⚠️ You are signed in as a guest. Guests cannot become admins.
+                  </p>
+                  <p className="text-sm mb-3">
+                    Please sign out and sign in with an email account to gain admin access.
+                  </p>
+                </>
+              )}
             </div>
             <div className="flex gap-2">
+              {!user.email && (
+                <Button 
+                  variant="default" 
+                  className="flex-1"
+                  onClick={async () => {
+                    await signOut();
+                    window.location.href = "/auth?redirect=/admin";
+                  }}
+                >
+                  Sign Out & Login with Email
+                </Button>
+              )}
               <Button 
                 variant="outline" 
                 className="flex-1"
@@ -147,12 +172,14 @@ export default function AdminDashboard() {
               >
                 Go Home
               </Button>
-              <Button 
-                className="flex-1"
-                onClick={() => window.location.reload()}
-              >
-                Refresh Page
-              </Button>
+              {user.email && (
+                <Button 
+                  className="flex-1"
+                  onClick={() => window.location.reload()}
+                >
+                  Refresh Page
+                </Button>
+              )}
             </div>
           </CardContent>
         </Card>

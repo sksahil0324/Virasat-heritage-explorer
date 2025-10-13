@@ -1,9 +1,15 @@
-import { internalMutation } from "./_generated/server";
+import { mutation } from "./_generated/server";
 import { v } from "convex/values";
 
-export const seedHeritageSites = internalMutation({
-  args: { userId: v.id("users") },
+export const seedHeritageSites = mutation({
+  args: {},
   handler: async (ctx, args) => {
+    // Get the first user or use a system user ID
+    const users = await ctx.db.query("users").collect();
+    const userId = users.length > 0 ? users[0]._id : await ctx.db.insert("users", {
+      email: "system@virasat.com",
+      role: "admin",
+    });
     const sites = [
       {
         name: "Taj Mahal",
@@ -24,7 +30,6 @@ export const seedHeritageSites = internalMutation({
         community: "The local community includes descendants of the original craftsmen who still practice traditional marble inlay work. The area hosts annual Taj Mahotsav celebrating local arts and crafts.",
         viewCount: 0,
         isPublished: true,
-        createdBy: args.userId,
       },
       {
         name: "Hampi",
@@ -45,7 +50,6 @@ export const seedHeritageSites = internalMutation({
         community: "The local community includes temple priests, traditional musicians, and artisans. Many families have lived here for generations, maintaining ancient traditions and rituals.",
         viewCount: 0,
         isPublished: true,
-        createdBy: args.userId,
       },
       {
         name: "Khajuraho Temples",
@@ -66,7 +70,6 @@ export const seedHeritageSites = internalMutation({
         community: "Local artisans continue the tradition of stone carving. The community celebrates Mahashivratri with great fervor, and traditional dance forms are passed down through generations.",
         viewCount: 0,
         isPublished: true,
-        createdBy: args.userId,
       },
       {
         name: "Konark Sun Temple",
@@ -87,7 +90,6 @@ export const seedHeritageSites = internalMutation({
         community: "Local Gotipua dancers (young boys performing Odissi) maintain ancient traditions. Fishing communities nearby celebrate Magha Saptami with ritual bathing. Stone carvers continue traditional crafts.",
         viewCount: 0,
         isPublished: true,
-        createdBy: args.userId,
       },
       {
         name: "Ajanta Caves",
@@ -108,7 +110,6 @@ export const seedHeritageSites = internalMutation({
         community: "Local guides are descendants of families who've lived near the caves for generations. Buddhist monks occasionally visit for meditation. The community celebrates Buddha Purnima with special prayers.",
         viewCount: 0,
         isPublished: true,
-        createdBy: args.userId,
       },
       {
         name: "Mysore Palace",
@@ -129,7 +130,6 @@ export const seedHeritageSites = internalMutation({
         community: "The Wadiyar royal family still resides in a portion of the palace. Local artisans maintain traditional crafts like sandalwood carving, silk weaving, and incense making. The community celebrates Dasara with 10 days of festivities.",
         viewCount: 0,
         isPublished: true,
-        createdBy: args.userId,
       },
       {
         name: "Qutub Minar",
@@ -150,7 +150,6 @@ export const seedHeritageSites = internalMutation({
         community: "The area is surrounded by urban Delhi but maintains historical significance. Local historians and archaeologists conduct regular studies. The community celebrates Qutub Festival showcasing classical music and dance.",
         viewCount: 0,
         isPublished: true,
-        createdBy: args.userId,
       },
       {
         name: "Meenakshi Temple",
@@ -171,7 +170,6 @@ export const seedHeritageSites = internalMutation({
         community: "Temple priests belong to families serving for generations. The community includes traditional musicians, dancers, and flower vendors. Daily rituals involve hundreds of people maintaining ancient traditions.",
         viewCount: 0,
         isPublished: true,
-        createdBy: args.userId,
       },
       {
         name: "Hawa Mahal",
@@ -192,7 +190,6 @@ export const seedHeritageSites = internalMutation({
         community: "Local artisans specialize in block printing, blue pottery, and jewelry making. The community celebrates Teej and Gangaur festivals with processions passing by the palace.",
         viewCount: 0,
         isPublished: true,
-        createdBy: args.userId,
       },
       {
         name: "Golden Temple (Harmandir Sahib)",
@@ -213,7 +210,6 @@ export const seedHeritageSites = internalMutation({
         community: "Volunteers (sewadars) from around the world serve in the langar. The community maintains the tradition of kar seva (voluntary service). Nagar Kirtan processions celebrate Sikh festivals.",
         viewCount: 0,
         isPublished: true,
-        createdBy: args.userId,
       },
       {
         name: "Ellora Caves",
@@ -234,7 +230,6 @@ export const seedHeritageSites = internalMutation({
         community: "Local guides belong to families with generations of knowledge. Buddhist monks visit for meditation. The community celebrates festivals from all three religions represented in the caves.",
         viewCount: 0,
         isPublished: true,
-        createdBy: args.userId,
       },
       {
         name: "Amer Fort",
@@ -255,7 +250,6 @@ export const seedHeritageSites = internalMutation({
         community: "Local communities include descendants of royal servants, traditional musicians, and artisans. Elephant caretakers maintain centuries-old traditions. The community celebrates Teej and Gangaur with royal processions.",
         viewCount: 0,
         isPublished: true,
-        createdBy: args.userId,
       },
       {
         name: "Victoria Memorial",
@@ -276,7 +270,6 @@ export const seedHeritageSites = internalMutation({
         community: "The area is a cultural hub with artists, photographers, and historians. The community celebrates Durga Puja with grand pandals nearby. Street vendors sell traditional Bengali snacks.",
         viewCount: 0,
         isPublished: true,
-        createdBy: args.userId,
       },
       {
         name: "Sanchi Stupa",
@@ -297,7 +290,6 @@ export const seedHeritageSites = internalMutation({
         community: "Buddhist monks and scholars visit for study and meditation. Local communities maintain the site and celebrate Buddha Purnima. The area has a peaceful, spiritual atmosphere.",
         viewCount: 0,
         isPublished: true,
-        createdBy: args.userId,
       },
       {
         name: "Charminar",
@@ -318,7 +310,6 @@ export const seedHeritageSites = internalMutation({
         community: "The area is a vibrant commercial hub with pearl traders, bangle sellers, and traditional craftsmen. The community celebrates Ramadan with special fervor. Old City culture thrives around Charminar.",
         viewCount: 0,
         isPublished: true,
-        createdBy: args.userId,
       },
       {
         name: "Jaisalmer Fort",
@@ -339,7 +330,6 @@ export const seedHeritageSites = internalMutation({
         community: "Brahmin and Rajput families have lived here for generations. Traditional musicians, craftsmen, and shopkeepers maintain old customs. The community celebrates Gangaur and Teej festivals.",
         viewCount: 0,
         isPublished: true,
-        createdBy: args.userId,
       },
       {
         name: "Mahabodhi Temple",
@@ -360,7 +350,6 @@ export const seedHeritageSites = internalMutation({
         community: "Buddhist monks from around the world reside here. Local communities support pilgrims and maintain the site. The area has Tibetan, Thai, Japanese, and other international Buddhist communities.",
         viewCount: 0,
         isPublished: true,
-        createdBy: args.userId,
       },
       {
         name: "Brihadeeswarar Temple",
@@ -381,7 +370,6 @@ export const seedHeritageSites = internalMutation({
         community: "Temple priests belong to families serving for over 1,000 years. The community includes traditional musicians, dancers, and artisans. Thanjavur is known for classical music and art.",
         viewCount: 0,
         isPublished: true,
-        createdBy: args.userId,
       },
       {
         name: "Red Fort",
@@ -402,7 +390,6 @@ export const seedHeritageSites = internalMutation({
         community: "The area is surrounded by Old Delhi's vibrant markets. The community celebrates Independence Day with patriotic fervor. Local historians and guides share stories of Mughal glory.",
         viewCount: 0,
         isPublished: true,
-        createdBy: args.userId,
       },
       {
         name: "Gol Gumbaz",
@@ -423,7 +410,6 @@ export const seedHeritageSites = internalMutation({
         community: "Local guides share stories of the Adil Shahi dynasty. The community celebrates Urs festivals at nearby Sufi shrines. Traditional musicians perform qawwalis.",
         viewCount: 0,
         isPublished: true,
-        createdBy: args.userId,
       },
       {
         name: "Rani ki Vav",
@@ -444,7 +430,6 @@ export const seedHeritageSites = internalMutation({
         community: "Local communities include descendants of ancient craftsmen. Patan is famous for Patola silk weaving, a tradition passed through generations. The community celebrates Navratri with traditional Garba.",
         viewCount: 0,
         isPublished: true,
-        createdBy: args.userId,
       },
       {
         name: "Fatehpur Sikri",
@@ -465,7 +450,6 @@ export const seedHeritageSites = internalMutation({
         community: "Local communities include descendants of Mughal-era craftsmen. The area around Salim Chishti's tomb is maintained by Sufi devotees. Traditional marble inlay work continues.",
         viewCount: 0,
         isPublished: true,
-        createdBy: args.userId,
       },
       {
         name: "Nalanda University Ruins",
@@ -486,7 +470,6 @@ export const seedHeritageSites = internalMutation({
         community: "Buddhist scholars and archaeologists visit for research. Local communities maintain the site. A new Nalanda University was established nearby in 2014, reviving the ancient tradition.",
         viewCount: 0,
         isPublished: true,
-        createdBy: args.userId,
       },
       {
         name: "Elephanta Caves",
@@ -507,7 +490,6 @@ export const seedHeritageSites = internalMutation({
         community: "Local fishing communities live on the island. Guides share stories passed through generations. The community celebrates Mahashivratri with special fervor. Mumbai's art community organizes cultural events.",
         viewCount: 0,
         isPublished: true,
-        createdBy: args.userId,
       },
       {
         name: "Chittorgarh Fort",
@@ -528,7 +510,6 @@ export const seedHeritageSites = internalMutation({
         community: "Local communities include descendants of Rajput warriors. Traditional folk musicians perform ballads of valor. The community celebrates Jauhar Mela and Meera Mahotsav annually.",
         viewCount: 0,
         isPublished: true,
-        createdBy: args.userId,
       },
       {
         name: "Sundarbans National Park",
@@ -549,7 +530,6 @@ export const seedHeritageSites = internalMutation({
         community: "Local communities include fishermen, honey collectors, and forest dwellers. They have unique relationship with tigers, worshipping them while fearing them. Traditional boat-making and fishing techniques passed through generations.",
         viewCount: 0,
         isPublished: true,
-        createdBy: args.userId,
       },
       {
         name: "Jantar Mantar",
@@ -570,12 +550,14 @@ export const seedHeritageSites = internalMutation({
         community: "Local astronomers and scientists study the instruments. The community celebrates science festivals. Traditional astrologers still use the observatory for calculations.",
         viewCount: 0,
         isPublished: true,
-        createdBy: args.userId,
       },
     ];
 
     for (const site of sites) {
-      await ctx.db.insert("heritageSites", site);
+      await ctx.db.insert("heritageSites", {
+        ...site,
+        createdBy: userId,
+      });
     }
 
     return { success: true, count: sites.length };

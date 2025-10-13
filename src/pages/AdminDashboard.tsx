@@ -110,7 +110,7 @@ export default function AdminDashboard() {
   }
 
   if (user.role !== "admin") {
-    toast.error("Access denied. Admin privileges required.");
+    toast.error("Access denied. You need admin privileges. Please contact the administrator or run: npx convex run makeAdmin:makeUserAdmin '{\"email\": \"" + user.email + "\"}'");
     navigate("/");
     return null;
   }

@@ -141,7 +141,7 @@ export default function Landing() {
                         </Button>
                       </motion.div>
                       <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                        <Button onClick={() => navigate("/admin")} size="sm" variant="outline" className="border-amber-500/50">
+                        <Button onClick={() => navigate("/auth?redirect=/admin")} size="sm" variant="outline" className="border-amber-500/50">
                           <Shield className="mr-2 h-4 w-4" />
                           Admin Login
                         </Button>

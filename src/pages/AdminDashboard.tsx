@@ -105,14 +105,51 @@ export default function AdminDashboard() {
   }
 
   if (!user) {
-    navigate("/auth");
+    navigate("/auth?redirect=/admin");
     return null;
   }
 
   if (user.role !== "admin") {
-    toast.error("Access denied. You need admin privileges. Please contact the administrator or run: npx convex run makeAdmin:makeUserAdmin '{\"email\": \"" + user.email + "\"}'");
-    navigate("/");
-    return null;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <Card className="max-w-md w-full mx-4">
+          <CardHeader>
+            <CardTitle className="text-2xl text-center">Access Denied</CardTitle>
+            <CardDescription className="text-center">
+              Admin privileges required
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="p-4 bg-muted rounded-lg">
+              <p className="text-sm mb-3">
+                You are logged in as: <strong>{user.email}</strong>
+              </p>
+              <p className="text-sm mb-3">
+                To gain admin access, run this command in your terminal:
+              </p>
+              <code className="block p-3 bg-background rounded text-xs break-all">
+                npx convex run makeAdmin:makeUserAdmin '{`{"email": "${user.email}"}`}'
+              </code>
+            </div>
+            <div className="flex gap-2">
+              <Button 
+                variant="outline" 
+                className="flex-1"
+                onClick={() => navigate("/")}
+              >
+                Go Home
+              </Button>
+              <Button 
+                className="flex-1"
+                onClick={() => window.location.reload()}
+              >
+                Refresh Page
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
   }
 
   const resetForm = () => {

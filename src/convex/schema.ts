@@ -16,28 +16,94 @@ export const roleValidator = v.union(
 );
 export type Role = Infer<typeof roleValidator>;
 
+// Heritage site categories
+export const SITE_CATEGORIES = {
+  TEMPLE: "temple",
+  FORT: "fort",
+  PALACE: "palace",
+  MONUMENT: "monument",
+  MUSEUM: "museum",
+  ARCHAEOLOGICAL: "archaeological",
+  NATURAL: "natural",
+  OTHER: "other",
+} as const;
+
+export const categoryValidator = v.union(
+  v.literal(SITE_CATEGORIES.TEMPLE),
+  v.literal(SITE_CATEGORIES.FORT),
+  v.literal(SITE_CATEGORIES.PALACE),
+  v.literal(SITE_CATEGORIES.MONUMENT),
+  v.literal(SITE_CATEGORIES.MUSEUM),
+  v.literal(SITE_CATEGORIES.ARCHAEOLOGICAL),
+  v.literal(SITE_CATEGORIES.NATURAL),
+  v.literal(SITE_CATEGORIES.OTHER),
+);
+
 const schema = defineSchema(
   {
     // default auth tables using convex auth.
-    ...authTables, // do not remove or modify
+    ...authTables,
 
-    // the users table is the default users table that is brought in by the authTables
     users: defineTable({
-      name: v.optional(v.string()), // name of the user. do not remove
-      image: v.optional(v.string()), // image of the user. do not remove
-      email: v.optional(v.string()), // email of the user. do not remove
-      emailVerificationTime: v.optional(v.number()), // email verification time. do not remove
-      isAnonymous: v.optional(v.boolean()), // is the user anonymous. do not remove
+      name: v.optional(v.string()),
+      image: v.optional(v.string()),
+      email: v.optional(v.string()),
+      emailVerificationTime: v.optional(v.number()),
+      isAnonymous: v.optional(v.boolean()),
+      role: v.optional(roleValidator),
+    }).index("email", ["email"]),
 
-      role: v.optional(roleValidator), // role of the user. do not remove
-    }).index("email", ["email"]), // index for the email. do not remove or modify
+    // Heritage sites table
+    heritageSites: defineTable({
+      name: v.string(),
+      description: v.string(),
+      historicalSignificance: v.string(),
+      category: categoryValidator,
+      state: v.string(),
+      city: v.string(),
+      latitude: v.optional(v.number()),
+      longitude: v.optional(v.number()),
+      isUNESCO: v.boolean(),
+      timePeriod: v.optional(v.string()),
+      visitorGuidelines: v.optional(v.string()),
+      viewCount: v.number(),
+      isPublished: v.boolean(),
+      createdBy: v.id("users"),
+    })
+      .index("by_state", ["state"])
+      .index("by_category", ["category"])
+      .index("by_published", ["isPublished"])
+      .index("by_unesco", ["isUNESCO"])
+      .index("by_view_count", ["viewCount"]),
 
-    // add other tables here
+    // Media files for heritage sites
+    media: defineTable({
+      siteId: v.id("heritageSites"),
+      type: v.union(v.literal("image"), v.literal("video"), v.literal("model3d"), v.literal("panorama")),
+      storageId: v.id("_storage"),
+      url: v.string(),
+      caption: v.optional(v.string()),
+      isPrimary: v.boolean(),
+    }).index("by_site", ["siteId"]),
 
-    // tableName: defineTable({
-    //   ...
-    //   // table fields
-    // }).index("by_field", ["field"])
+    // Audio summaries
+    audioSummaries: defineTable({
+      siteId: v.id("heritageSites"),
+      storageId: v.id("_storage"),
+      url: v.string(),
+      duration: v.optional(v.number()),
+      language: v.string(),
+      playCount: v.number(),
+    }).index("by_site", ["siteId"]),
+
+    // User favorites
+    favorites: defineTable({
+      userId: v.id("users"),
+      siteId: v.id("heritageSites"),
+    })
+      .index("by_user", ["userId"])
+      .index("by_site", ["siteId"])
+      .index("by_user_and_site", ["userId", "siteId"]),
   },
   {
     schemaValidation: false,

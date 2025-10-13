@@ -13,9 +13,13 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as audio from "../audio.js";
 import type * as auth_emailOtp from "../auth/emailOtp.js";
 import type * as auth from "../auth.js";
+import type * as favorites from "../favorites.js";
+import type * as heritageSites from "../heritageSites.js";
 import type * as http from "../http.js";
+import type * as media from "../media.js";
 import type * as users from "../users.js";
 
 /**
@@ -27,9 +31,13 @@ import type * as users from "../users.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  audio: typeof audio;
   "auth/emailOtp": typeof auth_emailOtp;
   auth: typeof auth;
+  favorites: typeof favorites;
+  heritageSites: typeof heritageSites;
   http: typeof http;
+  media: typeof media;
   users: typeof users;
 }>;
 export declare const api: FilterApi<

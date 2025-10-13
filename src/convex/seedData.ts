@@ -10,6 +10,7 @@ export const seedHeritageSites = mutation({
       email: "system@virasat.com",
       role: "admin",
     });
+    
     const sites = [
       {
         name: "Taj Mahal",
@@ -28,6 +29,13 @@ export const seedHeritageSites = mutation({
         cuisine: "Agra is famous for Petha (sweet made from ash gourd), Mughlai cuisine including biryani, kebabs, and the rich Agra ka Petha.",
         stories: "The monument took 22 years and 20,000 artisans to complete. Master craftsmen were brought from Persia, Turkey, and Europe. Some say Shah Jahan cut off the hands of workers to prevent them from replicating the design.",
         community: "The local community includes descendants of the original craftsmen who still practice traditional marble inlay work. The area hosts annual Taj Mahotsav celebrating local arts and crafts.",
+        ticketPrice: "₹1050 for foreigners, ₹50 for Indians",
+        openingHours: "Sunrise to Sunset (Closed on Fridays)",
+        bestTimeToVisit: "October to March",
+        timezone: "Asia/Kolkata",
+        view360Url: "https://www.google.com/maps/@27.1751448,78.0421422,3a,75y,90t/data=!3m8!1e1!3m6!1sAF1QipNRAcB7g3K_YvEKdGlvKLjvJr8qKJvJr8qKJvJr8qK!2e10!3e11!6shttps:%2F%2Flh5.googleusercontent.com%2Fp%2AF1QipNRAcB7g3K_YvEKdGlvKLjvJr8qKJvJr8qKJvJr8qK%3Dw203-h100-k-no-pi-0-ya0-ro-0-fo100!7i10240!8i5120",
+        view3dUrl: "https://sketchfab.com/3d-models/taj-mahal-agra-india",
+        imageUrl: "https://images.unsplash.com/photo-1564507592333-c60657eea523?w=800",
         viewCount: 0,
         isPublished: true,
       },
@@ -554,10 +562,23 @@ export const seedHeritageSites = mutation({
     ];
 
     for (const site of sites) {
-      await ctx.db.insert("heritageSites", {
+      const siteId = await ctx.db.insert("heritageSites", {
         ...site,
         createdBy: userId,
       });
+      
+      // Add media for sites with imageUrl
+      if (site.imageUrl) {
+        // Note: In production, you would upload actual files to storage
+        // For now, we're using external URLs as placeholders
+        await ctx.db.insert("media", {
+          siteId: siteId,
+          type: "image",
+          url: site.imageUrl,
+          caption: `${site.name} - Main View`,
+          isPrimary: true,
+        });
+      }
     }
 
     return { success: true, count: sites.length };

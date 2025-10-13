@@ -91,7 +91,7 @@ const schema = defineSchema(
     media: defineTable({
       siteId: v.id("heritageSites"),
       type: v.union(v.literal("image"), v.literal("video"), v.literal("model3d"), v.literal("panorama")),
-      storageId: v.id("_storage"),
+      storageId: v.optional(v.id("_storage")),
       url: v.string(),
       caption: v.optional(v.string()),
       isPrimary: v.boolean(),

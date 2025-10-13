@@ -102,7 +102,13 @@ export default function AdminDashboard() {
     );
   }
 
-  if (!user || user.role !== "admin") {
+  if (!user) {
+    navigate("/auth");
+    return null;
+  }
+
+  if (user.role !== "admin") {
+    toast.error("Access denied. Admin privileges required.");
     navigate("/");
     return null;
   }

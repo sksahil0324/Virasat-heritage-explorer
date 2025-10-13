@@ -53,11 +53,13 @@ export default function AdminDashboard() {
   const [uploadingAudio, setUploadingAudio] = useState(false);
   const [uploadingMedia, setUploadingMedia] = useState(false);
 
-  const sites = useQuery(api.heritageSites.listAll);
-  const stats = useQuery(api.heritageSites.getStats);
+  // Only fetch data if user is authenticated and is an admin
+  const isAdmin = user?.role === "admin";
+  const sites = useQuery(api.heritageSites.listAll, isAdmin ? {} : "skip");
+  const stats = useQuery(api.heritageSites.getStats, isAdmin ? {} : "skip");
   const editingSite = useQuery(
     api.heritageSites.getById,
-    editingSiteId ? { id: editingSiteId } : "skip"
+    editingSiteId && isAdmin ? { id: editingSiteId } : "skip"
   );
   
   const createSite = useMutation(api.heritageSites.create);

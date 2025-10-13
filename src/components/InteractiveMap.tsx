@@ -300,8 +300,12 @@ export default function InteractiveMap() {
                 .map(([state, stateSites]) => (
                   <motion.div
                     key={state}
-                    whileHover={{ scale: 1.02 }}
-                    className="p-4 border-2 border-primary/20 rounded-lg hover:border-primary/50 hover:bg-primary/5 transition-all cursor-pointer"
+                    whileHover={{ 
+                      scale: 1.03,
+                      y: -3,
+                      transition: { duration: 0.3, ease: "easeOut" }
+                    }}
+                    className="p-4 border-2 border-primary/20 rounded-lg hover:border-primary/50 hover:bg-primary/5 hover:shadow-md transition-all duration-300 ease-out cursor-pointer"
                     onClick={() => setSelectedState(state)}
                   >
                     <h4 className="font-medium mb-2">{state}</h4>

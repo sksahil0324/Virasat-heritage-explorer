@@ -241,9 +241,14 @@ export default function Explore() {
                         initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.05 }}
+                        whileHover={{ 
+                          scale: 1.03, 
+                          y: -5,
+                          transition: { duration: 0.3, ease: "easeOut" }
+                        }}
                       >
                         <Card
-                          className="h-full cursor-pointer hover:border-primary/50 transition-colors"
+                          className="h-full cursor-pointer border-2 border-transparent hover:border-primary/50 transition-all duration-300 ease-out hover:shadow-lg"
                           onClick={() => navigate(`/site/${site._id}`)}
                         >
                           <CardHeader>
@@ -324,9 +329,14 @@ export default function Explore() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.05 }}
+                  whileHover={{ 
+                    scale: 1.03, 
+                    y: -5,
+                    transition: { duration: 0.3, ease: "easeOut" }
+                  }}
                 >
                   <Card
-                    className="h-full cursor-pointer hover:border-primary/50 transition-colors"
+                    className="h-full cursor-pointer border-2 border-transparent hover:border-primary/50 transition-all duration-300 ease-out hover:shadow-lg"
                     onClick={() => navigate(`/site/${site._id}`)}
                   >
                     <CardHeader>
@@ -373,12 +383,17 @@ export default function Explore() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.05 }}
+                  whileHover={{ 
+                    scale: 1.03, 
+                    y: -5,
+                    transition: { duration: 0.3, ease: "easeOut" }
+                  }}
                 >
                   <Card
-                    className="h-full cursor-pointer hover:border-primary/50 transition-colors overflow-hidden"
+                    className="h-full cursor-pointer border-2 border-transparent hover:border-primary/50 transition-all duration-300 ease-out hover:shadow-lg overflow-hidden"
                     onClick={() => navigate(`/site/${site._id}`)}
                   >
-                    <div className="aspect-video bg-muted flex items-center justify-center">
+                    <div className="aspect-video bg-muted flex items-center justify-center transition-all duration-300 ease-out hover:bg-muted/80">
                       <ImageIcon className="h-12 w-12 text-muted-foreground" />
                     </div>
                     <CardHeader>
@@ -416,9 +431,14 @@ export default function Explore() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.05 }}
+                  whileHover={{ 
+                    scale: 1.02, 
+                    y: -5,
+                    transition: { duration: 0.3, ease: "easeOut" }
+                  }}
                 >
                   <Card
-                    className="cursor-pointer hover:border-primary/50 transition-colors"
+                    className="cursor-pointer border-2 border-transparent hover:border-primary/50 transition-all duration-300 ease-out hover:shadow-lg"
                     onClick={() => navigate(`/site/${site._id}`)}
                   >
                     <CardHeader>
@@ -465,9 +485,14 @@ export default function Explore() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.05 }}
+                  whileHover={{ 
+                    scale: 1.02, 
+                    y: -5,
+                    transition: { duration: 0.3, ease: "easeOut" }
+                  }}
                 >
                   <Card
-                    className="cursor-pointer hover:border-primary/50 transition-colors"
+                    className="cursor-pointer border-2 border-transparent hover:border-primary/50 transition-all duration-300 ease-out hover:shadow-lg"
                     onClick={() => navigate(`/site/${site._id}`)}
                   >
                     <CardHeader>

@@ -220,6 +220,11 @@
 .custom-marker {
   background: transparent;
   border: none;
+  transition: transform 0.3s ease-out;
+}
+
+.custom-marker:hover {
+  transform: scale(1.15);
 }
 
 .state-tooltip {
@@ -229,6 +234,7 @@
   font-size: 12px !important;
   padding: 4px 8px !important;
   border-radius: 4px !important;
+  transition: all 0.2s ease-out !important;
 }
 
 .leaflet-popup-content-wrapper {
@@ -236,8 +242,22 @@
   color: var(--card-foreground) !important;
   border-radius: 8px !important;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  transition: all 0.3s ease-out !important;
 }
 
 .leaflet-popup-tip {
   background: var(--card) !important;
+}
+
+/* Smooth button transitions */
+button {
+  transition: all 0.3s ease-out !important;
+}
+
+button:hover {
+  transform: translateY(-1px);
+}
+
+button:active {
+  transform: translateY(0);
 }

@@ -20,6 +20,7 @@ import type * as favorites from "../favorites.js";
 import type * as heritageSites from "../heritageSites.js";
 import type * as http from "../http.js";
 import type * as media from "../media.js";
+import type * as seedData from "../seedData.js";
 import type * as users from "../users.js";
 
 /**
@@ -38,6 +39,7 @@ declare const fullApi: ApiFromModules<{
   heritageSites: typeof heritageSites;
   http: typeof http;
   media: typeof media;
+  seedData: typeof seedData;
   users: typeof users;
 }>;
 export declare const api: FilterApi<

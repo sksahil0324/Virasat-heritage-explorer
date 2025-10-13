@@ -69,6 +69,11 @@ const schema = defineSchema(
       viewCount: v.number(),
       isPublished: v.boolean(),
       createdBy: v.id("users"),
+      folkTales: v.optional(v.string()),
+      culturalHeritage: v.optional(v.string()),
+      cuisine: v.optional(v.string()),
+      stories: v.optional(v.string()),
+      community: v.optional(v.string()),
     })
       .index("by_state", ["state"])
       .index("by_category", ["category"])

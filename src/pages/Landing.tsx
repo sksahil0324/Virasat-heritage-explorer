@@ -52,25 +52,61 @@ export default function Landing() {
         className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 sticky top-0 z-50"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
-            <div className="flex items-center gap-3 cursor-pointer" onClick={() => navigate("/")}>
-              <img src="./logo.svg" alt="VIRASAT" className="h-8 w-8" />
-              <span className="text-xl font-bold tracking-tight">VIRASAT</span>
+          <div className="flex justify-between items-center h-20">
+            {/* Logo and Tagline */}
+            <div className="flex flex-col cursor-pointer" onClick={() => navigate("/")}>
+              <div className="flex items-center gap-3">
+                <img src="./logo_bg.svg" alt="VIRASAT" className="h-10 w-10" />
+                <div className="flex flex-col">
+                  <span className="text-2xl font-bold tracking-tight">VIRASAT</span>
+                  <span className="text-xs text-muted-foreground">Where Heritage Meets Technology</span>
+                </div>
+              </div>
             </div>
-            <div className="flex items-center gap-4">
+
+            {/* Navigation Menu */}
+            <div className="hidden lg:flex items-center gap-1">
+              <Button variant="ghost" onClick={() => navigate("/")} className="text-sm">
+                Home
+              </Button>
+              <Button variant="ghost" onClick={() => navigate("/explore")} className="text-sm">
+                Explore
+              </Button>
+              <Button variant="ghost" onClick={() => navigate("/explore")} className="text-sm">
+                Heritage Map
+              </Button>
+              <Button variant="ghost" onClick={() => navigate("/explore")} className="text-sm">
+                360° Experience
+              </Button>
+              <Button variant="ghost" onClick={() => navigate("/explore")} className="text-sm">
+                Gallery
+              </Button>
+              <Button variant="ghost" onClick={() => navigate("/explore")} className="text-sm">
+                Stories
+              </Button>
+              <Button variant="ghost" onClick={() => navigate("/explore")} className="text-sm">
+                Community
+              </Button>
+              <Button variant="ghost" onClick={() => navigate("/explore")} className="text-sm">
+                About
+              </Button>
+            </div>
+
+            {/* Auth Buttons */}
+            <div className="flex items-center gap-3">
               {!isLoading && (
                 <>
                   {isAuthenticated ? (
-                    <Button onClick={() => navigate("/explore")}>
-                      Explore Sites
+                    <Button onClick={() => navigate("/explore")} size="sm">
+                      Dashboard
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                   ) : (
                     <>
-                      <Button variant="ghost" onClick={() => navigate("/auth")}>
+                      <Button variant="ghost" onClick={() => navigate("/auth")} size="sm">
                         Sign In
                       </Button>
-                      <Button onClick={() => navigate("/auth")}>
+                      <Button onClick={() => navigate("/auth")} size="sm">
                         Get Started
                         <ArrowRight className="ml-2 h-4 w-4" />
                       </Button>

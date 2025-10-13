@@ -1,2 +1,3 @@
-<TabsTrigger value="360" disabled={!site.view360Url}>360° View</TabsTrigger>
-<TabsTrigger value="3d" disabled={!site.view3dUrl}>3D Model</TabsTrigger>
+<div className="aspect-video bg-muted flex items-center justify-center">
+  <ImageIcon className="h-12 w-12 text-muted-foreground" />
+</div>

@@ -28,7 +28,18 @@ export const list = query({
       filtered = filtered.filter((site) => site.isUNESCO);
     }
 
-    return filtered.sort((a, b) => b.viewCount - a.viewCount);
+    // Fetch media for each site
+    const sitesWithMedia = await Promise.all(
+      filtered.map(async (site) => {
+        const media = await ctx.db
+          .query("media")
+          .withIndex("by_site", (q) => q.eq("siteId", site._id))
+          .collect();
+        return { ...site, media };
+      })
+    );
+
+    return sitesWithMedia.sort((a, b) => b.viewCount - a.viewCount);
   },
 });
 

@@ -377,32 +377,43 @@ export default function Explore() {
             </motion.div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {sites?.map((site, index) => (
-                <motion.div
-                  key={site._id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                  whileHover={{ 
-                    scale: 1.03, 
-                    y: -5,
-                    transition: { duration: 0.3, ease: "easeOut" }
-                  }}
-                >
-                  <Card
-                    className="h-full cursor-pointer border-2 border-transparent hover:border-primary/50 transition-all duration-300 ease-out hover:shadow-lg overflow-hidden"
-                    onClick={() => navigate(`/site/${site._id}`)}
+              {sites?.map((site, index) => {
+                const primaryImage = site.media?.find((m: any) => m.isPrimary && m.type === "image");
+                return (
+                  <motion.div
+                    key={site._id}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.05 }}
+                    whileHover={{ 
+                      scale: 1.03, 
+                      y: -5,
+                      transition: { duration: 0.3, ease: "easeOut" }
+                    }}
                   >
-                    <div className="aspect-video bg-muted flex items-center justify-center transition-all duration-300 ease-out hover:bg-muted/80">
-                      <ImageIcon className="h-12 w-12 text-muted-foreground" />
-                    </div>
-                    <CardHeader>
-                      <CardTitle className="text-lg">{site.name}</CardTitle>
-                      <CardDescription>{site.city}, {site.state}</CardDescription>
-                    </CardHeader>
-                  </Card>
-                </motion.div>
-              ))}
+                    <Card
+                      className="h-full cursor-pointer border-2 border-transparent hover:border-primary/50 transition-all duration-300 ease-out hover:shadow-lg overflow-hidden"
+                      onClick={() => navigate(`/site/${site._id}`)}
+                    >
+                      {primaryImage ? (
+                        <img
+                          src={primaryImage.url}
+                          alt={site.name}
+                          className="w-full aspect-video object-cover transition-all duration-300 ease-out hover:scale-105"
+                        />
+                      ) : (
+                        <div className="aspect-video bg-muted flex items-center justify-center transition-all duration-300 ease-out hover:bg-muted/80">
+                          <ImageIcon className="h-12 w-12 text-muted-foreground" />
+                        </div>
+                      )}
+                      <CardHeader>
+                        <CardTitle className="text-lg">{site.name}</CardTitle>
+                        <CardDescription>{site.city}, {site.state}</CardDescription>
+                      </CardHeader>
+                    </Card>
+                  </motion.div>
+                );
+              })}
             </div>
           </>
         )}

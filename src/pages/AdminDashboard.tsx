@@ -281,7 +281,7 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleMediaUpload = async (siteId: Id<"heritageSites">, file: File, type: "image" | "video", isPrimary: boolean = false) => {
+  const handleMediaUpload = async (siteId: Id<"heritageSites">, file: File, type: "image" | "video" | "model3d" | "panorama", isPrimary: boolean = false) => {
     try {
       setUploadingMedia(true);
       const uploadUrl = await generateUploadUrl();
@@ -299,7 +299,7 @@ export default function AdminDashboard() {
         isPrimary,
       });
       
-      toast.success("Media uploaded successfully");
+      toast.success(`${type === 'model3d' ? '3D Model' : type === 'panorama' ? '360° Panorama' : 'Media'} uploaded successfully`);
     } catch (error) {
       toast.error("Failed to upload media");
     } finally {
@@ -635,6 +635,42 @@ export default function AdminDashboard() {
                 }}
                 disabled={uploadingMedia}
               />
+            </div>
+
+            <div className="space-y-2">
+              <Label>Upload 3D Model</Label>
+              <Input
+                type="file"
+                accept=".glb,.gltf,.obj,.fbx"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file && editingSiteId) {
+                    handleMediaUpload(editingSiteId, file, "model3d");
+                  }
+                }}
+                disabled={uploadingMedia}
+              />
+              <p className="text-xs text-muted-foreground">
+                Supported formats: GLB, GLTF, OBJ, FBX
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <Label>Upload 360° Panorama</Label>
+              <Input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file && editingSiteId) {
+                    handleMediaUpload(editingSiteId, file, "panorama");
+                  }
+                }}
+                disabled={uploadingMedia}
+              />
+              <p className="text-xs text-muted-foreground">
+                Upload equirectangular panoramic images (360° photos)
+              </p>
             </div>
 
             <div className="space-y-2">

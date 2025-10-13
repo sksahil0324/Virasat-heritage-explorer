@@ -21,6 +21,7 @@ import type * as auth from "../auth.js";
 import type * as favorites from "../favorites.js";
 import type * as heritageSites from "../heritageSites.js";
 import type * as http from "../http.js";
+import type * as makeAdmin from "../makeAdmin.js";
 import type * as media from "../media.js";
 import type * as seedData from "../seedData.js";
 import type * as updateRemainingUrls from "../updateRemainingUrls.js";
@@ -43,6 +44,7 @@ declare const fullApi: ApiFromModules<{
   favorites: typeof favorites;
   heritageSites: typeof heritageSites;
   http: typeof http;
+  makeAdmin: typeof makeAdmin;
   media: typeof media;
   seedData: typeof seedData;
   updateRemainingUrls: typeof updateRemainingUrls;

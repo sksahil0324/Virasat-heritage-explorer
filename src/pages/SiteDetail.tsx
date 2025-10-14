@@ -154,13 +154,14 @@ export default function SiteDetail() {
                     
                     <TabsContent value="360" className="m-0">
                       {site.view360Url ? (
-                        <div className="w-full h-[400px] relative">
+                        <div className="w-full h-[600px] relative">
                           <iframe
                             src={site.view360Url}
                             className="w-full h-full border-0"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; xr-spatial-tracking"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; xr-spatial-tracking; fullscreen"
                             allowFullScreen
                             title="360° Virtual Tour"
+                            style={{ border: 'none' }}
                           />
                         </div>
                       ) : (

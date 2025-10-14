@@ -141,8 +141,18 @@ export default function InteractiveMap() {
                 center={[22.9734, 78.6569]}
                 zoom={5}
                 scrollWheelZoom={true}
+                zoomControl={true}
+                doubleClickZoom={true}
+                touchZoom={true}
+                dragging={true}
+                zoomAnimation={true}
+                fadeAnimation={true}
+                markerZoomAnimation={true}
                 style={{ height: "100%", width: "100%" }}
                 className="z-0"
+                zoomSnap={0.5}
+                zoomDelta={0.5}
+                wheelPxPerZoomLevel={120}
               >
                 <TileLayer
                   url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

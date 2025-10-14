@@ -1,1 +1,1 @@
-npx convex run autoAddPhotos:runAutoAddPhotos
+npx convex run autoAddPhotos:bulkAddPhotosNow

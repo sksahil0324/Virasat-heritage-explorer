@@ -78,7 +78,13 @@ export default function SiteDetail() {
 
   // Prioritize uploaded images (with storageId) over Unsplash images
   const uploadedImages = site.media?.filter((m) => m.type === "image" && m.storageId);
-  const primaryImage = uploadedImages?.find((m) => m.isPrimary) || uploadedImages?.[0] || site.media?.find((m) => m.type === "image");
+  const allImages = site.media?.filter((m) => m.type === "image");
+  
+  // First try to find a primary uploaded image, then any uploaded image, then fall back to primary image, then any image
+  const primaryImage = uploadedImages?.find((m) => m.isPrimary) || 
+                       uploadedImages?.[0] || 
+                       allImages?.find((m) => m.isPrimary) || 
+                       allImages?.[0];
   const panoramaImage = site.media?.find((m) => m.type === "panorama");
   const model3d = site.media?.find((m) => m.type === "model3d");
 
@@ -431,7 +437,7 @@ export default function SiteDetail() {
                               className="w-full h-24 object-cover rounded-md cursor-pointer hover:opacity-80 transition-opacity"
                               onError={(e) => {
                                 console.error("Failed to load gallery image:", media.url);
-                                e.currentTarget.style.display = 'none';
+                                e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='96'%3E%3Crect width='200' height='96' fill='%23f0f0f0'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='12' fill='%23999'%3EImage unavailable%3C/text%3E%3C/svg%3E";
                               }}
                             />
                           ))}

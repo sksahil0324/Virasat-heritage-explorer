@@ -23,7 +23,7 @@ function LoadingFallback() {
 export default function Model3DViewer({ modelUrl }: Model3DViewerProps) {
   return (
     <div className="w-full h-full relative">
-      <Canvas camera={{ position: [0, 0, 5], fov: 50 }}>
+      <Canvas camera={{ position: [0, 2, 8], fov: 60 }}>
         <Suspense fallback={null}>
           <Stage environment="city" intensity={0.6}>
             <Model url={modelUrl} />
@@ -31,12 +31,23 @@ export default function Model3DViewer({ modelUrl }: Model3DViewerProps) {
           <OrbitControls
             enableZoom={true}
             enablePan={true}
-            minDistance={1}
-            maxDistance={20}
+            enableRotate={true}
+            minDistance={2}
+            maxDistance={50}
+            zoomSpeed={1.2}
+            rotateSpeed={0.8}
+            panSpeed={0.8}
+            autoRotate={false}
+            autoRotateSpeed={2}
           />
         </Suspense>
       </Canvas>
       <Suspense fallback={<LoadingFallback />} />
+      <div className="absolute bottom-4 left-4 bg-black/70 text-white text-xs px-3 py-2 rounded-md">
+        <p>🖱️ Left Click + Drag: Rotate</p>
+        <p>🖱️ Right Click + Drag: Pan</p>
+        <p>🖱️ Scroll: Zoom In/Out</p>
+      </div>
     </div>
   );
 }

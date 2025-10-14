@@ -294,12 +294,27 @@ export default function AdminDashboard() {
   const handleMediaUpload = async (siteId: Id<"heritageSites">, file: File, type: "image" | "video" | "model3d" | "panorama", isPrimary: boolean = false) => {
     try {
       setUploadingMedia(true);
+      
+      // Validate file size (max 100MB for 3D models)
+      const maxSize = type === "model3d" ? 100 * 1024 * 1024 : 50 * 1024 * 1024;
+      if (file.size > maxSize) {
+        toast.error(`File too large. Maximum size is ${maxSize / (1024 * 1024)}MB`);
+        return;
+      }
+      
+      toast.info(`Uploading ${file.name}...`);
+      
       const uploadUrl = await generateUploadUrl();
       const result = await fetch(uploadUrl, {
         method: "POST",
         headers: { "Content-Type": file.type },
         body: file,
       });
+      
+      if (!result.ok) {
+        throw new Error(`Upload failed with status ${result.status}`);
+      }
+      
       const { storageId } = await result.json();
       
       await addMedia({
@@ -311,7 +326,8 @@ export default function AdminDashboard() {
       
       toast.success(`${type === 'model3d' ? '3D Model' : type === 'panorama' ? '360° Panorama' : 'Media'} uploaded successfully`);
     } catch (error) {
-      toast.error("Failed to upload media");
+      console.error("Upload error:", error);
+      toast.error(`Failed to upload media: ${error instanceof Error ? error.message : 'Unknown error'}`);
     } finally {
       setUploadingMedia(false);
     }

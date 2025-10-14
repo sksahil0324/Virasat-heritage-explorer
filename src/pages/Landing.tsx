@@ -92,7 +92,7 @@ export default function Landing() {
   };
 
   return (
-    <div className="min-h-screen bg-background relative overflow-hidden">
+    <div className="min-h-screen relative overflow-hidden">
       <ParticleBackground />
 
       {/* Navigation */}
@@ -211,7 +211,7 @@ export default function Landing() {
             <motion.div
               key={currentImageIndex}
               initial={{ opacity: 0, scale: 1.1 }}
-              animate={{ opacity: 0.3, scale: 1 }}
+              animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 1.5 }}
               className="absolute inset-0 z-0"

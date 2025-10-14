@@ -305,9 +305,17 @@ export default function AdminDashboard() {
       toast.info(`Uploading ${file.name}...`);
       
       const uploadUrl = await generateUploadUrl();
+      
+      // Use appropriate content type for different file types
+      let contentType = file.type;
+      if (type === "model3d") {
+        // For 3D models, use application/octet-stream if no MIME type is detected
+        contentType = file.type || "application/octet-stream";
+      }
+      
       const result = await fetch(uploadUrl, {
         method: "POST",
-        headers: { "Content-Type": file.type },
+        headers: { "Content-Type": contentType },
         body: file,
       });
       

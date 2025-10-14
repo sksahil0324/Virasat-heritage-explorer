@@ -390,7 +390,9 @@ export default function Explore() {
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {sites?.map((site, index) => {
-                const primaryImage = site.media?.find((m: any) => m.isPrimary && m.type === "image");
+                // Find primary image first, then fall back to any image
+                const primaryImage = site.media?.find((m: any) => m.isPrimary && m.type === "image") || 
+                                    site.media?.find((m: any) => m.type === "image");
                 return (
                   <motion.div
                     key={site._id}

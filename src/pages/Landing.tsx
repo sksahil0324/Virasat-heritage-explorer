@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/hooks/use-auth";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Globe, Headphones, Image, Map, Shield, Sparkles, Download } from "lucide-react";
 import { useNavigate } from "react-router";
 import ParticleBackground from "@/components/ParticleBackground";
@@ -11,10 +11,41 @@ import FloatingElement from "@/components/FloatingElement";
 import AnimatedSection from "@/components/AnimatedSection";
 import { toast } from "sonner";
 import { downloadSourceCode } from "@/lib/downloadSource";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { useState, useEffect } from "react";
 
 export default function Landing() {
   const { isAuthenticated, isLoading } = useAuth();
   const navigate = useNavigate();
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  // Fetch all published sites with media
+  const sites = useQuery(api.heritageSites.list, {});
+
+  // Extract images from sites that have uploaded images
+  const monumentImages = sites
+    ?.flatMap((site) => 
+      site.media
+        ?.filter((m) => m.type === "image" && m.storageId)
+        .map((m) => ({
+          url: m.url,
+          name: site.name,
+          location: `${site.city}, ${site.state}`,
+        }))
+    )
+    .filter(Boolean) || [];
+
+  // Rotate images every 30 seconds
+  useEffect(() => {
+    if (monumentImages.length === 0) return;
+
+    const interval = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % monumentImages.length);
+    }, 30000); // 30 seconds
+
+    return () => clearInterval(interval);
+  }, [monumentImages.length]);
 
   const features = [
     {
@@ -172,62 +203,128 @@ export default function Landing() {
         </div>
       </motion.nav>
 
-      {/* Hero Section */}
+      {/* Hero Section with Rotating Images */}
       <section className="relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 sm:py-32">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center relative z-10"
-          >
-            <FloatingElement delay={0}>
-              <Badge className="mb-4 glass-morph" variant="secondary">
-                Virtual Heritage Exploration
-              </Badge>
-            </FloatingElement>
-            
-            <motion.h1 
-              className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight mb-6"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-            >
-              Discover India's
-              <br />
-              <span className="gradient-text">Cultural Heritage</span>
-            </motion.h1>
-            
-            <motion.p 
-              className="text-xl text-muted-foreground max-w-2xl mx-auto mb-8"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.8, delay: 0.4 }}
-            >
-              Immerse yourself in the rich history and culture of India's heritage sites through
-              interactive 3D models, audio guides, and comprehensive information.
-            </motion.p>
-            
-            <motion.div 
-              className="flex flex-col sm:flex-row gap-4 justify-center"
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            {/* Left side - Text content */}
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.6 }}
+              transition={{ duration: 0.6 }}
+              className="relative z-10"
             >
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button size="lg" onClick={() => navigate(isAuthenticated ? "/explore" : "/auth")} className="relative overflow-hidden group">
-                  <span className="relative z-10">Start Exploring</span>
-                  <ArrowRight className="ml-2 h-5 w-5 relative z-10" />
-                  <div className="absolute inset-0 bg-gradient-to-r from-primary to-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                </Button>
-              </motion.div>
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-                <Button size="lg" variant="outline" onClick={() => navigate("/explore")} className="glass-morph">
-                  Browse Sites
-                </Button>
+              <FloatingElement delay={0}>
+                <Badge className="mb-4 glass-morph" variant="secondary">
+                  Virtual Heritage Exploration
+                </Badge>
+              </FloatingElement>
+              
+              <motion.h1 
+                className="text-5xl sm:text-6xl lg:text-7xl font-bold tracking-tight mb-6"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.8, delay: 0.2 }}
+              >
+                Discover India's
+                <br />
+                <span className="gradient-text">Cultural Heritage</span>
+              </motion.h1>
+              
+              <motion.p 
+                className="text-xl text-muted-foreground max-w-2xl mb-8"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.8, delay: 0.4 }}
+              >
+                Immerse yourself in the rich history and culture of India's heritage sites through
+                interactive 3D models, audio guides, and comprehensive information.
+              </motion.p>
+              
+              <motion.div 
+                className="flex flex-col sm:flex-row gap-4"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.6 }}
+              >
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Button size="lg" onClick={() => navigate(isAuthenticated ? "/explore" : "/auth")} className="relative overflow-hidden group">
+                    <span className="relative z-10">Start Exploring</span>
+                    <ArrowRight className="ml-2 h-5 w-5 relative z-10" />
+                    <div className="absolute inset-0 bg-gradient-to-r from-primary to-accent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  </Button>
+                </motion.div>
+                <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                  <Button size="lg" variant="outline" onClick={() => navigate("/explore")} className="glass-morph">
+                    Browse Sites
+                  </Button>
+                </motion.div>
               </motion.div>
             </motion.div>
-          </motion.div>
+
+            {/* Right side - Rotating Images */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.3 }}
+              className="relative h-[500px] rounded-2xl overflow-hidden glass-morph"
+            >
+              <AnimatePresence mode="wait">
+                {monumentImages.length > 0 && (
+                  <motion.div
+                    key={currentImageIndex}
+                    initial={{ opacity: 0, scale: 1.1 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.9 }}
+                    transition={{ duration: 1 }}
+                    className="absolute inset-0"
+                  >
+                    <img
+                      src={monumentImages[currentImageIndex]?.url}
+                      alt={monumentImages[currentImageIndex]?.name}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        console.error("Failed to load monument image");
+                        e.currentTarget.style.display = 'none';
+                      }}
+                    />
+                    <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-6">
+                      <motion.div
+                        initial={{ y: 20, opacity: 0 }}
+                        animate={{ y: 0, opacity: 1 }}
+                        transition={{ delay: 0.3 }}
+                      >
+                        <h3 className="text-white text-2xl font-bold mb-1">
+                          {monumentImages[currentImageIndex]?.name}
+                        </h3>
+                        <p className="text-white/80 text-sm">
+                          {monumentImages[currentImageIndex]?.location}
+                        </p>
+                      </motion.div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              {/* Image indicators */}
+              {monumentImages.length > 0 && (
+                <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex gap-2 z-10">
+                  {monumentImages.slice(0, 5).map((_, index) => (
+                    <button
+                      key={index}
+                      onClick={() => setCurrentImageIndex(index)}
+                      className={`w-2 h-2 rounded-full transition-all ${
+                        index === currentImageIndex % 5
+                          ? "bg-white w-8"
+                          : "bg-white/50 hover:bg-white/75"
+                      }`}
+                      aria-label={`Go to image ${index + 1}`}
+                    />
+                  ))}
+                </div>
+              )}
+            </motion.div>
+          </div>
         </div>
 
         {/* Decorative gradient */}

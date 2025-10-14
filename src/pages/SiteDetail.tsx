@@ -12,6 +12,7 @@ import { ArrowLeft, Heart, Loader2, MapPin, Play, Volume2, Clock, Ticket, Calend
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
+import PanoramaViewer from "@/components/PanoramaViewer";
 
 export default function SiteDetail() {
   const { id } = useParams<{ id: string }>();
@@ -75,6 +76,8 @@ export default function SiteDetail() {
   }
 
   const primaryImage = site.media?.find((m) => m.isPrimary && m.type === "image");
+  const panoramaImage = site.media?.find((m) => m.type === "panorama");
+  const model3d = site.media?.find((m) => m.type === "model3d");
 
   return (
     <div className="min-h-screen bg-background">
@@ -133,8 +136,8 @@ export default function SiteDetail() {
                     <div className="p-4 border-b">
                       <TabsList className="grid w-full grid-cols-3">
                         <TabsTrigger value="image">Photo</TabsTrigger>
-                        <TabsTrigger value="360" disabled={!site.view360Url}>360° View</TabsTrigger>
-                        <TabsTrigger value="3d" disabled={!site.view3dUrl}>3D Model</TabsTrigger>
+                        <TabsTrigger value="360" disabled={!panoramaImage && !site.view360Url}>360° View</TabsTrigger>
+                        <TabsTrigger value="3d" disabled={!model3d && !site.view3dUrl}>3D Model</TabsTrigger>
                       </TabsList>
                     </div>
                     
@@ -153,7 +156,11 @@ export default function SiteDetail() {
                     </TabsContent>
                     
                     <TabsContent value="360" className="m-0">
-                      {site.view360Url ? (
+                      {panoramaImage ? (
+                        <div className="w-full h-[600px] relative bg-black">
+                          <PanoramaViewer imageUrl={panoramaImage.url} />
+                        </div>
+                      ) : site.view360Url ? (
                         <div className="w-full h-[600px] relative">
                           <iframe
                             src={site.view360Url}

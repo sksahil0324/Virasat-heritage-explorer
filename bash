@@ -1,2 +1,1 @@
-   npx convex run makeAdmin:makeUserAdmin '{"email": "lapuser234@gmail.com"}'
-   
+npx convex run autoAddPhotos:runAutoAddPhotos

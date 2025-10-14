@@ -1,7 +1,8 @@
-import { Canvas } from "@react-three/fiber";
-import { OrbitControls, useGLTF, Stage, PerspectiveCamera } from "@react-three/drei";
-import { Suspense } from "react";
+import { Canvas, useThree } from "@react-three/fiber";
+import { OrbitControls, useGLTF, PerspectiveCamera, Center, Bounds } from "@react-three/drei";
+import { Suspense, useEffect, useRef } from "react";
 import { Loader2 } from "lucide-react";
+import * as THREE from "three";
 
 interface Model3DViewerProps {
   modelUrl: string;
@@ -9,6 +10,32 @@ interface Model3DViewerProps {
 
 function Model({ url }: { url: string }) {
   const { scene } = useGLTF(url);
+  const { camera, controls } = useThree();
+  
+  useEffect(() => {
+    if (scene && camera && controls) {
+      // Calculate bounding box to understand model size
+      const box = new THREE.Box3().setFromObject(scene);
+      const size = box.getSize(new THREE.Vector3());
+      const center = box.getCenter(new THREE.Vector3());
+      
+      // Normalize model scale if it's too large or too small
+      const maxDim = Math.max(size.x, size.y, size.z);
+      const scale = maxDim > 0 ? 5 / maxDim : 1;
+      scene.scale.setScalar(scale);
+      
+      // Recalculate after scaling
+      box.setFromObject(scene);
+      box.getCenter(center);
+      
+      // Set controls target to model center
+      if (controls && 'target' in controls) {
+        (controls as any).target.copy(center);
+        (controls as any).update();
+      }
+    }
+  }, [scene, camera, controls]);
+  
   return <primitive object={scene} />;
 }
 
@@ -23,23 +50,33 @@ function LoadingFallback() {
 export default function Model3DViewer({ modelUrl }: Model3DViewerProps) {
   return (
     <div className="w-full h-full relative">
-      <Canvas>
-        <PerspectiveCamera makeDefault position={[0, 5, 15]} fov={50} />
+      <Canvas
+        camera={{ position: [0, 0, 10], fov: 50 }}
+        gl={{ preserveDrawingBuffer: true }}
+        onCreated={({ gl }) => {
+          gl.setClearColor('#000000', 1);
+        }}
+      >
+        <PerspectiveCamera makeDefault position={[0, 0, 10]} fov={50} />
+        <ambientLight intensity={0.5} />
+        <directionalLight position={[10, 10, 5]} intensity={1} />
+        <directionalLight position={[-10, -10, -5]} intensity={0.5} />
         <Suspense fallback={null}>
-          <Stage environment="city" intensity={0.6} adjustCamera={1.5}>
-            <Model url={modelUrl} />
-          </Stage>
+          <Bounds fit clip observe margin={1.2}>
+            <Center>
+              <Model url={modelUrl} />
+            </Center>
+          </Bounds>
           <OrbitControls
+            makeDefault
             enableZoom={true}
             enablePan={true}
             enableRotate={true}
-            minDistance={5}
-            maxDistance={100}
+            minDistance={3}
+            maxDistance={50}
             zoomSpeed={1.5}
             rotateSpeed={1}
             panSpeed={1}
-            autoRotate={false}
-            autoRotateSpeed={2}
             enableDamping={true}
             dampingFactor={0.05}
           />

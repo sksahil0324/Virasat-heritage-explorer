@@ -78,3 +78,13 @@ export const runAutoAddPhotos = action({
     );
   },
 });
+
+export const bulkAddPhotosNow = action({
+  args: {},
+  handler: async (ctx): Promise<{ success: boolean; sitesChecked: number; totalAdded: number }> => {
+    return await ctx.runAction(
+      internal.autoAddPhotos.fetchAndAddMonumentPhotos,
+      {}
+    );
+  },
+});

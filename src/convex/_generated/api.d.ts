@@ -20,6 +20,7 @@ import type * as auth_emailOtp from "../auth/emailOtp.js";
 import type * as auth from "../auth.js";
 import type * as autoAddPhotos from "../autoAddPhotos.js";
 import type * as autoAddPhotosMutation from "../autoAddPhotosMutation.js";
+import type * as crons from "../crons.js";
 import type * as favorites from "../favorites.js";
 import type * as heritageSites from "../heritageSites.js";
 import type * as http from "../http.js";
@@ -46,6 +47,7 @@ declare const fullApi: ApiFromModules<{
   auth: typeof auth;
   autoAddPhotos: typeof autoAddPhotos;
   autoAddPhotosMutation: typeof autoAddPhotosMutation;
+  crons: typeof crons;
   favorites: typeof favorites;
   heritageSites: typeof heritageSites;
   http: typeof http;

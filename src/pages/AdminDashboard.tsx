@@ -656,19 +656,28 @@ export default function AdminDashboard() {
         {editingSiteId && (
           <div className="space-y-4 pt-4 border-t">
             <div className="space-y-2">
-              <Label>Upload Images/Videos</Label>
+              <Label>Upload Images/Videos (Bulk Upload)</Label>
               <Input
                 type="file"
                 accept="image/*,video/*"
-                onChange={(e) => {
-                  const file = e.target.files?.[0];
-                  if (file && editingSiteId) {
-                    const type = file.type.startsWith("image/") ? "image" : "video";
-                    handleMediaUpload(editingSiteId, file, type);
+                multiple
+                onChange={async (e) => {
+                  const files = Array.from(e.target.files || []);
+                  if (files.length > 0 && editingSiteId) {
+                    toast.info(`Uploading ${files.length} file(s)...`);
+                    for (const file of files) {
+                      const type = file.type.startsWith("image/") ? "image" : "video";
+                      await handleMediaUpload(editingSiteId, file, type);
+                    }
+                    toast.success(`Successfully uploaded ${files.length} file(s)`);
+                    e.target.value = ''; // Reset input
                   }
                 }}
                 disabled={uploadingMedia}
               />
+              <p className="text-xs text-muted-foreground">
+                Select multiple images or videos to upload at once
+              </p>
             </div>
 
             <div className="space-y-2">
@@ -685,7 +694,7 @@ export default function AdminDashboard() {
                 disabled={uploadingMedia}
               />
               <p className="text-xs text-muted-foreground">
-                Supported formats: GLB, GLTF, OBJ, FBX
+                Supported formats: GLB, GLTF, OBJ, FBX (Max 100MB)
               </p>
             </div>
 
@@ -724,6 +733,13 @@ export default function AdminDashboard() {
                 />
               </div>
             </div>
+
+            {uploadingMedia && (
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <span>Uploading files...</span>
+              </div>
+            )}
           </div>
         )}
       </TabsContent>

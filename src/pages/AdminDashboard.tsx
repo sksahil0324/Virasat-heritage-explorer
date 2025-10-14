@@ -229,6 +229,11 @@ export default function AdminDashboard() {
         timezone: formData.timezone || undefined,
         view360Url: formData.view360Url || undefined,
         view3dUrl: formData.view3dUrl || undefined,
+        folkTales: formData.folkTales || undefined,
+        culturalHeritage: formData.culturalHeritage || undefined,
+        cuisine: formData.cuisine || undefined,
+        stories: formData.stories || undefined,
+        community: formData.community || undefined,
       });
       toast.success("Heritage site created successfully");
       setIsCreateDialogOpen(false);
@@ -260,6 +265,11 @@ export default function AdminDashboard() {
         timezone: formData.timezone || undefined,
         view360Url: formData.view360Url || undefined,
         view3dUrl: formData.view3dUrl || undefined,
+        folkTales: formData.folkTales || undefined,
+        culturalHeritage: formData.culturalHeritage || undefined,
+        cuisine: formData.cuisine || undefined,
+        stories: formData.stories || undefined,
+        community: formData.community || undefined,
       });
       toast.success("Site updated successfully");
       setIsEditDialogOpen(false);

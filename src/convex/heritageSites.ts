@@ -132,6 +132,11 @@ export const create = mutation({
     timezone: v.optional(v.string()),
     view360Url: v.optional(v.string()),
     view3dUrl: v.optional(v.string()),
+    folkTales: v.optional(v.string()),
+    culturalHeritage: v.optional(v.string()),
+    cuisine: v.optional(v.string()),
+    stories: v.optional(v.string()),
+    community: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const user = await getCurrentUser(ctx);
@@ -182,6 +187,11 @@ export const update = mutation({
     timezone: v.optional(v.string()),
     view360Url: v.optional(v.string()),
     view3dUrl: v.optional(v.string()),
+    folkTales: v.optional(v.string()),
+    culturalHeritage: v.optional(v.string()),
+    cuisine: v.optional(v.string()),
+    stories: v.optional(v.string()),
+    community: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const user = await getCurrentUser(ctx);

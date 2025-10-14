@@ -12,9 +12,9 @@ export const updateKonark3DModel = mutation({
       throw new Error("Konark Sun Temple not found");
     }
     
-    // Update with Sketchfab embed URL
+    // Update with Sketchfab embed URL with camera and preload parameters
     await ctx.db.patch(konarkTemple._id, {
-      view3dUrl: "https://sketchfab.com/models/6cc905be2ae34e8091eb1eaa84a17738/embed"
+      view3dUrl: "https://sketchfab.com/models/6cc905be2ae34e8091eb1eaa84a17738/embed?camera=0&preload=1"
     });
     
     return { success: true, siteId: konarkTemple._id, siteName: konarkTemple.name };

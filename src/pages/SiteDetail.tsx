@@ -179,7 +179,21 @@ export default function SiteDetail() {
                     </TabsContent>
                     
                     <TabsContent value="3d" className="m-0">
-                      {site.view3dUrl ? (
+                      {model3d ? (
+                        <div className="w-full h-[400px] relative bg-black flex items-center justify-center">
+                          <a 
+                            href={model3d.url} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-white hover:text-primary transition-colors"
+                          >
+                            <div className="text-center">
+                              <p className="text-lg mb-2">3D Model Available</p>
+                              <p className="text-sm text-muted-foreground">Click to download and view in your 3D viewer</p>
+                            </div>
+                          </a>
+                        </div>
+                      ) : site.view3dUrl ? (
                         <div className="w-full h-[400px] relative">
                           <iframe
                             src={site.view3dUrl}

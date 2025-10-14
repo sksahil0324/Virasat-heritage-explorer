@@ -3,192 +3,248 @@ import JSZip from "jszip";
 export async function downloadSourceCode() {
   const zip = new JSZip();
 
-  // Define all source files to include in the download
-  const filesToDownload = [
-    // Root config files
-    "package.json",
-    "README.md",
-    "components.json",
-    "index.html",
-    "eslint.config.js",
-    "tsconfig.json",
-    "vite.config.ts",
-    
-    // Source files - we'll need to fetch these from the server
-    // Since we're in a browser environment, we'll need to use fetch or include them statically
-  ];
-
   try {
-    // Create a comprehensive README for the downloaded source
-    zip.file("DOWNLOADED_README.txt", `
+    // Create a comprehensive README with project information
+    const readmeContent = `
 VIRASAT - Heritage Explorer Source Code
 ========================================
 
-This is the complete source code for the VIRASAT Heritage Explorer application.
+This project is built with React, TypeScript, Vite, and Convex.
 
-To run this project:
-1. Install dependencies: pnpm install
-2. Set up Convex: npx convex dev
-3. Start the dev server: pnpm dev
+PROJECT STRUCTURE:
+==================
 
-Project Structure:
-- src/pages/ - React pages (Landing, Explore, SiteDetail, etc.)
-- src/components/ - Reusable React components
-- src/convex/ - Backend functions and database schema
-- src/lib/ - Utility functions
-- src/hooks/ - Custom React hooks
+Frontend (React + TypeScript):
+- src/pages/           - Main application pages
+  - Landing.tsx        - Landing page with hero section
+  - Explore.tsx        - Heritage sites exploration page
+  - SiteDetail.tsx     - Individual site details
+  - AdminDashboard.tsx - Admin management interface
+  - Auth.tsx           - Authentication page
+  - Favorites.tsx      - User favorites page
+  - NotFound.tsx       - 404 page
 
-For more information, see README.md
+- src/components/      - Reusable React components
+  - ParticleBackground.tsx
+  - HolographicCard.tsx
+  - FloatingElement.tsx
+  - AnimatedSection.tsx
+  - InteractiveMap.tsx
+  - LogoDropdown.tsx
+  - ui/                - Shadcn UI components
+
+Backend (Convex):
+- src/convex/
+  - schema.ts          - Database schema definitions
+  - heritageSites.ts   - Heritage sites CRUD operations
+  - media.ts           - Media upload and management
+  - audio.ts           - Audio guide management
+  - favorites.ts       - User favorites functionality
+  - users.ts           - User management
+  - auth.ts            - Authentication configuration
+  - makeAdmin.ts       - Admin role assignment
+  - seedData.ts        - Initial data seeding
+
+Utilities & Hooks:
+- src/lib/
+  - utils.ts           - Utility functions
+  - downloadSource.ts  - Source code download utility
+
+- src/hooks/
+  - use-auth.ts        - Authentication hook
+  - use-mobile.ts      - Mobile detection hook
+
+Styles:
+- src/index.css        - Global styles and Tailwind configuration
+
+Configuration:
+- package.json         - Dependencies and scripts
+- vite.config.ts       - Vite configuration
+- tsconfig.json        - TypeScript configuration
+- components.json      - Shadcn UI configuration
+
+SETUP INSTRUCTIONS:
+===================
+
+1. Install dependencies:
+   pnpm install
+
+2. Set up Convex:
+   npx convex dev
+
+3. Start the development server:
+   pnpm dev
+
+4. Build for production:
+   pnpm build
+
+KEY FEATURES:
+=============
+- Interactive heritage site exploration
+- 3D models and 360° panoramic views
+- Audio guides in multiple languages
+- Interactive maps with geolocation
+- Admin dashboard for content management
+- User authentication and favorites
+- Responsive design with futuristic theme
+
+TECHNOLOGIES:
+=============
+- React 19 with TypeScript
+- Vite for build tooling
+- Convex for backend and database
+- Tailwind CSS for styling
+- Shadcn UI component library
+- Framer Motion for animations
+- Leaflet for interactive maps
+- React Router for navigation
+
+ACCESSING THE SOURCE CODE:
+==========================
+
+Since this is a web application, the source code is not directly downloadable
+from the browser. To access the complete source code:
+
+1. If you have access to the repository:
+   - Clone from GitHub/GitLab
+   - Or download from the version control system
+
+2. If you're running this locally:
+   - The source code is in your project directory
+   - All files are in the 'src/' folder
+
+3. Contact the project administrator for repository access
+
+FILE COUNT:
+===========
+- Pages: 7 main pages
+- Components: 50+ UI components
+- Convex Functions: 15+ backend functions
+- Total TypeScript files: 85+
 
 Downloaded on: ${new Date().toLocaleString()}
-    `);
 
-    // Fetch and add the actual package.json
-    try {
-      const packageResponse = await fetch('/package.json');
-      if (packageResponse.ok) {
-        const packageText = await packageResponse.text();
-        zip.file("package.json", packageText);
-      }
-    } catch (e) {
-      console.warn("Could not fetch package.json");
-    }
+For more information, see the project README.md
+`;
 
-    // List of all source files to include
-    const sourceFiles = [
-      // Pages
-      "src/pages/Landing.tsx",
-      "src/pages/Explore.tsx",
-      "src/pages/SiteDetail.tsx",
-      "src/pages/AdminDashboard.tsx",
-      "src/pages/Auth.tsx",
-      "src/pages/Favorites.tsx",
-      "src/pages/NotFound.tsx",
-      
-      // Components
-      "src/components/ParticleBackground.tsx",
-      "src/components/HolographicCard.tsx",
-      "src/components/FloatingElement.tsx",
-      "src/components/AnimatedSection.tsx",
-      "src/components/InteractiveMap.tsx",
-      "src/components/LogoDropdown.tsx",
-      
-      // UI Components
-      "src/components/ui/button.tsx",
-      "src/components/ui/card.tsx",
-      "src/components/ui/input.tsx",
-      "src/components/ui/badge.tsx",
-      "src/components/ui/dialog.tsx",
-      "src/components/ui/tabs.tsx",
-      "src/components/ui/select.tsx",
-      "src/components/ui/textarea.tsx",
-      "src/components/ui/label.tsx",
-      "src/components/ui/switch.tsx",
-      "src/components/ui/alert.tsx",
-      "src/components/ui/avatar.tsx",
-      "src/components/ui/accordion.tsx",
-      "src/components/ui/alert-dialog.tsx",
-      "src/components/ui/aspect-ratio.tsx",
-      "src/components/ui/breadcrumb.tsx",
-      "src/components/ui/calendar.tsx",
-      "src/components/ui/carousel.tsx",
-      "src/components/ui/chart.tsx",
-      "src/components/ui/checkbox.tsx",
-      "src/components/ui/collapsible.tsx",
-      "src/components/ui/command.tsx",
-      "src/components/ui/context-menu.tsx",
-      "src/components/ui/drawer.tsx",
-      "src/components/ui/dropdown-menu.tsx",
-      "src/components/ui/form.tsx",
-      "src/components/ui/hover-card.tsx",
-      "src/components/ui/input-otp.tsx",
-      "src/components/ui/menubar.tsx",
-      "src/components/ui/navigation-menu.tsx",
-      "src/components/ui/pagination.tsx",
-      "src/components/ui/popover.tsx",
-      "src/components/ui/progress.tsx",
-      "src/components/ui/radio-group.tsx",
-      "src/components/ui/resizable.tsx",
-      "src/components/ui/scroll-area.tsx",
-      "src/components/ui/separator.tsx",
-      "src/components/ui/sheet.tsx",
-      "src/components/ui/sidebar.tsx",
-      "src/components/ui/skeleton.tsx",
-      "src/components/ui/slider.tsx",
-      "src/components/ui/sonner.tsx",
-      "src/components/ui/table.tsx",
-      "src/components/ui/toggle.tsx",
-      "src/components/ui/toggle-group.tsx",
-      "src/components/ui/tooltip.tsx",
-      
-      // Convex backend
-      "src/convex/schema.ts",
-      "src/convex/heritageSites.ts",
-      "src/convex/media.ts",
-      "src/convex/audio.ts",
-      "src/convex/favorites.ts",
-      "src/convex/users.ts",
-      "src/convex/auth.ts",
-      "src/convex/auth.config.ts",
-      "src/convex/http.ts",
-      "src/convex/makeAdmin.ts",
-      "src/convex/seedData.ts",
-      "src/convex/addSampleImages.ts",
-      "src/convex/addMorePhotos.ts",
-      "src/convex/updateRemainingUrls.ts",
-      "src/convex/auth/emailOtp.ts",
-      
-      // Lib and hooks
-      "src/lib/utils.ts",
-      "src/lib/downloadSource.ts",
-      "src/hooks/use-auth.ts",
-      "src/hooks/use-mobile.ts",
-      
-      // Styles and config
-      "src/index.css",
-      "src/main.tsx",
-      "src/instrumentation.tsx",
-      "src/vite-env.d.ts",
-      "src/types/global.d.ts",
-    ];
+    zip.file("VIRASAT_PROJECT_INFO.txt", readmeContent);
 
-    // Fetch each source file and add to ZIP
-    const fetchPromises = sourceFiles.map(async (filePath) => {
-      try {
-        const response = await fetch(`/${filePath}`);
-        if (response.ok) {
-          const content = await response.text();
-          zip.file(filePath, content);
-        } else {
-          console.warn(`Could not fetch ${filePath}`);
-        }
-      } catch (error) {
-        console.warn(`Error fetching ${filePath}:`, error);
-      }
-    });
+    // Add package.json content as text
+    const packageInfo = `
+VIRASAT - Package Dependencies
+================================
 
-    // Wait for all files to be fetched
-    await Promise.all(fetchPromises);
+This file lists all the dependencies used in the VIRASAT project.
 
-    // Add config files
-    const configFiles = [
-      "package.json",
-      "README.md",
-      "components.json",
-      "index.html",
-    ];
+Main Dependencies:
+- React 19.1.0
+- Convex 1.27.0
+- TypeScript 5.8.3
+- Vite 6.3.5
+- Tailwind CSS 4.1.8
+- Framer Motion 12.15.0
+- React Router 7.6.1
+- Leaflet 1.9.4
+- JSZip 3.10.1
 
-    for (const configFile of configFiles) {
-      try {
-        const response = await fetch(`/${configFile}`);
-        if (response.ok) {
-          const content = await response.text();
-          zip.file(configFile, content);
-        }
-      } catch (error) {
-        console.warn(`Error fetching ${configFile}:`, error);
-      }
-    }
+UI Components:
+- Shadcn UI (Radix UI components)
+- Lucide React (icons)
+- Sonner (toast notifications)
+
+To install all dependencies:
+  pnpm install
+
+For the complete package.json, see your project directory.
+`;
+
+    zip.file("DEPENDENCIES.txt", packageInfo);
+
+    // Add project structure as a text file
+    const structureInfo = `
+VIRASAT - Project File Structure
+==================================
+
+src/
+├── pages/
+│   ├── Landing.tsx
+│   ├── Explore.tsx
+│   ├── SiteDetail.tsx
+│   ├── AdminDashboard.tsx
+│   ├── Auth.tsx
+│   ├── Favorites.tsx
+│   └── NotFound.tsx
+│
+├── components/
+│   ├── ParticleBackground.tsx
+│   ├── HolographicCard.tsx
+│   ├── FloatingElement.tsx
+│   ├── AnimatedSection.tsx
+│   ├── InteractiveMap.tsx
+│   ├── LogoDropdown.tsx
+│   └── ui/
+│       ├── button.tsx
+│       ├── card.tsx
+│       ├── input.tsx
+│       ├── dialog.tsx
+│       ├── tabs.tsx
+│       └── [50+ more UI components]
+│
+├── convex/
+│   ├── schema.ts
+│   ├── heritageSites.ts
+│   ├── media.ts
+│   ├── audio.ts
+│   ├── favorites.ts
+│   ├── users.ts
+│   ├── auth.ts
+│   ├── auth.config.ts
+│   ├── http.ts
+│   ├── makeAdmin.ts
+│   ├── seedData.ts
+│   ├── addSampleImages.ts
+│   ├── addMorePhotos.ts
+│   ├── updateRemainingUrls.ts
+│   └── auth/
+│       └── emailOtp.ts
+│
+├── lib/
+│   ├── utils.ts
+│   └── downloadSource.ts
+│
+├── hooks/
+│   ├── use-auth.ts
+│   └── use-mobile.ts
+│
+├── types/
+│   └── global.d.ts
+│
+├── index.css
+├── main.tsx
+├── instrumentation.tsx
+└── vite-env.d.ts
+
+public/
+├── india-states.geojson
+├── india.geojson
+├── logo.svg
+├── logo.png
+├── logo_bg.svg
+└── logo_bg.png
+
+Root Configuration Files:
+├── package.json
+├── vite.config.ts
+├── tsconfig.json
+├── tsconfig.app.json
+├── tsconfig.node.json
+├── components.json
+├── eslint.config.js
+├── index.html
+└── README.md
+`;
+
+    zip.file("PROJECT_STRUCTURE.txt", structureInfo);
 
     // Generate the ZIP file
     const blob = await zip.generateAsync({ 
@@ -201,7 +257,7 @@ Downloaded on: ${new Date().toLocaleString()}
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.download = `virasat-complete-source-${Date.now()}.zip`;
+    link.download = `virasat-project-info-${Date.now()}.zip`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -209,7 +265,7 @@ Downloaded on: ${new Date().toLocaleString()}
 
     return true;
   } catch (error) {
-    console.error("Error creating source code download:", error);
+    console.error("Error creating download:", error);
     throw error;
   }
 }

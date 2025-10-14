@@ -24,6 +24,7 @@ import type * as http from "../http.js";
 import type * as makeAdmin from "../makeAdmin.js";
 import type * as media from "../media.js";
 import type * as seedData from "../seedData.js";
+import type * as updateKonarkModel from "../updateKonarkModel.js";
 import type * as updateRemainingUrls from "../updateRemainingUrls.js";
 import type * as users from "../users.js";
 
@@ -47,6 +48,7 @@ declare const fullApi: ApiFromModules<{
   makeAdmin: typeof makeAdmin;
   media: typeof media;
   seedData: typeof seedData;
+  updateKonarkModel: typeof updateKonarkModel;
   updateRemainingUrls: typeof updateRemainingUrls;
   users: typeof users;
 }>;

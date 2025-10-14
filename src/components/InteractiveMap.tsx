@@ -45,6 +45,7 @@ const createCustomIcon = (isUNESCO: boolean) => {
       border: 3px solid white;
       box-shadow: 0 2px 8px rgba(0,0,0,0.3);
       animation: pulse 2s infinite;
+      transition: all 0.3s ease;
     "></div>`,
     iconSize: [24, 24],
     iconAnchor: [12, 12],
@@ -57,6 +58,7 @@ export default function InteractiveMap() {
   const [selectedSite, setSelectedSite] = useState<Site | null>(null);
   const [selectedState, setSelectedState] = useState<string | null>(null);
   const [indiaGeoJson, setIndiaGeoJson] = useState<any>(null);
+  const [hoveredSite, setHoveredSite] = useState<Site | null>(null);
 
   // Load India GeoJSON data
   useEffect(() => {
@@ -163,6 +165,8 @@ export default function InteractiveMap() {
                       icon={createCustomIcon(site.isUNESCO)}
                       eventHandlers={{
                         click: () => setSelectedSite(site),
+                        mouseover: () => setHoveredSite(site),
+                        mouseout: () => setHoveredSite(null),
                       }}
                     >
                       <Popup>
@@ -190,6 +194,24 @@ export default function InteractiveMap() {
               </div>
             )}
           </div>
+
+          {/* Hover Info Display */}
+          <AnimatePresence>
+            {hoveredSite && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.2 }}
+                className="mt-4 p-3 bg-primary/10 rounded-lg border border-primary/30"
+              >
+                <p className="text-sm font-semibold text-primary">{hoveredSite.name}</p>
+                <p className="text-xs text-muted-foreground">
+                  {hoveredSite.city}, {hoveredSite.state}
+                </p>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* State Info Display */}
           {selectedState && sitesByState?.[selectedState] && (
@@ -231,6 +253,7 @@ export default function InteractiveMap() {
                 initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.3 }}
                 className="space-y-4"
               >
                 <div className="flex items-start justify-between">

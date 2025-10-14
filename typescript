@@ -1,1 +1,2 @@
-const primaryImage = site.media?.find((m) => m.isPrimary && m.type === "image");
+const primaryImage = site.media?.find((m: any) => m.isPrimary && m.type === "image") || 
+                    site.media?.find((m: any) => m.type === "image");

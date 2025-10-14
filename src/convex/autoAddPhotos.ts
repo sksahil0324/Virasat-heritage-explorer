@@ -22,7 +22,9 @@ export const fetchAndAddMonumentPhotos = internalAction({
     let totalAdded = 0;
 
     for (const site of sitesNeeding) {
-      const query = `${site.name} ${site.city ?? ""} India monument`.trim();
+      // Create a more specific search query
+      // Use the monument name and state for better accuracy
+      const query = `${site.name} ${site.state} India heritage architecture`.trim();
       const url = `https://api.unsplash.com/search/photos?query=${encodeURIComponent(
         query
       )}&per_page=3&orientation=landscape&content_filter=high&client_id=${accessKey}`;

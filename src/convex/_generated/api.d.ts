@@ -18,6 +18,7 @@ import type * as addSampleImages from "../addSampleImages.js";
 import type * as audio from "../audio.js";
 import type * as auth_emailOtp from "../auth/emailOtp.js";
 import type * as auth from "../auth.js";
+import type * as cleanupUnsplashImages from "../cleanupUnsplashImages.js";
 import type * as crons from "../crons.js";
 import type * as favorites from "../favorites.js";
 import type * as heritageSites from "../heritageSites.js";
@@ -43,6 +44,7 @@ declare const fullApi: ApiFromModules<{
   audio: typeof audio;
   "auth/emailOtp": typeof auth_emailOtp;
   auth: typeof auth;
+  cleanupUnsplashImages: typeof cleanupUnsplashImages;
   crons: typeof crons;
   favorites: typeof favorites;
   heritageSites: typeof heritageSites;

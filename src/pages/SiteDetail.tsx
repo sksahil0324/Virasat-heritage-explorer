@@ -422,7 +422,7 @@ export default function SiteDetail() {
                     <ScrollArea className="h-[300px]">
                       <div className="grid grid-cols-2 gap-2">
                         {site.media
-                          .filter((m) => m.type === "image" && m.storageId)
+                          .filter((m) => m.type === "image")
                           .map((media) => (
                             <img
                               key={media._id}

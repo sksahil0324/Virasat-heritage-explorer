@@ -1,5 +1,5 @@
 import { Canvas } from "@react-three/fiber";
-import { OrbitControls, useGLTF, Stage } from "@react-three/drei";
+import { OrbitControls, useGLTF, Stage, PerspectiveCamera } from "@react-three/drei";
 import { Suspense } from "react";
 import { Loader2 } from "lucide-react";
 
@@ -23,22 +23,25 @@ function LoadingFallback() {
 export default function Model3DViewer({ modelUrl }: Model3DViewerProps) {
   return (
     <div className="w-full h-full relative">
-      <Canvas camera={{ position: [0, 2, 8], fov: 60 }}>
+      <Canvas>
+        <PerspectiveCamera makeDefault position={[0, 5, 15]} fov={50} />
         <Suspense fallback={null}>
-          <Stage environment="city" intensity={0.6}>
+          <Stage environment="city" intensity={0.6} adjustCamera={1.5}>
             <Model url={modelUrl} />
           </Stage>
           <OrbitControls
             enableZoom={true}
             enablePan={true}
             enableRotate={true}
-            minDistance={2}
-            maxDistance={50}
-            zoomSpeed={1.2}
-            rotateSpeed={0.8}
-            panSpeed={0.8}
+            minDistance={5}
+            maxDistance={100}
+            zoomSpeed={1.5}
+            rotateSpeed={1}
+            panSpeed={1}
             autoRotate={false}
             autoRotateSpeed={2}
+            enableDamping={true}
+            dampingFactor={0.05}
           />
         </Suspense>
       </Canvas>

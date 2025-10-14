@@ -148,6 +148,20 @@ export default function SiteDetail() {
                           src={primaryImage.url}
                           alt={site.name}
                           className="w-full h-[400px] object-cover"
+                          onError={(e) => {
+                            console.error("Failed to load primary image:", primaryImage.url);
+                            e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='400'%3E%3Crect width='800' height='400' fill='%23f0f0f0'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='18' fill='%23999'%3EImage failed to load%3C/text%3E%3C/svg%3E";
+                          }}
+                        />
+                      ) : site.media && site.media.length > 0 ? (
+                        <img
+                          src={site.media[0].url}
+                          alt={site.name}
+                          className="w-full h-[400px] object-cover"
+                          onError={(e) => {
+                            console.error("Failed to load fallback image:", site.media[0].url);
+                            e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='400'%3E%3Crect width='800' height='400' fill='%23f0f0f0'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='18' fill='%23999'%3EImage failed to load%3C/text%3E%3C/svg%3E";
+                          }}
                         />
                       ) : (
                         <div className="w-full h-[400px] bg-muted flex items-center justify-center">

@@ -69,6 +69,7 @@ export default function AdminDashboard() {
   const addMedia = useMutation(api.media.add);
   const generateAudioUploadUrl = useMutation(api.audio.generateUploadUrl);
   const addAudio = useMutation(api.audio.add);
+  const cleanupUnsplashImages = useMutation(api.cleanupUnsplashImages.removeUnsplashImages);
 
   const [formData, setFormData] = useState<SiteFormData>({
     name: "",
@@ -882,6 +883,21 @@ export default function AdminDashboard() {
                           onClick={() => handleEditSite(site._id)}
                         >
                           <Edit className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={async () => {
+                            try {
+                              const result = await cleanupUnsplashImages({ siteId: site._id });
+                              toast.success(`Removed ${result.removed} Unsplash images, ${result.remaining} uploaded images remain`);
+                            } catch (error) {
+                              toast.error("Failed to cleanup images");
+                            }
+                          }}
+                          title="Remove Unsplash images and set uploaded image as primary"
+                        >
+                          🧹
                         </Button>
                         <Button
                           variant="outline"

@@ -76,7 +76,9 @@ export default function SiteDetail() {
     );
   }
 
-  const primaryImage = site.media?.find((m) => m.isPrimary && m.type === "image");
+  // Prioritize uploaded images (with storageId) over Unsplash images
+  const uploadedImages = site.media?.filter((m) => m.type === "image" && m.storageId);
+  const primaryImage = uploadedImages?.find((m) => m.isPrimary) || uploadedImages?.[0] || site.media?.find((m) => m.type === "image");
   const panoramaImage = site.media?.find((m) => m.type === "panorama");
   const model3d = site.media?.find((m) => m.type === "model3d");
 
@@ -420,13 +422,17 @@ export default function SiteDetail() {
                     <ScrollArea className="h-[300px]">
                       <div className="grid grid-cols-2 gap-2">
                         {site.media
-                          .filter((m) => m.type === "image")
+                          .filter((m) => m.type === "image" && m.storageId)
                           .map((media) => (
                             <img
                               key={media._id}
                               src={media.url}
                               alt={media.caption || site.name}
                               className="w-full h-24 object-cover rounded-md cursor-pointer hover:opacity-80 transition-opacity"
+                              onError={(e) => {
+                                console.error("Failed to load gallery image:", media.url);
+                                e.currentTarget.style.display = 'none';
+                              }}
                             />
                           ))}
                       </div>

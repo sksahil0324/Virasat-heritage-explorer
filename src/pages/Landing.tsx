@@ -10,7 +10,6 @@ import HolographicCard from "@/components/HolographicCard";
 import FloatingElement from "@/components/FloatingElement";
 import AnimatedSection from "@/components/AnimatedSection";
 import { toast } from "sonner";
-import { downloadSourceCode } from "@/lib/downloadSource";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useState, useEffect } from "react";
@@ -80,17 +79,6 @@ export default function Landing() {
     },
   ];
 
-  const handleDownloadSource = async () => {
-    try {
-      toast.loading("Preparing source code download...");
-      await downloadSourceCode();
-      toast.success("Source code downloaded successfully!");
-    } catch (error) {
-      toast.error("Failed to download source code");
-      console.error(error);
-    }
-  };
-
   return (
     <div className="min-h-screen relative overflow-hidden">
       <ParticleBackground />
@@ -146,7 +134,6 @@ export default function Landing() {
                 <Button 
                   variant="ghost" 
                   className="text-sm"
-                  onClick={handleDownloadSource}
                 >
                   <Download className="h-4 w-4 mr-2" />
                   Download Source

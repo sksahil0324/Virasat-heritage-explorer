@@ -369,12 +369,6 @@ export default function AdminDashboard() {
     }
   };
 
-  // Get media for editing site
-  const siteMedia = useQuery(
-    api.heritageSites.getById,
-    editingSiteId && isAdmin ? { id: editingSiteId } : "skip"
-  );
-
   // Populate form when editing
   if (editingSite && isEditDialogOpen && formData.name === "") {
     setFormData({
@@ -662,14 +656,14 @@ export default function AdminDashboard() {
           </p>
         </div>
 
-        {editingSiteId && (
+            {editingSiteId && (
           <div className="space-y-4 pt-4 border-t">
             {/* Media Management Section */}
-            {siteMedia?.media && siteMedia.media.length > 0 && (
+            {editingSite?.media && editingSite.media.length > 0 && (
               <div className="space-y-3 p-4 bg-muted rounded-lg">
                 <Label className="font-semibold">Manage Site Images</Label>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                  {siteMedia.media.map((media) => (
+                  {editingSite.media.map((media) => (
                     <div key={media._id} className="relative group">
                       <img
                         src={media.url}

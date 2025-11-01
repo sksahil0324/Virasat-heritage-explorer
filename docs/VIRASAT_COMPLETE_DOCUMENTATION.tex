@@ -1,0 +1,1228 @@
+\documentclass[12pt,a4paper]{report}
+\usepackage[utf-8]{inputenc}
+\usepackage[margin=1in]{geometry}
+\usepackage{graphicx}
+\usepackage{tikz}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{float}
+\usepackage{fancyhdr}
+\usepackage{lastpage}
+
+% Code styling
+\lstset{
+    language=JavaScript,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue},
+    commentstyle=\color{gray},
+    stringstyle=\color{red},
+    breaklines=true,
+    showstringspaces=false,
+    tabsize=2,
+    frame=single,
+    backgroundcolor=\color{gray!10}
+}
+
+% Header and Footer
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{VIRASAT - Heritage Explorer}
+\lhead{\leftmark}
+\cfoot{Page \thepage\ of \pageref{LastPage}}
+
+\title{\textbf{VIRASAT - Heritage Explorer}\\
+\large{Complete Technical Documentation}\\
+\normalsize{Digital Platform for Indian Heritage Sites}}
+\author{Development Team}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\newpage
+
+% ============================================================================
+% CHAPTER 1: INTRODUCTION
+% ============================================================================
+\chapter{Introduction}
+
+\section{Project Overview}
+
+VIRASAT (meaning ``Heritage'' in Hindi) is an innovative digital platform designed to bridge the gap between India's rich cultural heritage and modern technology. The platform serves as a comprehensive virtual museum and exploration tool, enabling users worldwide to discover, learn about, and experience India's magnificent heritage sites through immersive digital experiences.
+
+\subsection{Vision and Mission}
+
+The primary vision of VIRASAT is to democratize access to India's cultural heritage by leveraging cutting-edge web technologies. The mission encompasses:
+
+\begin{itemize}
+    \item \textbf{Preservation}: Digital documentation and preservation of heritage sites for future generations
+    \item \textbf{Education}: Providing comprehensive historical and cultural information to educate users
+    \item \textbf{Accessibility}: Making heritage sites accessible to everyone, regardless of physical location or mobility constraints
+    \item \textbf{Innovation}: Utilizing modern web technologies to create engaging, immersive experiences
+    \item \textbf{Community}: Building a community of heritage enthusiasts and researchers
+\end{itemize}
+
+\section{Problem Statement}
+
+India possesses one of the world's richest cultural heritages, with thousands of monuments, temples, forts, and archaeological sites. However, several challenges limit public engagement:
+
+\begin{enumerate}
+    \item \textbf{Geographic Barriers}: Many heritage sites are located in remote areas, making physical visits difficult
+    \item \textbf{Limited Information}: On-site information is often minimal or not available in multiple languages
+    \item \textbf{Preservation Concerns}: Physical tourism can contribute to wear and degradation of ancient structures
+    \item \textbf{Accessibility Issues}: People with mobility constraints face difficulties visiting sites
+    \item \textbf{Fragmented Resources}: Information about heritage sites is scattered across multiple sources
+\end{enumerate}
+
+VIRASAT addresses these challenges by providing a centralized, accessible, and immersive digital platform.
+
+\section{Key Features}
+
+\begin{table}[H]
+\centering
+\caption{VIRASAT Platform Features Overview}
+\begin{tabular}{@{}lp{8cm}@{}}
+\toprule
+\textbf{Feature Category} & \textbf{Description} \\
+\midrule
+Exploration & Browse sites via list/grid view, interactive map, search, and filters \\
+Immersive Views & 360° panoramas, 3D models, high-quality media galleries \\
+Audio Guides & Multi-language audio summaries with play tracking \\
+User Features & Authentication, favorites, personalized dashboard \\
+Interactive Map & Leaflet-based map with GeoJSON, custom markers, state selection \\
+Admin Dashboard & Content management, media uploads, analytics, user management \\
+Responsive Design & Optimized for desktop, tablet, and mobile devices \\
+Futuristic Theme & Glass morphism, holographic effects, particle animations \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ============================================================================
+% CHAPTER 2: TECHNOLOGY STACK
+% ============================================================================
+\chapter{Technology Stack and Architecture}
+
+\section{Frontend Technologies}
+
+\begin{table}[H]
+\centering
+\caption{Frontend Technology Stack}
+\begin{tabular}{@{}llp{6cm}@{}}
+\toprule
+\textbf{Technology} & \textbf{Version} & \textbf{Purpose} \\
+\midrule
+React & 19.1.0 & UI component library and rendering \\
+TypeScript & 5.8.3 & Type-safe JavaScript development \\
+Vite & 6.3.5 & Build tool and development server \\
+React Router & 7.6.1 & Client-side routing \\
+Tailwind CSS & 4.1.8 & Utility-first CSS framework \\
+Framer Motion & 12.15.0 & Animation and transitions \\
+Shadcn UI & Latest & Pre-built UI components \\
+Leaflet & 1.9.4 & Interactive mapping \\
+Three.js & Latest & 3D rendering \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Backend Technologies}
+
+\begin{table}[H]
+\centering
+\caption{Backend Technology Stack}
+\begin{tabular}{@{}llp{6cm}@{}}
+\toprule
+\textbf{Technology} & \textbf{Version} & \textbf{Purpose} \\
+\midrule
+Convex & 1.27.0 & Backend-as-a-Service, database, and API \\
+Convex Auth & Latest & Authentication with OTP \\
+Node.js & 18+ & Runtime for actions \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{System Architecture}
+
+\subsection{High-Level Architecture}
+
+The VIRASAT platform follows a modern three-tier architecture:
+
+\begin{enumerate}
+    \item \textbf{Presentation Layer}: React-based frontend with responsive UI components
+    \item \textbf{Application Layer}: Convex backend with queries, mutations, and actions
+    \item \textbf{Data Layer}: Convex NoSQL database with optimized indexes
+\end{enumerate}
+
+\subsection{Component Structure}
+
+\begin{itemize}
+    \item \textbf{Pages}: Landing, Explore, SiteDetail, AdminDashboard, Auth, Favorites, NotFound
+    \item \textbf{Components}: ParticleBackground, HolographicCard, InteractiveMap, Model3DViewer, PanoramaViewer
+    \item \textbf{UI Components}: 50+ Shadcn UI components for consistent design
+    \item \textbf{Hooks}: useAuth, useMobile, and custom hooks for shared logic
+    \item \textbf{Utilities}: Helper functions for downloads, formatting, and data manipulation
+\end{itemize}
+
+% ============================================================================
+% CHAPTER 3: DATABASE SCHEMA
+% ============================================================================
+\chapter{Database Schema and Data Model}
+
+\section{Schema Overview}
+
+The VIRASAT database uses Convex's NoSQL document model with strong typing through validators. The schema defines five main tables with strategic indexing for optimal query performance.
+
+\section{Table Definitions}
+
+\subsection{Users Table}
+
+\begin{lstlisting}[caption=Users Table Schema]
+users: defineTable({
+  name: v.optional(v.string()),
+  image: v.optional(v.string()),
+  email: v.optional(v.string()),
+  emailVerificationTime: v.optional(v.number()),
+  isAnonymous: v.optional(v.boolean()),
+  role: v.optional(roleValidator), // "admin" | "user" | "member"
+}).index("email", ["email"])
+\end{lstlisting}
+
+\textbf{Purpose}: Stores user account information and authentication data.
+
+\textbf{Key Fields}:
+\begin{itemize}
+    \item \texttt{role}: Determines access level (admin has full control, user has limited access)
+    \item \texttt{email}: Unique identifier for authentication
+    \item \texttt{isAnonymous}: Tracks anonymous user sessions
+\end{itemize}
+
+\subsection{Heritage Sites Table}
+
+\begin{lstlisting}[caption=Heritage Sites Table Schema]
+heritageSites: defineTable({
+  name: v.string(),
+  description: v.string(),
+  historicalSignificance: v.string(),
+  category: categoryValidator,
+  state: v.string(),
+  city: v.string(),
+  latitude: v.optional(v.number()),
+  longitude: v.optional(v.number()),
+  isUNESCO: v.boolean(),
+  timePeriod: v.optional(v.string()),
+  visitorGuidelines: v.optional(v.string()),
+  viewCount: v.number(),
+  isPublished: v.boolean(),
+  createdBy: v.id("users"),
+  folkTales: v.optional(v.string()),
+  culturalHeritage: v.optional(v.string()),
+  cuisine: v.optional(v.string()),
+  stories: v.optional(v.string()),
+  community: v.optional(v.string()),
+  ticketPrice: v.optional(v.string()),
+  openingHours: v.optional(v.string()),
+  bestTimeToVisit: v.optional(v.string()),
+  timezone: v.optional(v.string()),
+  view360Url: v.optional(v.string()),
+  view3dUrl: v.optional(v.string()),
+})
+.index("by_state", ["state"])
+.index("by_category", ["category"])
+.index("by_published", ["isPublished"])
+.index("by_unesco", ["isUNESCO"])
+.index("by_view_count", ["viewCount"])
+\end{lstlisting}
+
+\textbf{Purpose}: Core table storing all heritage site information.
+
+\textbf{Categories}: temple, fort, palace, monument, museum, archaeological, natural, other
+
+\textbf{Indexing Strategy}:
+\begin{itemize}
+    \item \texttt{by\_published}: Fast retrieval of public sites
+    \item \texttt{by\_state}: Geographic filtering
+    \item \texttt{by\_category}: Category-based browsing
+    \item \texttt{by\_unesco}: UNESCO site filtering
+    \item \texttt{by\_view\_count}: Popularity sorting
+\end{itemize}
+
+\subsection{Media Table}
+
+\begin{lstlisting}[caption=Media Table Schema]
+media: defineTable({
+  siteId: v.id("heritageSites"),
+  type: v.union(
+    v.literal("image"),
+    v.literal("video"),
+    v.literal("model3d"),
+    v.literal("panorama")
+  ),
+  storageId: v.optional(v.id("_storage")),
+  url: v.string(),
+  caption: v.optional(v.string()),
+  isPrimary: v.boolean(),
+}).index("by_site", ["siteId"])
+\end{lstlisting}
+
+\textbf{Purpose}: Stores media files associated with heritage sites.
+
+\textbf{Media Types}:
+\begin{itemize}
+    \item \texttt{image}: High-resolution photographs
+    \item \texttt{video}: Documentary or promotional videos
+    \item \texttt{model3d}: Interactive 3D models
+    \item \texttt{panorama}: 360° panoramic views
+\end{itemize}
+
+\textbf{Key Features}:
+\begin{itemize}
+    \item \texttt{isPrimary}: Designates the primary image for site display
+    \item \texttt{storageId}: References Convex file storage
+    \item \texttt{url}: Direct access URL for the media file
+\end{itemize}
+
+\subsection{Audio Summaries Table}
+
+\begin{lstlisting}[caption=Audio Summaries Table Schema]
+audioSummaries: defineTable({
+  siteId: v.id("heritageSites"),
+  storageId: v.id("_storage"),
+  url: v.string(),
+  duration: v.optional(v.number()),
+  language: v.string(),
+  playCount: v.number(),
+}).index("by_site", ["siteId"])
+\end{lstlisting}
+
+\textbf{Purpose}: Stores audio guide information for heritage sites.
+
+\textbf{Features}:
+\begin{itemize}
+    \item Multi-language support
+    \item Play count tracking for analytics
+    \item Duration metadata for UI display
+\end{itemize}
+
+\subsection{Favorites Table}
+
+\begin{lstlisting}[caption=Favorites Table Schema]
+favorites: defineTable({
+  userId: v.id("users"),
+  siteId: v.id("heritageSites"),
+})
+.index("by_user", ["userId"])
+.index("by_site", ["siteId"])
+.index("by_user_and_site", ["userId", "siteId"])
+\end{lstlisting}
+
+\textbf{Purpose}: Tracks user favorite sites for personalized experience.
+
+\textbf{Indexes}:
+\begin{itemize}
+    \item \texttt{by\_user}: Retrieve all favorites for a user
+    \item \texttt{by\_site}: Find users who favorited a site
+    \item \texttt{by\_user\_and\_site}: Check if a specific site is favorited
+\end{itemize}
+
+% ============================================================================
+% CHAPTER 4: BACKEND FUNCTIONS
+% ============================================================================
+\chapter{Backend Functions and API}
+
+\section{Heritage Sites Functions}
+
+\subsection{Query: list}
+
+\begin{lstlisting}[caption=List Published Heritage Sites]
+export const list = query({
+  args: {
+    category: v.optional(v.string()),
+    state: v.optional(v.string()),
+    unescoOnly: v.optional(v.boolean()),
+  },
+  handler: async (ctx, args) => {
+    // Fetch published sites with optional filters
+    // Returns sites sorted by view count
+  },
+});
+\end{lstlisting}
+
+\textbf{Purpose}: Retrieve published heritage sites with optional filtering.
+
+\textbf{Parameters}:
+\begin{itemize}
+    \item \texttt{category}: Filter by site category
+    \item \texttt{state}: Filter by Indian state
+    \item \texttt{unescoOnly}: Show only UNESCO World Heritage Sites
+\end{itemize}
+
+\textbf{Returns}: Array of sites with associated media, sorted by popularity.
+
+\subsection{Query: getById}
+
+\begin{lstlisting}[caption=Get Single Heritage Site]
+export const getById = query({
+  args: { id: v.id("heritageSites") },
+  handler: async (ctx, args) => {
+    // Fetch site with media and audio
+  },
+});
+\end{lstlisting}
+
+\textbf{Purpose}: Retrieve detailed information for a single heritage site.
+
+\textbf{Returns}: Site object with all associated media and audio guides.
+
+\subsection{Mutation: create}
+
+\begin{lstlisting}[caption=Create Heritage Site (Admin Only)]
+export const create = mutation({
+  args: {
+    name: v.string(),
+    description: v.string(),
+    historicalSignificance: v.string(),
+    category: v.union(...),
+    state: v.string(),
+    city: v.string(),
+    // ... additional fields
+  },
+  handler: async (ctx, args) => {
+    // Verify admin role
+    // Insert new site
+  },
+});
+\end{lstlisting}
+
+\textbf{Purpose}: Create a new heritage site (admin only).
+
+\textbf{Authorization}: Requires admin role.
+
+\subsection{Mutation: update}
+
+\begin{lstlisting}[caption=Update Heritage Site (Admin Only)]
+export const update = mutation({
+  args: {
+    id: v.id("heritageSites"),
+    // ... optional fields to update
+  },
+  handler: async (ctx, args) => {
+    // Verify admin role
+    // Update site fields
+  },
+});
+\end{lstlisting}
+
+\textbf{Purpose}: Update existing heritage site information.
+
+\textbf{Authorization}: Requires admin role.
+
+\subsection{Mutation: remove}
+
+\begin{lstlisting}[caption=Delete Heritage Site (Admin Only)]
+export const remove = mutation({
+  args: { id: v.id("heritageSites") },
+  handler: async (ctx, args) => {
+    // Delete associated media and audio
+    // Delete site
+  },
+});
+\end{lstlisting}
+
+\textbf{Purpose}: Delete a heritage site and all associated content.
+
+\textbf{Authorization}: Requires admin role.
+
+\textbf{Cascade Deletion}: Automatically deletes all media and audio files.
+
+\section{Media Management Functions}
+
+\subsection{Mutation: addMedia}
+
+\begin{lstlisting}[caption=Add Media to Site]
+export const addMedia = mutation({
+  args: {
+    siteId: v.id("heritageSites"),
+    type: v.union(...),
+    storageId: v.optional(v.id("_storage")),
+    url: v.string(),
+    caption: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    // Verify admin role
+    // Insert media record
+  },
+});
+\end{lstlisting}
+
+\textbf{Purpose}: Add media file to a heritage site.
+
+\subsection{Mutation: removeMedia}
+
+\begin{lstlisting}[caption=Remove Media from Site]
+export const removeMedia = mutation({
+  args: { mediaId: v.id("media") },
+  handler: async (ctx, args) => {
+    // Verify admin role
+    // Delete media record
+  },
+});
+\end{lstlisting}
+
+\textbf{Purpose}: Remove media file from a site.
+
+\subsection{Mutation: setPrimaryMedia}
+
+\begin{lstlisting}[caption=Set Primary Media]
+export const setPrimaryMedia = mutation({
+  args: {
+    siteId: v.id("heritageSites"),
+    mediaId: v.id("media"),
+  },
+  handler: async (ctx, args) => {
+    // Verify admin role
+    // Update isPrimary flags
+  },
+});
+\end{lstlisting}
+
+\textbf{Purpose}: Set a media file as the primary image for a site.
+
+\textbf{Logic}: Ensures only one primary media per site.
+
+\section{User and Authentication Functions}
+
+\subsection{Query: getCurrentUser}
+
+\begin{lstlisting}[caption=Get Current User]
+export const getCurrentUser = query({
+  args: {},
+  handler: async (ctx) => {
+    // Get authenticated user from session
+  },
+});
+\end{lstlisting}
+
+\textbf{Purpose}: Retrieve current authenticated user information.
+
+\subsection{Mutation: makeAdmin}
+
+\begin{lstlisting}[caption=Promote User to Admin]
+export const makeAdmin = mutation({
+  args: { userId: v.id("users") },
+  handler: async (ctx, args) => {
+    // Verify current user is admin
+    // Update user role to admin
+  },
+});
+\end{lstlisting}
+
+\textbf{Purpose}: Promote a user to admin role.
+
+\textbf{Authorization}: Requires existing admin role.
+
+\section{Favorites Functions}
+
+\subsection{Query: getUserFavorites}
+
+\begin{lstlisting}[caption=Get User Favorites]
+export const getUserFavorites = query({
+  args: {},
+  handler: async (ctx) => {
+    // Get current user
+    // Fetch all favorited sites
+  },
+});
+\end{lstlisting}
+
+\textbf{Purpose}: Retrieve all sites favorited by current user.
+
+\subsection{Mutation: addFavorite}
+
+\begin{lstlisting}[caption=Add Site to Favorites]
+export const addFavorite = mutation({
+  args: { siteId: v.id("heritageSites") },
+  handler: async (ctx, args) => {
+    // Get current user
+    // Create favorite record
+  },
+});
+\end{lstlisting}
+
+\textbf{Purpose}: Add a site to user's favorites.
+
+\subsection{Mutation: removeFavorite}
+
+\begin{lstlisting}[caption=Remove Site from Favorites]
+export const removeFavorite = mutation({
+  args: { siteId: v.id("heritageSites") },
+  handler: async (ctx, args) => {
+    // Get current user
+    // Delete favorite record
+  },
+});
+\end{lstlisting}
+
+\textbf{Purpose}: Remove a site from user's favorites.
+
+% ============================================================================
+% CHAPTER 5: FRONTEND PAGES
+% ============================================================================
+\chapter{Frontend Pages and Components}
+
+\section{Page Structure}
+
+\subsection{Landing Page (/)}
+
+\textbf{Purpose}: Entry point for the application with hero section and feature showcase.
+
+\textbf{Key Sections}:
+\begin{itemize}
+    \item Navigation bar with logo and menu
+    \item Hero section with rotating background images
+    \item Features grid with holographic cards
+    \item Call-to-action section
+    \item Footer with branding
+\end{itemize}
+
+\textbf{Features}:
+\begin{itemize}
+    \item Particle background animation
+    \item Glass morphism effects
+    \item Gradient text styling
+    \item Responsive navigation
+    \item Dynamic authentication buttons
+\end{itemize}
+
+\subsection{Explore Page (/explore)}
+
+\textbf{Purpose}: Main discovery interface for browsing heritage sites.
+
+\textbf{Key Features}:
+\begin{itemize}
+    \item Interactive map with site markers
+    \item Grid/list view toggle
+    \item Advanced filtering (category, state, UNESCO)
+    \item Search functionality
+    \item Site cards with primary images
+    \item View count and favorite indicators
+\end{itemize}
+
+\textbf{Interactions}:
+\begin{itemize}
+    \item Click site card to view details
+    \item Click map marker to navigate to site
+    \item Add/remove favorites
+    \item Filter and search in real-time
+\end{itemize}
+
+\subsection{Site Detail Page (/site/:id)}
+
+\textbf{Purpose}: Comprehensive view of a single heritage site.
+
+\textbf{Content Sections}:
+\begin{itemize}
+    \item Site header with primary image
+    \item Description and historical significance
+    \item Media gallery (images, videos, 3D models, panoramas)
+    \item Audio guides with language selection
+    \item Visitor information (hours, tickets, best time to visit)
+    \item Cultural information (folk tales, cuisine, community)
+    \item Interactive map showing location
+    \item Related sites recommendations
+\end{itemize}
+
+\textbf{Interactive Elements}:
+\begin{itemize}
+    \item 3D model viewer with rotation and zoom
+    \item Panorama viewer for 360° views
+    \item Audio player with playback controls
+    \item Favorite toggle button
+    \item Share functionality
+\end{itemize}
+
+\subsection{Admin Dashboard (/admin)}
+
+\textbf{Purpose}: Content management interface for administrators.
+
+\textbf{Key Sections}:
+\begin{itemize}
+    \item Statistics dashboard (total sites, views, audio plays)
+    \item Sites management table
+    \item Media management interface
+    \item Audio guide management
+    \item User management
+\end{itemize}
+
+\textbf{Admin Capabilities}:
+\begin{itemize}
+    \item Create, read, update, delete heritage sites
+    \item Upload and manage media files
+    \item Set primary images for sites
+    \item Delete unwanted media
+    \item Upload audio guides
+    \item Publish/unpublish sites
+    \item View analytics and statistics
+    \item Manage user roles
+\end{itemize}
+
+\subsection{Authentication Page (/auth)}
+
+\textbf{Purpose}: User login and registration interface.
+
+\textbf{Features}:
+\begin{itemize}
+    \item Email OTP authentication
+    \item Anonymous user option
+    \item Redirect after authentication
+    \item Error handling and validation
+\end{itemize}
+
+\subsection{Favorites Page (/favorites)}
+
+\textbf{Purpose}: Display user's saved favorite sites.
+
+\textbf{Features}:
+\begin{itemize}
+    \item Grid view of favorited sites
+    \item Remove from favorites option
+    \item Quick navigation to site details
+    \item Empty state message
+\end{itemize}
+
+\section{Reusable Components}
+
+\subsection{ParticleBackground}
+
+\textbf{Purpose}: Animated particle network background effect.
+
+\textbf{Features}:
+\begin{itemize}
+    \item Canvas-based particle animation
+    \item Particle movement and connection
+    \item Responsive sizing
+    \item Customizable opacity and color
+\end{itemize}
+
+\subsection{HolographicCard}
+
+\textbf{Purpose}: Card component with glass morphism and shimmer effects.
+
+\textbf{Features}:
+\begin{itemize}
+    \item Glass morphism styling
+    \item Holographic border effect
+    \item Shimmer animation on hover
+    \item Responsive layout
+\end{itemize}
+
+\subsection{InteractiveMap}
+
+\textbf{Purpose}: Leaflet-based interactive map for site discovery.
+
+\textbf{Features}:
+\begin{itemize}
+    \item GeoJSON support for state boundaries
+    \item Custom markers for heritage sites
+    \item Click handlers for site selection
+    \item Zoom and pan controls
+    \item State-based filtering
+\end{itemize}
+
+\subsection{Model3DViewer}
+
+\textbf{Purpose}: Three.js-based 3D model viewer.
+
+\textbf{Features}:
+\begin{itemize}
+    \item Model loading and rendering
+    \item Rotation and zoom controls
+    \item Lighting and material rendering
+    \item Responsive sizing
+\end{itemize}
+
+\subsection{PanoramaViewer}
+
+\textbf{Purpose}: 360° panoramic view viewer.
+
+\textbf{Features}:
+\begin{itemize}
+    \item Panorama image rendering
+    \item Mouse/touch controls for navigation
+    \item Zoom functionality
+    \item Fullscreen support
+\end{itemize}
+
+% ============================================================================
+% CHAPTER 6: ALGORITHMS AND WORKFLOWS
+% ============================================================================
+\chapter{Algorithms and Workflows}
+
+\section{Site Discovery Algorithm}
+
+\subsection{Filtering and Sorting}
+
+\begin{lstlisting}[caption=Site Discovery Algorithm]
+function discoverSites(filters, sortBy) {
+  1. Query published sites from database
+  2. Apply category filter if specified
+  3. Apply state filter if specified
+  4. Apply UNESCO filter if specified
+  5. Sort by specified criteria (popularity, name, etc.)
+  6. Fetch associated media for each site
+  7. Return filtered and sorted results
+}
+\end{lstlisting}
+
+\section{Image Management Workflow}
+
+\subsection{Adding Media}
+
+\begin{enumerate}
+    \item Admin uploads media file through dashboard
+    \item File is stored in Convex file storage
+    \item Media record is created in database
+    \item Media is associated with heritage site
+    \item UI updates to show new media
+\end{enumerate}
+
+\subsection{Setting Primary Image}
+
+\begin{enumerate}
+    \item Admin selects image from media gallery
+    \item System queries all media for the site
+    \item Previous primary image flag is removed
+    \item Selected image is marked as primary
+    \item Site display updates to show new primary image
+\end{enumerate}
+
+\subsection{Deleting Media}
+
+\begin{enumerate}
+    \item Admin selects media to delete
+    \item System verifies admin authorization
+    \item Media record is deleted from database
+    \item File is removed from storage
+    \item If deleted media was primary, system selects new primary
+    \item UI updates to reflect changes
+\end{enumerate}
+
+\section{User Authentication Flow}
+
+\begin{enumerate}
+    \item User navigates to /auth page
+    \item User enters email address
+    \item OTP is sent to email
+    \item User enters OTP code
+    \item System verifies OTP
+    \item User session is created
+    \item User is redirected to dashboard or explore page
+\end{enumerate}
+
+\section{Favorites Management}
+
+\begin{enumerate}
+    \item User clicks favorite button on site
+    \item System checks if site is already favorited
+    \item If not favorited: create favorite record
+    \item If favorited: delete favorite record
+    \item UI updates to reflect favorite status
+    \item Favorites page updates in real-time
+\end{enumerate}
+
+% ============================================================================
+% CHAPTER 7: STYLING AND THEME
+% ============================================================================
+\chapter{Styling and Theme System}
+
+\section{Design Philosophy}
+
+VIRASAT employs a futuristic design aesthetic with the following principles:
+
+\begin{itemize}
+    \item \textbf{Glass Morphism}: Translucent, frosted glass effects for depth
+    \item \textbf{Holographic Elements}: Shimmer and glow effects for visual interest
+    \item \textbf{Particle Animations}: Dynamic background elements for engagement
+    \item \textbf{Gradient Text}: Multi-color text for branding and emphasis
+    \item \textbf{Responsive Design}: Mobile-first approach with desktop enhancements
+\end{itemize}
+
+\section{Color Palette}
+
+The application uses OKLCH color format for Tailwind CSS v4:
+
+\begin{itemize}
+    \item \textbf{Primary}: Blue-based colors for main UI elements
+    \item \textbf{Secondary}: Purple accents for interactive elements
+    \item \textbf{Background}: Dark theme with subtle gradients
+    \item \textbf{Text}: High contrast for readability
+    \item \textbf{Accent}: Cyan/blue for highlights and borders
+\end{itemize}
+
+\section{Component Styling}
+
+\subsection{Glass Morphism}
+
+\begin{lstlisting}[caption=Glass Morphism CSS]
+.glass-morph {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+}
+\end{lstlisting}
+
+\subsection{Holographic Border}
+
+\begin{lstlisting}[caption=Holographic Border CSS]
+.holo-border {
+  background: linear-gradient(45deg, #00ff00, #00ffff, #ff00ff);
+  padding: 2px;
+  border-radius: 8px;
+}
+\end{lstlisting}
+
+\subsection{Gradient Text}
+
+\begin{lstlisting}[caption=Gradient Text CSS]
+.gradient-text {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+\end{lstlisting}
+
+% ============================================================================
+% CHAPTER 8: PERFORMANCE AND OPTIMIZATION
+% ============================================================================
+\chapter{Performance and Optimization}
+
+\section{Frontend Optimization}
+
+\subsection{Code Splitting}
+
+\begin{itemize}
+    \item Route-based code splitting with React Router
+    \item Lazy loading of components
+    \item Dynamic imports for heavy libraries
+\end{itemize}
+
+\subsection{Image Optimization}
+
+\begin{itemize}
+    \item Responsive image sizing
+    \item Lazy loading for off-screen images
+    \item WebP format support with fallbacks
+    \item Image compression and optimization
+\end{itemize}
+
+\subsection{Caching Strategy}
+
+\begin{itemize}
+    \item Browser caching for static assets
+    \item Service worker for offline support
+    \item Convex automatic caching for queries
+\end{itemize}
+
+\section{Backend Optimization}
+
+\subsection{Database Indexing}
+
+Strategic indexes on frequently queried fields:
+
+\begin{itemize}
+    \item \texttt{by\_published}: Fast public site retrieval
+    \item \texttt{by\_state}: Geographic queries
+    \item \texttt{by\_category}: Category filtering
+    \item \texttt{by\_user\_and\_site}: Favorite lookups
+\end{itemize}
+
+\subsection{Query Optimization}
+
+\begin{itemize}
+    \item Batch queries where possible
+    \item Minimize data transfer
+    \item Use indexes for filtering
+    \item Avoid N+1 query problems
+\end{itemize}
+
+\section{Real-Time Performance}
+
+\begin{itemize}
+    \item WebSocket connections for live updates
+    \item Reactive data subscriptions
+    \item Optimistic UI updates
+    \item Debounced search and filters
+\end{itemize}
+
+% ============================================================================
+% CHAPTER 9: SECURITY
+% ============================================================================
+\chapter{Security and Authorization}
+
+\section{Authentication}
+
+\subsection{Email OTP Authentication}
+
+\begin{itemize}
+    \item One-time passwords sent via email
+    \item Time-limited OTP validity
+    \item Rate limiting on OTP requests
+    \item Secure session management
+\end{itemize}
+
+\subsection{Session Management}
+
+\begin{itemize}
+    \item JWT-based session tokens
+    \item Secure cookie storage
+    \item Session expiration and refresh
+    \item CSRF protection
+\end{itemize}
+
+\section{Authorization}
+
+\subsection{Role-Based Access Control}
+
+\begin{itemize}
+    \item \textbf{Admin}: Full access to all features and content management
+    \item \textbf{User}: Access to exploration and favorites
+    \item \textbf{Member}: Limited access to community features
+\end{itemize}
+
+\subsection{Function-Level Authorization}
+
+\begin{lstlisting}[caption=Authorization Check Example]
+export const create = mutation({
+  args: { /* ... */ },
+  handler: async (ctx, args) => {
+    const user = await getCurrentUser(ctx);
+    if (!user || user.role !== "admin") {
+      throw new Error("Unauthorized");
+    }
+    // Proceed with operation
+  },
+});
+\end{lstlisting}
+
+\section{Data Protection}
+
+\begin{itemize}
+    \item HTTPS encryption for all communications
+    \item Secure file storage with access controls
+    \item Input validation and sanitization
+    \item SQL injection prevention (NoSQL)
+    \item XSS protection through React
+\end{itemize}
+
+% ============================================================================
+% CHAPTER 10: DEPLOYMENT AND MAINTENANCE
+% ============================================================================
+\chapter{Deployment and Maintenance}
+
+\section{Development Setup}
+
+\begin{lstlisting}[caption=Development Environment Setup]
+# Install dependencies
+pnpm install
+
+# Start Convex development server
+npx convex dev
+
+# Start Vite development server
+pnpm dev
+
+# Run type checker
+npx tsc -b --noEmit
+\end{lstlisting}
+
+\section{Production Deployment}
+
+\subsection{Frontend Deployment}
+
+\begin{enumerate}
+    \item Build optimized production bundle: \texttt{pnpm build}
+    \item Deploy to CDN or hosting service
+    \item Configure environment variables
+    \item Set up SSL/TLS certificates
+    \item Configure caching headers
+\end{enumerate}
+
+\subsection{Backend Deployment}
+
+\begin{enumerate}
+    \item Deploy Convex functions: \texttt{npx convex deploy}
+    \item Configure production environment variables
+    \item Set up database backups
+    \item Configure monitoring and logging
+    \item Set up error tracking
+\end{enumerate}
+
+\section{Monitoring and Logging}
+
+\begin{itemize}
+    \item Application error tracking
+    \item Performance monitoring
+    \item Database query logging
+    \item User activity tracking
+    \item Analytics and metrics
+\end{itemize}
+
+\section{Maintenance Tasks}
+
+\begin{itemize}
+    \item Regular security updates
+    \item Dependency updates
+    \item Database optimization
+    \item Cache invalidation
+    \item Backup verification
+\end{itemize}
+
+% ============================================================================
+% CHAPTER 11: FUTURE ENHANCEMENTS
+% ============================================================================
+\chapter{Future Enhancements and Roadmap}
+
+\section{Planned Features}
+
+\subsection{Phase 2}
+
+\begin{itemize}
+    \item Multi-language support (Hindi, Tamil, Telugu, etc.)
+    \item User-generated content and reviews
+    \item Social sharing and community features
+    \item Advanced search with full-text indexing
+    \item Personalized recommendations
+\end{itemize}
+
+\subsection{Phase 3}
+
+\begin{itemize}
+    \item Mobile native applications (iOS/Android)
+    \item Augmented Reality (AR) features
+    \item Virtual reality (VR) experiences
+    \item Offline mode with service workers
+    \item Advanced analytics dashboard
+\end{itemize}
+
+\subsection{Phase 4}
+
+\begin{itemize}
+    \item AI-powered content recommendations
+    \item Chatbot for user assistance
+    \item Video streaming optimization
+    \item Blockchain-based heritage verification
+    \item Integration with tourism boards
+\end{itemize}
+
+\section{Technical Improvements}
+
+\begin{itemize}
+    \item GraphQL API implementation
+    \item Microservices architecture
+    \item Advanced caching strategies
+    \item Machine learning for personalization
+    \item Improved accessibility features
+\end{itemize}
+
+% ============================================================================
+% APPENDIX
+% ============================================================================
+\appendix
+
+\chapter{File Structure}
+
+\begin{lstlisting}[caption=Project Directory Structure]
+VIRASAT/
+├── src/
+│   ├── pages/
+│   │   ├── Landing.tsx
+│   │   ├── Explore.tsx
+│   │   ├── SiteDetail.tsx
+│   │   ├── AdminDashboard.tsx
+│   │   ├── Auth.tsx
+│   │   ├── Favorites.tsx
+│   │   └── NotFound.tsx
+│   ├── components/
+│   │   ├── ParticleBackground.tsx
+│   │   ├── HolographicCard.tsx
+│   │   ├── InteractiveMap.tsx
+│   │   ├── Model3DViewer.tsx
+│   │   ├── PanoramaViewer.tsx
+│   │   ├── FloatingElement.tsx
+│   │   ├── AnimatedSection.tsx
+│   │   └── ui/ (50+ Shadcn components)
+│   ├── convex/
+│   │   ├── schema.ts
+│   │   ├── heritageSites.ts
+│   │   ├── media.ts
+│   │   ├── audio.ts
+│   │   ├── favorites.ts
+│   │   ├── users.ts
+│   │   ├── auth.ts
+│   │   ├── http.ts
+│   │   └── crons.ts
+│   ├── hooks/
+│   │   ├── use-auth.ts
+│   │   └── use-mobile.ts
+│   ├── lib/
+│   │   ├── utils.ts
+│   │   └── downloadSource.ts
+│   ├── index.css
+│   ├── main.tsx
+│   └── instrumentation.tsx
+├── public/
+│   ├── india.geojson
+│   ├── india-states.geojson
+│   ├── logo.svg
+│   └── logo.png
+├── package.json
+├── vite.config.ts
+├── tsconfig.json
+└── README.md
+\end{lstlisting}
+
+\chapter{Environment Variables}
+
+\begin{lstlisting}[caption=Required Environment Variables]
+# Frontend (.env)
+VITE_CONVEX_URL=<your-convex-url>
+
+# Backend (Convex)
+CONVEX_DEPLOYMENT=<deployment-id>
+UNSPLASH_ACCESS_KEY=<unsplash-api-key>
+\end{lstlisting}
+
+\chapter{API Reference}
+
+\section{Heritage Sites API}
+
+\begin{itemize}
+    \item \texttt{api.heritageSites.list}: Get published sites
+    \item \texttt{api.heritageSites.getById}: Get site details
+    \item \texttt{api.heritageSites.search}: Search sites
+    \item \texttt{api.heritageSites.create}: Create site (admin)
+    \item \texttt{api.heritageSites.update}: Update site (admin)
+    \item \texttt{api.heritageSites.remove}: Delete site (admin)
+\end{itemize}
+
+\section{Media API}
+
+\begin{itemize}
+    \item \texttt{api.media.addMedia}: Add media to site
+    \item \texttt{api.media.removeMedia}: Remove media
+    \item \texttt{api.media.setPrimaryMedia}: Set primary image
+\end{itemize}
+
+\section{Favorites API}
+
+\begin{itemize}
+    \item \texttt{api.favorites.getUserFavorites}: Get user favorites
+    \item \texttt{api.favorites.addFavorite}: Add to favorites
+    \item \texttt{api.favorites.removeFavorite}: Remove from favorites
+\end{itemize}
+
+\end{document}

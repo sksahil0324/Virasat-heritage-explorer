@@ -115,6 +115,19 @@ const schema = defineSchema(
       .index("by_user", ["userId"])
       .index("by_site", ["siteId"])
       .index("by_user_and_site", ["userId", "siteId"]),
+
+    // User-submitted stories
+    userStories: defineTable({
+      siteId: v.id("heritageSites"),
+      userId: v.id("users"),
+      content: v.string(),
+      type: v.union(v.literal("story"), v.literal("community")),
+      userName: v.string(),
+      isApproved: v.boolean(),
+    })
+      .index("by_site", ["siteId"])
+      .index("by_user", ["userId"])
+      .index("by_site_and_approved", ["siteId", "isApproved"]),
   },
   {
     schemaValidation: false,

@@ -18,6 +18,8 @@ import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router";
 import InteractiveMap from "@/components/InteractiveMap";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import SubmitStoryDialog from "@/components/SubmitStoryDialog";
+import UserStoriesDisplay from "@/components/UserStoriesDisplay";
 
 export default function Explore() {
   const { isLoading: authLoading, isAuthenticated } = useAuth();
@@ -474,21 +476,26 @@ export default function Explore() {
                   }}
                 >
                   <Card
-                    className="cursor-pointer border-2 border-transparent hover:border-primary/50 transition-all duration-300 ease-out hover:shadow-lg"
-                    onClick={() => navigate(`/site/${site._id}`)}
+                    className="border-2 border-transparent hover:border-primary/50 transition-all duration-300 ease-out hover:shadow-lg"
                   >
                     <CardHeader>
-                      <div className="flex items-center gap-2 mb-2">
-                        <Badge variant="secondary">{site.category}</Badge>
-                        {site.isUNESCO && <Badge>UNESCO</Badge>}
+                      <div className="flex items-center justify-between mb-2">
+                        <div className="flex items-center gap-2">
+                          <Badge variant="secondary">{site.category}</Badge>
+                          {site.isUNESCO && <Badge>UNESCO</Badge>}
+                        </div>
+                        {isAuthenticated && (
+                          <SubmitStoryDialog siteId={site._id} siteName={site.name} type="story" />
+                        )}
                       </div>
-                      <CardTitle className="text-xl">{site.name}</CardTitle>
+                      <CardTitle className="text-xl cursor-pointer hover:text-primary" onClick={() => navigate(`/site/${site._id}`)}>{site.name}</CardTitle>
                       <CardDescription>{site.city}, {site.state}</CardDescription>
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="space-y-4">
                       <p className="text-sm text-muted-foreground line-clamp-4">
                         {site.folkTales || site.stories}
                       </p>
+                      <UserStoriesDisplay siteId={site._id} type="story" />
                     </CardContent>
                   </Card>
                 </motion.div>

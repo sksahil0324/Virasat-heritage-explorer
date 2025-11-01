@@ -23,6 +23,7 @@ import type * as media from "../media.js";
 import type * as seedData from "../seedData.js";
 import type * as updateKonarkModel from "../updateKonarkModel.js";
 import type * as updateRemainingUrls from "../updateRemainingUrls.js";
+import type * as userStories from "../userStories.js";
 import type * as users from "../users.js";
 
 import type {
@@ -55,6 +56,7 @@ declare const fullApi: ApiFromModules<{
   seedData: typeof seedData;
   updateKonarkModel: typeof updateKonarkModel;
   updateRemainingUrls: typeof updateRemainingUrls;
+  userStories: typeof userStories;
   users: typeof users;
 }>;
 declare const fullApiWithMounts: typeof fullApi;

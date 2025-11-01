@@ -182,6 +182,13 @@ export default function SiteDetail() {
                       {panoramaImage ? (
                         <div className="w-full h-[600px] relative bg-black">
                           <PanoramaViewer imageUrl={panoramaImage.url} />
+                          <Button
+                            size="sm"
+                            className="absolute top-4 right-4 z-10"
+                            onClick={() => window.open(`/panorama/${id}`, '_blank', 'width=1920,height=1080')}
+                          >
+                            Fullscreen
+                          </Button>
                         </div>
                       ) : site.view360Url ? (
                         <div className="w-full h-[600px] relative">
@@ -193,6 +200,13 @@ export default function SiteDetail() {
                             title="360° Virtual Tour"
                             style={{ border: 'none' }}
                           />
+                          <Button
+                            size="sm"
+                            className="absolute top-4 right-4 z-10"
+                            onClick={() => window.open(site.view360Url, '_blank', 'width=1920,height=1080')}
+                          >
+                            Fullscreen
+                          </Button>
                         </div>
                       ) : (
                         <div className="w-full h-[400px] bg-muted flex items-center justify-center">

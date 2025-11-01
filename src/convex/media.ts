@@ -44,6 +44,34 @@ export const remove = mutation({
   },
 });
 
+// Set media as primary
+export const setPrimary = mutation({
+  args: { 
+    id: v.id("media"),
+    siteId: v.id("heritageSites")
+  },
+  handler: async (ctx, args) => {
+    const user = await getCurrentUser(ctx);
+    if (!user || user.role !== "admin") {
+      throw new Error("Unauthorized");
+    }
+
+    // Get all media for this site
+    const siteMedia = await ctx.db
+      .query("media")
+      .withIndex("by_site", (q) => q.eq("siteId", args.siteId))
+      .collect();
+
+    // Set all to non-primary
+    for (const media of siteMedia) {
+      await ctx.db.patch(media._id, { isPrimary: false });
+    }
+
+    // Set the selected one as primary
+    await ctx.db.patch(args.id, { isPrimary: true });
+  },
+});
+
 // Generate upload URL
 export const generateUploadUrl = mutation({
   args: {},

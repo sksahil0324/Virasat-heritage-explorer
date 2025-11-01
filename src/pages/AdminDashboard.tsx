@@ -70,6 +70,8 @@ export default function AdminDashboard() {
   const generateAudioUploadUrl = useMutation(api.audio.generateUploadUrl);
   const addAudio = useMutation(api.audio.add);
   const cleanupUnsplashImages = useMutation(api.cleanupUnsplashImages.removeUnsplashImages);
+  const removeMedia = useMutation(api.media.remove);
+  const setMediaPrimary = useMutation(api.media.setPrimary);
 
   const [formData, setFormData] = useState<SiteFormData>({
     name: "",
@@ -367,6 +369,12 @@ export default function AdminDashboard() {
     }
   };
 
+  // Get media for editing site
+  const siteMedia = useQuery(
+    api.heritageSites.getById,
+    editingSiteId && isAdmin ? { id: editingSiteId } : "skip"
+  );
+
   // Populate form when editing
   if (editingSite && isEditDialogOpen && formData.name === "") {
     setFormData({
@@ -656,6 +664,70 @@ export default function AdminDashboard() {
 
         {editingSiteId && (
           <div className="space-y-4 pt-4 border-t">
+            {/* Media Management Section */}
+            {siteMedia?.media && siteMedia.media.length > 0 && (
+              <div className="space-y-3 p-4 bg-muted rounded-lg">
+                <Label className="font-semibold">Manage Site Images</Label>
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                  {siteMedia.media.map((media) => (
+                    <div key={media._id} className="relative group">
+                      <img
+                        src={media.url}
+                        alt={media.caption || "Site image"}
+                        className={`w-full h-24 object-cover rounded-lg border-2 transition-all ${
+                          media.isPrimary ? "border-primary" : "border-border"
+                        }`}
+                        onError={(e) => {
+                          e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100'%3E%3Crect fill='%23f0f0f0' width='100' height='100'/%3E%3Ctext x='50' y='50' text-anchor='middle' dy='.3em' fill='%23999' font-size='12'%3EImage Error%3C/text%3E%3C/svg%3E";
+                        }}
+                      />
+                      {media.isPrimary && (
+                        <div className="absolute top-1 right-1 bg-primary text-primary-foreground px-2 py-1 rounded text-xs font-semibold">
+                          Primary
+                        </div>
+                      )}
+                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center gap-2">
+                        {!media.isPrimary && (
+                          <Button
+                            size="sm"
+                            variant="secondary"
+                            onClick={async () => {
+                              try {
+                                await setMediaPrimary({ id: media._id, siteId: editingSiteId });
+                                toast.success("Image set as primary");
+                              } catch (error) {
+                                toast.error("Failed to set primary image");
+                              }
+                            }}
+                            title="Set as primary image"
+                          >
+                            ⭐
+                          </Button>
+                        )}
+                        <Button
+                          size="sm"
+                          variant="destructive"
+                          onClick={async () => {
+                            if (confirm("Delete this image?")) {
+                              try {
+                                await removeMedia({ id: media._id });
+                                toast.success("Image deleted");
+                              } catch (error) {
+                                toast.error("Failed to delete image");
+                              }
+                            }
+                          }}
+                          title="Delete image"
+                        >
+                          🗑️
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             <div className="space-y-2">
               <Label>Upload Images/Videos (Bulk Upload)</Label>
               <Input

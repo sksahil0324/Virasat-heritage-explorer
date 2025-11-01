@@ -109,7 +109,7 @@ export default function Landing() {
 
             {/* Navigation Menu */}
             <div className="hidden lg:flex items-center gap-1">
-              {["Home", "Explore", "Heritage Map", "360° Experience", "Gallery", "Stories", "Community", "About"].map((item, index) => (
+              {["Home", "Explore", "Heritage Map", "360° Experience", "Gallery", "Stories", "Community"].map((item, index) => (
                 <motion.div
                   key={item}
                   initial={{ opacity: 0, y: -10 }}

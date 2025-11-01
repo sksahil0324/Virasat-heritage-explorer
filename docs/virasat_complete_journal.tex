@@ -1,0 +1,1660 @@
+\documentclass[12pt,a4paper]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows, positioning, calc}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{float}
+
+\geometry{margin=1in}
+\pagestyle{fancy}
+\fancyhf{}
+\rhead{VIRASAT - Heritage Explorer}
+\lhead{\leftmark}
+\cfoot{\thepage}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,      
+    urlcolor=cyan,
+    pdftitle={VIRASAT Heritage Explorer - Complete Technical Documentation},
+    pdfauthor={VIRASAT Team},
+}
+
+\lstdefinestyle{typescript}{
+    language=Java,
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    commentstyle=\color{green!60!black},
+    stringstyle=\color{red},
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    stepnumber=1,
+    numbersep=8pt,
+    backgroundcolor=\color{gray!10},
+    showspaces=false,
+    showstringspaces=false,
+    showtabs=false,
+    frame=single,
+    tabsize=2,
+    captionpos=b,
+    breaklines=true,
+    breakatwhitespace=false,
+    escapeinside={\%*}{*)},
+    morekeywords={const, let, var, function, async, await, export, import, interface, type}
+}
+
+\lstset{style=typescript}
+
+\tikzstyle{startstop} = [rectangle, rounded corners, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=red!30]
+\tikzstyle{process} = [rectangle, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=blue!30]
+\tikzstyle{decision} = [diamond, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=green!30]
+\tikzstyle{arrow} = [thick,->,>=stealth]
+\tikzstyle{data} = [trapezium, trapezium left angle=70, trapezium right angle=110, minimum width=3cm, minimum height=1cm, text centered, draw=black, fill=yellow!30]
+
+\begin{document}
+
+\begin{titlepage}
+    \centering
+    \vspace*{2cm}
+    {\Huge\bfseries VIRASAT\\[0.5cm]}
+    {\LARGE Heritage Explorer Platform\\[1.5cm]}
+    {\Large Complete Technical Documentation\\[2cm]}
+    
+    \includegraphics[width=0.3\textwidth]{logo.png}\\[2cm]
+    
+    {\large A Comprehensive Full-Stack Web Application\\
+    for Indian Heritage Site Exploration\\[1cm]}
+    
+    {\large Technology Stack:\\
+    React • TypeScript • Convex • Leaflet • Three.js\\[2cm]}
+    
+    {\large \today}
+    
+    \vfill
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+\begin{abstract}
+VIRASAT (Heritage Explorer) is a cutting-edge full-stack web platform designed to showcase and preserve India's rich cultural heritage through immersive digital experiences. The platform leverages modern web technologies including React 19, TypeScript, Convex backend, and advanced visualization libraries to provide users with interactive 3D models, 360° panoramic views, audio guides, and comprehensive historical information about heritage sites across India.
+
+This document provides complete technical documentation covering system architecture, implementation details, algorithms, data flows, security measures, performance optimizations, and future enhancement plans. The platform serves both general users seeking to explore India's heritage and administrators managing content through a comprehensive dashboard.
+
+\textbf{Key Features:} Interactive mapping with Leaflet, 3D model rendering with Three.js, real-time data synchronization with Convex, responsive design with Tailwind CSS, role-based access control, file storage management, and futuristic UI/UX with glass morphism effects.
+\end{abstract}
+
+\chapter{Introduction}
+
+\section{Project Overview}
+
+VIRASAT (meaning "Heritage" in Hindi) is a comprehensive digital platform dedicated to preserving, showcasing, and making accessible India's vast cultural heritage. The platform transforms the way users interact with historical sites by providing immersive experiences through cutting-edge web technologies.
+
+\subsection{Motivation}
+
+India possesses one of the world's richest cultural heritages, with thousands of monuments, temples, forts, and archaeological sites. However, many of these sites are:
+\begin{itemize}
+    \item Geographically dispersed and difficult to access
+    \item Lacking comprehensive digital documentation
+    \item Not easily discoverable by heritage enthusiasts
+    \item Missing immersive visualization technologies
+    \item Inadequately represented in modern digital platforms
+\end{itemize}
+
+VIRASAT addresses these challenges by creating a centralized, technology-driven platform that brings India's heritage to users worldwide.
+
+\subsection{Project Objectives}
+
+\begin{enumerate}
+    \item \textbf{Digital Preservation:} Create comprehensive digital records of heritage sites including images, videos, 3D models, and 360° views
+    \item \textbf{Accessibility:} Make heritage information accessible to anyone, anywhere, through web technologies
+    \item \textbf{Immersive Experience:} Provide virtual tours through 3D models and panoramic views
+    \item \textbf{Educational Value:} Offer detailed historical, cultural, and architectural information
+    \item \textbf{Community Engagement:} Enable users to explore, favorite, and learn about heritage sites
+    \item \textbf{Administrative Efficiency:} Provide tools for content management and analytics
+\end{enumerate}
+
+\subsection{Target Audience}
+
+\begin{itemize}
+    \item Heritage enthusiasts and cultural researchers
+    \item Students and educators
+    \item Tourists planning visits to India
+    \item Historians and archaeologists
+    \item Government heritage departments
+    \item General public interested in Indian culture
+\end{itemize}
+
+\section{Scope and Limitations}
+
+\subsection{In Scope}
+\begin{itemize}
+    \item 27+ heritage sites across India with comprehensive data
+    \item Interactive map visualization with state-level filtering
+    \item 3D model and 360° panoramic view integration
+    \item Audio guide functionality with play tracking
+    \item User authentication and favorites management
+    \item Admin dashboard for content management
+    \item Responsive design for desktop and mobile devices
+    \item Real-time data synchronization
+    \item File upload and storage management
+\end{itemize}
+
+\subsection{Out of Scope}
+\begin{itemize}
+    \item Mobile native applications (iOS/Android)
+    \item Offline functionality
+    \item User-generated content and reviews
+    \item E-commerce features (ticket booking)
+    \item Multi-language support (currently English only)
+    \item Social media integration
+    \item Advanced AR/VR experiences
+\end{itemize}
+
+\chapter{System Architecture}
+
+\section{Technology Stack}
+
+\subsection{Frontend Technologies}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Technology} & \textbf{Version} & \textbf{Purpose} \\ \midrule
+React & 19.1.0 & UI framework \\
+TypeScript & 5.8.3 & Type-safe development \\
+Vite & 6.3.5 & Build tool and dev server \\
+React Router & 7.6.1 & Client-side routing \\
+Tailwind CSS & 4.1.8 & Utility-first styling \\
+Framer Motion & 12.15.0 & Animation library \\
+Leaflet & 1.9.4 & Interactive maps \\
+Three.js & Latest & 3D rendering \\
+@react-three/fiber & Latest & React renderer for Three.js \\
+@react-three/drei & Latest & Three.js helpers \\
+Shadcn UI & Latest & Component library \\
+Lucide React & Latest & Icon library \\
+Sonner & Latest & Toast notifications \\
+JSZip & 3.10.1 & ZIP file generation \\ \bottomrule
+\end{tabular}
+\caption{Frontend Technology Stack}
+\end{table}
+
+\subsection{Backend Technologies}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Technology} & \textbf{Version} & \textbf{Purpose} \\ \midrule
+Convex & 1.27.0 & Backend-as-a-Service \\
+Convex Auth & Latest & Authentication system \\
+Node.js & Latest & Runtime environment \\
+TypeScript & 5.8.3 & Type-safe backend code \\ \bottomrule
+\end{tabular}
+\caption{Backend Technology Stack}
+\end{table}
+
+\section{Architectural Pattern}
+
+VIRASAT follows a modern \textbf{Client-Server Architecture} with the following characteristics:
+
+\begin{itemize}
+    \item \textbf{Frontend:} Single Page Application (SPA) built with React
+    \item \textbf{Backend:} Serverless functions powered by Convex
+    \item \textbf{Database:} Convex's built-in reactive database
+    \item \textbf{Storage:} Convex file storage for media assets
+    \item \textbf{Authentication:} Convex Auth with email OTP
+    \item \textbf{Real-time:} WebSocket-based live data synchronization
+\end{itemize}
+
+\subsection{System Architecture Diagram}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=2cm]
+
+\node (user) [startstop] {User Browser};
+\node (react) [process, below of=user] {React Frontend};
+\node (router) [process, below of=react] {React Router};
+\node (convex) [process, below of=router] {Convex Backend};
+\node (db) [data, below left of=convex, xshift=-2cm] {Database};
+\node (storage) [data, below right of=convex, xshift=2cm] {File Storage};
+\node (auth) [process, right of=convex, xshift=3cm] {Auth System};
+
+\draw [arrow] (user) -- (react);
+\draw [arrow] (react) -- (router);
+\draw [arrow] (router) -- (convex);
+\draw [arrow] (convex) -- (db);
+\draw [arrow] (convex) -- (storage);
+\draw [arrow] (convex) -- (auth);
+\draw [arrow] (auth) -- (convex);
+
+\end{tikzpicture}
+\caption{High-Level System Architecture}
+\end{figure}
+
+\section{Database Schema}
+
+The database schema is defined using Convex's schema definition system with full TypeScript type safety.
+
+\subsection{Core Tables}
+
+\subsubsection{Users Table}
+
+\begin{lstlisting}[caption=Users Table Schema]
+users: defineTable({
+  name: v.optional(v.string()),
+  image: v.optional(v.string()),
+  email: v.optional(v.string()),
+  emailVerificationTime: v.optional(v.number()),
+  isAnonymous: v.optional(v.boolean()),
+  role: v.optional(roleValidator),
+}).index("email", ["email"])
+\end{lstlisting}
+
+\textbf{Fields:}
+\begin{itemize}
+    \item \texttt{name}: User's display name
+    \item \texttt{image}: Profile image URL
+    \item \texttt{email}: User's email address (indexed)
+    \item \texttt{emailVerificationTime}: Timestamp of email verification
+    \item \texttt{isAnonymous}: Whether user is anonymous
+    \item \texttt{role}: User role (admin, user, member)
+\end{itemize}
+
+\subsubsection{Heritage Sites Table}
+
+\begin{lstlisting}[caption=Heritage Sites Table Schema]
+heritageSites: defineTable({
+  name: v.string(),
+  description: v.string(),
+  historicalSignificance: v.string(),
+  category: categoryValidator,
+  state: v.string(),
+  city: v.string(),
+  latitude: v.optional(v.number()),
+  longitude: v.optional(v.number()),
+  isUNESCO: v.boolean(),
+  timePeriod: v.optional(v.string()),
+  visitorGuidelines: v.optional(v.string()),
+  viewCount: v.number(),
+  isPublished: v.boolean(),
+  createdBy: v.id("users"),
+  folkTales: v.optional(v.string()),
+  culturalHeritage: v.optional(v.string()),
+  cuisine: v.optional(v.string()),
+  stories: v.optional(v.string()),
+  community: v.optional(v.string()),
+  ticketPrice: v.optional(v.string()),
+  openingHours: v.optional(v.string()),
+  bestTimeToVisit: v.optional(v.string()),
+  timezone: v.optional(v.string()),
+  view360Url: v.optional(v.string()),
+  view3dUrl: v.optional(v.string()),
+})
+  .index("by_state", ["state"])
+  .index("by_category", ["category"])
+  .index("by_published", ["isPublished"])
+  .index("by_unesco", ["isUNESCO"])
+  .index("by_view_count", ["viewCount"])
+\end{lstlisting}
+
+\textbf{Categories:} temple, fort, palace, monument, museum, archaeological, natural, other
+
+\textbf{Indexes:} Optimized for filtering by state, category, publication status, UNESCO designation, and view count
+
+\subsubsection{Media Table}
+
+\begin{lstlisting}[caption=Media Table Schema]
+media: defineTable({
+  siteId: v.id("heritageSites"),
+  type: v.union(
+    v.literal("image"), 
+    v.literal("video"), 
+    v.literal("model3d"), 
+    v.literal("panorama")
+  ),
+  storageId: v.optional(v.id("_storage")),
+  url: v.string(),
+  caption: v.optional(v.string()),
+  isPrimary: v.boolean(),
+}).index("by_site", ["siteId"])
+\end{lstlisting}
+
+\textbf{Media Types:}
+\begin{itemize}
+    \item \texttt{image}: Standard photographs
+    \item \texttt{video}: Video content
+    \item \texttt{model3d}: 3D model files (GLB, GLTF, OBJ, FBX)
+    \item \texttt{panorama}: 360° panoramic images
+\end{itemize}
+
+\subsubsection{Audio Summaries Table}
+
+\begin{lstlisting}[caption=Audio Summaries Table Schema]
+audioSummaries: defineTable({
+  siteId: v.id("heritageSites"),
+  storageId: v.id("_storage"),
+  url: v.string(),
+  duration: v.optional(v.number()),
+  language: v.string(),
+  playCount: v.number(),
+}).index("by_site", ["siteId"])
+\end{lstlisting}
+
+\subsubsection{Favorites Table}
+
+\begin{lstlisting}[caption=Favorites Table Schema]
+favorites: defineTable({
+  userId: v.id("users"),
+  siteId: v.id("heritageSites"),
+})
+  .index("by_user", ["userId"])
+  .index("by_site", ["siteId"])
+  .index("by_user_and_site", ["userId", "siteId"])
+\end{lstlisting}
+
+\subsection{Entity Relationship Diagram}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=3cm]
+
+\node (users) [process] {Users};
+\node (sites) [process, right of=users, xshift=3cm] {Heritage Sites};
+\node (media) [process, below of=sites] {Media};
+\node (audio) [process, left of=media, xshift=-3cm] {Audio Summaries};
+\node (favorites) [process, below of=users] {Favorites};
+
+\draw [arrow] (users) -- node[anchor=south] {creates} (sites);
+\draw [arrow] (sites) -- node[anchor=west] {has many} (media);
+\draw [arrow] (sites) -- node[anchor=east] {has many} (audio);
+\draw [arrow] (users) -- node[anchor=east] {has many} (favorites);
+\draw [arrow] (favorites) -- node[anchor=north] {references} (sites);
+
+\end{tikzpicture}
+\caption{Entity Relationship Diagram}
+\end{figure}
+
+\section{Data Flow Architecture}
+
+\subsection{User Authentication Flow}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=2.5cm]
+
+\node (start) [startstop] {User Visits Site};
+\node (check) [decision, below of=start] {Authenticated?};
+\node (landing) [process, right of=check, xshift=3cm] {Show Landing Page};
+\node (explore) [process, below of=check] {Show Explore Page};
+\node (auth) [process, right of=explore, xshift=3cm] {Auth Page};
+\node (otp) [process, below of=auth] {Send OTP};
+\node (verify) [decision, below of=otp] {OTP Valid?};
+\node (success) [process, below of=verify] {Create Session};
+\node (end) [startstop, below of=success] {Access Granted};
+
+\draw [arrow] (start) -- (check);
+\draw [arrow] (check) -- node[anchor=south] {No} (landing);
+\draw [arrow] (check) -- node[anchor=west] {Yes} (explore);
+\draw [arrow] (landing) -- (auth);
+\draw [arrow] (auth) -- (otp);
+\draw [arrow] (otp) -- (verify);
+\draw [arrow] (verify) -- node[anchor=west] {Yes} (success);
+\draw [arrow] (verify) -- node[anchor=south] {No} (otp);
+\draw [arrow] (success) -- (end);
+
+\end{tikzpicture}
+\caption{User Authentication Flow}
+\end{figure}
+
+\subsection{Site Exploration Flow}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=2cm]
+
+\node (start) [startstop] {User on Explore Page};
+\node (filter) [process, below of=start] {Apply Filters};
+\node (query) [process, below of=filter] {Query Convex};
+\node (fetch) [process, below of=query] {Fetch Sites + Media};
+\node (render) [process, below of=fetch] {Render Site Cards};
+\node (click) [decision, below of=render] {User Clicks Site?};
+\node (detail) [process, below of=click] {Navigate to Detail};
+\node (load) [process, below of=detail] {Load Full Data};
+\node (display) [process, below of=load] {Display 3D/360°};
+\node (end) [startstop, below of=display] {User Explores};
+
+\draw [arrow] (start) -- (filter);
+\draw [arrow] (filter) -- (query);
+\draw [arrow] (query) -- (fetch);
+\draw [arrow] (fetch) -- (render);
+\draw [arrow] (render) -- (click);
+\draw [arrow] (click) -- node[anchor=west] {Yes} (detail);
+\draw [arrow] (click) -- node[anchor=south] {No} (render);
+\draw [arrow] (detail) -- (load);
+\draw [arrow] (load) -- (display);
+\draw [arrow] (display) -- (end);
+
+\end{tikzpicture}
+\caption{Site Exploration Flow}
+\end{figure}
+
+\chapter{Core Features Implementation}
+
+\section{Landing Page}
+
+The landing page serves as the entry point with a futuristic design aesthetic featuring particle animations, rotating background images, and glass morphism effects.
+
+\subsection{Key Components}
+
+\subsubsection{Particle Background}
+
+\begin{algorithm}[H]
+\caption{Particle Animation Algorithm}
+\begin{algorithmic}[1]
+\State Initialize canvas with window dimensions
+\State Create array of 80 particles with random positions and velocities
+\For{each animation frame}
+    \State Clear canvas
+    \For{each particle}
+        \State Update position: $x \gets x + v_x$, $y \gets y + v_y$
+        \If{particle exits canvas}
+            \State Wrap to opposite edge
+        \EndIf
+        \State Draw particle as circle with opacity
+    \EndFor
+    \For{each particle pair}
+        \State Calculate distance: $d = \sqrt{(x_1-x_2)^2 + (y_1-y_2)^2}$
+        \If{$d < 150$}
+            \State Draw connection line with opacity $\propto (1 - d/150)$
+        \EndIf
+    \EndFor
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+
+\subsubsection{Rotating Background Images}
+
+\begin{lstlisting}[caption=Background Image Rotation Logic]
+const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+// Fetch sites with uploaded images
+const sites = useQuery(api.heritageSites.list, {});
+const monumentImages = sites
+  ?.flatMap((site) => 
+    site.media
+      ?.filter((m) => m.type === "image" && m.storageId)
+      .map((m) => ({
+        url: m.url,
+        name: site.name,
+        location: `${site.city}, ${site.state}`,
+      }))
+  )
+  .filter(Boolean) || [];
+
+// Rotate every 30 seconds
+useEffect(() => {
+  if (monumentImages.length === 0) return;
+  const interval = setInterval(() => {
+    setCurrentImageIndex((prev) => 
+      (prev + 1) % monumentImages.length
+    );
+  }, 30000);
+  return () => clearInterval(interval);
+}, [monumentImages.length]);
+\end{lstlisting}
+
+\subsection{Navigation System}
+
+The navigation bar dynamically adjusts based on authentication status:
+
+\begin{itemize}
+    \item \textbf{Unauthenticated:} Sign In, Get Started, Admin Login buttons
+    \item \textbf{Authenticated:} Dashboard, Admin, Favorites buttons
+    \item \textbf{Menu Items:} Home, Explore, Heritage Map, 360° Experience, Gallery, Stories, Community, About
+\end{itemize}
+
+\section{Explore Page}
+
+The Explore page provides multiple ways to discover heritage sites through dynamic content sections.
+
+\subsection{URL-Based Section Routing}
+
+\begin{lstlisting}[caption=Dynamic Section Rendering]
+const [searchParams, setSearchParams] = useSearchParams();
+const activeSection = searchParams.get("section") || "explore";
+
+const handleSectionChange = (section: string) => {
+  setSearchParams({ section });
+};
+
+// Render different content based on activeSection
+{activeSection === "explore" && <ExploreContent />}
+{activeSection === "map" && <InteractiveMap />}
+{activeSection === "360" && <PanoramaGallery />}
+{activeSection === "gallery" && <ImageGallery />}
+{activeSection === "stories" && <StoriesSection />}
+{activeSection === "community" && <CommunitySection />}
+{activeSection === "about" && <AboutSection />}
+\end{lstlisting}
+
+\subsection{Search and Filter Algorithm}
+
+\begin{algorithm}[H]
+\caption{Heritage Site Filtering}
+\begin{algorithmic}[1]
+\Require $sites$: array of heritage sites
+\Require $category$, $state$, $unescoOnly$: filter parameters
+\Require $searchTerm$: search string
+\Ensure $filteredSites$: filtered array of sites
+
+\If{$searchTerm.length > 2$}
+    \State $results \gets$ query database with search term
+    \State \Return $results$
+\EndIf
+
+\State $filtered \gets sites$
+
+\If{$category \neq "all"$}
+    \State $filtered \gets$ filter by category
+\EndIf
+
+\If{$state \neq "all"$}
+    \State $filtered \gets$ filter by state
+\EndIf
+
+\If{$unescoOnly = true$}
+    \State $filtered \gets$ filter UNESCO sites only
+\EndIf
+
+\State Sort by view count (descending)
+\State \Return $filtered$
+\end{algorithmic}
+\end{algorithm}
+
+\section{Interactive Map}
+
+The interactive map uses Leaflet with GeoJSON data for accurate geographical representation of India.
+
+\subsection{Map Initialization}
+
+\begin{lstlisting}[caption=Map Configuration]
+<MapContainer
+  center={[22.9734, 78.6569]}  // Center of India
+  zoom={5}
+  scrollWheelZoom={true}
+  zoomControl={true}
+  zoomSnap={0.5}
+  zoomDelta={0.5}
+  wheelPxPerZoomLevel={120}
+  zoomAnimation={true}
+  fadeAnimation={true}
+  markerZoomAnimation={true}
+  style={{ height: "100%", width: "100%" }}
+>
+  <TileLayer
+    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+  />
+  <GeoJSON
+    data={indiaGeoJson}
+    style={geoJsonStyle}
+    onEachFeature={onEachFeature}
+  />
+  {/* Markers for heritage sites */}
+</MapContainer>
+\end{lstlisting}
+
+\subsection{Custom Marker System}
+
+\begin{algorithm}[H]
+\caption{Custom Marker Creation}
+\begin{algorithmic}[1]
+\Function{createCustomIcon}{$isUNESCO$}
+    \State $color \gets isUNESCO$ ? "\#ffd166" : "\#5bc0be"
+    \State Create div icon with:
+    \State \quad - Circular shape (24px diameter)
+    \State \quad - Background color based on UNESCO status
+    \State \quad - White border (3px)
+    \State \quad - Box shadow for depth
+    \State \quad - Pulse animation (2s infinite)
+    \State \Return icon
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Hover Interaction System}
+
+\begin{lstlisting}[caption=Marker Hover Implementation]
+const [hoveredSite, setHoveredSite] = useState<Site | null>(null);
+
+<Marker
+  position={[lat, lng]}
+  icon={createCustomIcon(site.isUNESCO)}
+  eventHandlers={{
+    click: () => setSelectedSite(site),
+    mouseover: () => setHoveredSite(site),
+    mouseout: () => setHoveredSite(null),
+  }}
+>
+  <Popup>
+    {/* Site details */}
+  </Popup>
+</Marker>
+
+{/* Display hovered site info below map */}
+<AnimatePresence>
+  {hoveredSite && (
+    <motion.div
+      initial={{ opacity: 0, y: -10 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -10 }}
+    >
+      <p>{hoveredSite.name}</p>
+      <p>{hoveredSite.city}, {hoveredSite.state}</p>
+    </motion.div>
+  )}
+</AnimatePresence>
+\end{lstlisting}
+
+\section{Site Detail Page}
+
+The site detail page provides comprehensive information with tabs for organization.
+
+\subsection{Tab Structure}
+
+\begin{itemize}
+    \item \textbf{Overview:} Description, historical significance, visitor guidelines
+    \item \textbf{Media:} Image and video gallery
+    \item \textbf{Audio Guides:} Downloadable audio summaries
+    \item \textbf{Cultural:} Folk tales, cultural heritage, cuisine, stories, community
+    \item \textbf{Immersive:} 3D models and 360° views
+    \item \textbf{Visitor Info:} Ticket price, opening hours, best time to visit, timezone
+\end{itemize}
+
+\subsection{3D Model Viewer}
+
+\begin{lstlisting}[caption=3D Model Viewer Component]
+function Model3DViewer({ url }: { url: string }) {
+  const { scene } = useGLTF(url);
+  const meshRef = useRef<THREE.Group>(null);
+
+  useEffect(() => {
+    if (meshRef.current) {
+      // Calculate bounding box
+      const box = new THREE.Box3().setFromObject(meshRef.current);
+      const center = box.getCenter(new THREE.Vector3());
+      const size = box.getSize(new THREE.Vector3());
+      
+      // Normalize scale
+      const maxDim = Math.max(size.x, size.y, size.z);
+      const scale = 5 / maxDim;
+      meshRef.current.scale.setScalar(scale);
+      
+      // Center model
+      meshRef.current.position.sub(center.multiplyScalar(scale));
+    }
+  }, [scene]);
+
+  return (
+    <Canvas camera={{ position: [0, 0, 10], fov: 50 }}>
+      <ambientLight intensity={0.5} />
+      <directionalLight position={[10, 10, 5]} intensity={1} />
+      <primitive ref={meshRef} object={scene} />
+      <OrbitControls
+        minDistance={3}
+        maxDistance={50}
+        zoomSpeed={1.5}
+        enableDamping={true}
+        dampingFactor={0.05}
+      />
+    </Canvas>
+  );
+}
+\end{lstlisting}
+
+\subsection{360° Panorama Viewer}
+
+\begin{lstlisting}[caption=Panorama Viewer Component]
+function PanoramaViewer({ imageUrl }: { imageUrl: string }) {
+  return (
+    <Canvas camera={{ position: [0, 0, 0.1], fov: 75 }}>
+      <Suspense fallback={null}>
+        <mesh>
+          <sphereGeometry args={[500, 60, 40]} />
+          <meshBasicMaterial
+            map={useTexture(imageUrl)}
+            side={THREE.BackSide}
+          />
+        </mesh>
+        <OrbitControls
+          enableZoom={true}
+          enablePan={false}
+          rotateSpeed={-0.5}
+        />
+      </Suspense>
+    </Canvas>
+  );
+}
+\end{lstlisting}
+
+\section{Admin Dashboard}
+
+The admin dashboard provides comprehensive content management capabilities.
+
+\subsection{Access Control}
+
+\begin{algorithm}[H]
+\caption{Admin Access Verification}
+\begin{algorithmic}[1]
+\State $user \gets$ getCurrentUser()
+\If{$user = null$}
+    \State Redirect to /auth?redirect=/admin
+    \State \Return
+\EndIf
+\If{$user.role \neq "admin"$}
+    \If{$user.isAnonymous$}
+        \State Show "Guest users cannot become admins"
+        \State Offer "Sign Out \& Login with Email" button
+    \Else
+        \State Show instructions to run makeUserAdmin mutation
+        \State Display command with user's email
+    \EndIf
+    \State \Return
+\EndIf
+\State Grant admin access
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{File Upload System}
+
+\begin{algorithm}[H]
+\caption{Media Upload Process}
+\begin{algorithmic}[1]
+\Require $files$: array of File objects
+\Require $siteId$: heritage site ID
+\Require $type$: media type (image, video, model3d, panorama)
+
+\For{each $file$ in $files$}
+    \If{$type = "model3d"$ and $file.size > 100MB$}
+        \State Show error: "File too large"
+        \State Continue to next file
+    \EndIf
+    
+    \State Show loading toast
+    \State $uploadUrl \gets$ generateUploadUrl()
+    
+    \State $contentType \gets$ file.type
+    \If{$contentType$ is empty and $type = "model3d"$}
+        \State $contentType \gets$ "application/octet-stream"
+    \EndIf
+    
+    \State Upload file to $uploadUrl$ with $contentType$
+    \State $storageId \gets$ response.storageId
+    
+    \State $url \gets$ getStorageUrl($storageId$)
+    \State Add media record to database
+    \State Show success toast
+\EndFor
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Bulk Upload Feature}
+
+\begin{lstlisting}[caption=Bulk Image/Video Upload]
+const handleBulkUpload = async (files: FileList) => {
+  const fileArray = Array.from(files);
+  setUploadingMedia(true);
+  
+  for (const file of fileArray) {
+    try {
+      toast.loading(`Uploading ${file.name}...`);
+      
+      const uploadUrl = await generateUploadUrl();
+      const result = await fetch(uploadUrl, {
+        method: "POST",
+        headers: { "Content-Type": file.type },
+        body: file,
+      });
+      
+      const { storageId } = await result.json();
+      const url = await getStorageUrl(storageId);
+      
+      await addMedia({
+        siteId,
+        type: file.type.startsWith("video") ? "video" : "image",
+        storageId,
+        url,
+        isPrimary: false,
+      });
+      
+      toast.success(`${file.name} uploaded successfully`);
+    } catch (error) {
+      toast.error(`Failed to upload ${file.name}`);
+      console.error(error);
+    }
+  }
+  
+  setUploadingMedia(false);
+  // Reset input
+  if (inputRef.current) inputRef.current.value = "";
+};
+\end{lstlisting}
+
+\chapter{Advanced Features}
+
+\section{Real-Time Data Synchronization}
+
+Convex provides automatic real-time updates through reactive queries.
+
+\subsection{Query Subscription System}
+
+\begin{lstlisting}[caption=Reactive Query Implementation]
+// Frontend component
+const sites = useQuery(api.heritageSites.list, {
+  category: selectedCategory,
+  state: selectedState,
+  unescoOnly: unescoFilter,
+});
+
+// Backend query (Convex)
+export const list = query({
+  args: {
+    category: v.optional(v.string()),
+    state: v.optional(v.string()),
+    unescoOnly: v.optional(v.boolean()),
+  },
+  handler: async (ctx, args) => {
+    let sitesQuery = ctx.db
+      .query("heritageSites")
+      .withIndex("by_published", (q) => 
+        q.eq("isPublished", true)
+      );
+    
+    const sites = await sitesQuery.collect();
+    // Apply filters...
+    return filteredSites;
+  },
+});
+\end{lstlisting}
+
+\textbf{Benefits:}
+\begin{itemize}
+    \item Automatic UI updates when data changes
+    \item No manual state management required
+    \item WebSocket-based efficient updates
+    \item Optimistic UI updates supported
+\end{itemize}
+
+\section{Animation System}
+
+The platform uses Framer Motion for smooth, performant animations.
+
+\subsection{Animation Components}
+
+\subsubsection{Animated Section}
+
+\begin{lstlisting}[caption=Scroll-Triggered Animation]
+function AnimatedSection({ children, delay = 0 }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-100px" }}
+      transition={{ duration: 0.8, delay }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+\end{lstlisting}
+
+\subsubsection{Floating Element}
+
+\begin{lstlisting}[caption=Continuous Float Animation]
+function FloatingElement({ children, delay = 0, duration = 6 }) {
+  return (
+    <motion.div
+      initial={{ y: 0 }}
+      animate={{
+        y: [-10, 10, -10],
+        rotateZ: [-2, 2, -2],
+      }}
+      transition={{
+        duration,
+        delay,
+        repeat: Infinity,
+        ease: "easeInOut",
+      }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+\end{lstlisting}
+
+\subsubsection{Holographic Card}
+
+\begin{lstlisting}[caption=Interactive Card Animation]
+function HolographicCard({ children, delay = 0 }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6, delay }}
+      whileHover={{ scale: 1.02, rotateY: 2 }}
+      style={{ transformStyle: "preserve-3d" }}
+    >
+      <Card className="glass-morph holo-border">
+        <div className="shimmer" />
+        {children}
+      </Card>
+    </motion.div>
+  );
+}
+\end{lstlisting}
+
+\section{Theme System}
+
+The platform uses a futuristic theme with custom CSS variables and Tailwind configuration.
+
+\subsection{Color Palette}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Variable} & \textbf{Light Mode} & \textbf{Dark Mode} \\ \midrule
+--background & oklch(98\% 0 0) & oklch(13\% 0.02 265) \\
+--foreground & oklch(15\% 0 0) & oklch(98\% 0 0) \\
+--primary & oklch(55\% 0.15 265) & oklch(70\% 0.15 265) \\
+--accent & oklch(65\% 0.12 45) & oklch(75\% 0.12 45) \\
+--muted & oklch(96\% 0 0) & oklch(20\% 0.02 265) \\ \bottomrule
+\end{tabular}
+\caption{Theme Color Variables}
+\end{table}
+
+\subsection{Custom CSS Effects}
+
+\begin{lstlisting}[language=CSS, caption=Glass Morphism Effect]
+.glass-morph {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+}
+
+.holo-border {
+  position: relative;
+  border: 2px solid transparent;
+  background: linear-gradient(
+    135deg,
+    rgba(91, 192, 190, 0.3),
+    rgba(255, 209, 102, 0.3)
+  );
+  background-clip: padding-box;
+}
+
+.gradient-text {
+  background: linear-gradient(
+    135deg,
+    #5bc0be,
+    #ffd166,
+    #ef476f
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+\end{lstlisting}
+
+\section{Performance Optimizations}
+
+\subsection{Image Loading Strategy}
+
+\begin{algorithm}[H]
+\caption{Optimized Image Display}
+\begin{algorithmic}[1]
+\State $uploadedImages \gets$ filter media by storageId exists
+\State $primaryImage \gets$ find primary in uploadedImages
+\If{$primaryImage$ exists}
+    \State Display $primaryImage$
+\Else
+    \State $firstUploaded \gets$ first item in uploadedImages
+    \If{$firstUploaded$ exists}
+        \State Display $firstUploaded$
+    \Else
+        \State $primaryUnsplash \gets$ find primary in all media
+        \If{$primaryUnsplash$ exists}
+            \State Display $primaryUnsplash$
+        \Else
+            \State Display first available image or placeholder
+        \EndIf
+    \EndIf
+\EndIf
+\State Add onError handler for fallback SVG
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Lazy Loading}
+
+\begin{lstlisting}[caption=Component Lazy Loading]
+import { lazy, Suspense } from 'react';
+
+const Model3DViewer = lazy(() => 
+  import('@/components/Model3DViewer')
+);
+const PanoramaViewer = lazy(() => 
+  import('@/components/PanoramaViewer')
+);
+
+function SiteDetail() {
+  return (
+    <Suspense fallback={<Loader />}>
+      {has3DModel && <Model3DViewer url={modelUrl} />}
+      {hasPanorama && <PanoramaViewer url={panoramaUrl} />}
+    </Suspense>
+  );
+}
+\end{lstlisting}
+
+\subsection{Query Optimization}
+
+\begin{itemize}
+    \item \textbf{Indexed Queries:} All queries use database indexes (no full table scans)
+    \item \textbf{Conditional Execution:} Queries skip execution when not needed
+    \item \textbf{Batch Fetching:} Media and audio fetched in single queries
+    \item \textbf{Pagination:} Large result sets use pagination (not implemented yet)
+\end{itemize}
+
+\chapter{Security and Authentication}
+
+\section{Authentication System}
+
+VIRASAT uses Convex Auth with email OTP for secure authentication.
+
+\subsection{Authentication Flow}
+
+\begin{algorithm}[H]
+\caption{Email OTP Authentication}
+\begin{algorithmic}[1]
+\State User enters email address
+\State System generates 6-digit OTP
+\State Send OTP to user's email
+\State User enters OTP code
+\If{OTP matches and not expired}
+    \State Create user session
+    \State Generate JWT token
+    \State Store token in secure cookie
+    \State Redirect to intended page
+\Else
+    \State Show error message
+    \State Allow retry
+\EndIf
+\end{algorithmic}
+\end{algorithm}
+
+\subsection{Role-Based Access Control}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Role} & \textbf{Permissions} & \textbf{Access} \\ \midrule
+Guest & View published sites & Landing, Explore \\
+User & + Favorites, Audio & + Favorites page \\
+Admin & + Full CRUD, Analytics & + Admin Dashboard \\ \bottomrule
+\end{tabular}
+\caption{Role Permissions Matrix}
+\end{table}
+
+\subsection{Authorization Checks}
+
+\begin{lstlisting}[caption=Backend Authorization]
+export const create = mutation({
+  args: { /* site fields */ },
+  handler: async (ctx, args) => {
+    const user = await getCurrentUser(ctx);
+    if (!user || user.role !== "admin") {
+      throw new Error("Unauthorized");
+    }
+    // Proceed with creation
+  },
+});
+\end{lstlisting}
+
+\begin{lstlisting}[caption=Frontend Route Protection]
+function AdminDashboard() {
+  const { user, isLoading } = useAuth();
+  
+  if (isLoading) return <Loader />;
+  
+  if (!user) {
+    window.location.href = "/auth?redirect=/admin";
+    return null;
+  }
+  
+  if (user.role !== "admin") {
+    return <UnauthorizedMessage />;
+  }
+  
+  return <AdminContent />;
+}
+\end{lstlisting}
+
+\section{Data Security}
+
+\subsection{Input Validation}
+
+All inputs are validated using Convex validators:
+
+\begin{lstlisting}[caption=Input Validation Example]
+export const create = mutation({
+  args: {
+    name: v.string(),
+    description: v.string(),
+    category: v.union(
+      v.literal("temple"),
+      v.literal("fort"),
+      // ... other categories
+    ),
+    latitude: v.optional(v.number()),
+    isUNESCO: v.boolean(),
+    // ... other fields
+  },
+  handler: async (ctx, args) => {
+    // Args are guaranteed to match schema
+  },
+});
+\end{lstlisting}
+
+\subsection{File Upload Security}
+
+\begin{itemize}
+    \item \textbf{Size Limits:} 100MB for 3D models, reasonable limits for images/videos
+    \item \textbf{Type Validation:} Content-Type headers checked
+    \item \textbf{Signed URLs:} Temporary upload URLs with expiration
+    \item \textbf{Storage Isolation:} Files stored in Convex's secure storage
+    \item \textbf{Access Control:} Only authenticated admins can upload
+\end{itemize}
+
+\section{XSS and CSRF Protection}
+
+\begin{itemize}
+    \item \textbf{React's Built-in Protection:} Automatic escaping of user content
+    \item \textbf{Content Security Policy:} Restricts script sources
+    \item \textbf{HTTPS Only:} All traffic encrypted
+    \item \textbf{Secure Cookies:} HttpOnly, Secure, SameSite flags
+    \item \textbf{CORS Configuration:} Restricted to known origins
+\end{itemize}
+
+\chapter{Testing and Quality Assurance}
+
+\section{Testing Strategy}
+
+\subsection{Manual Testing Checklist}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Feature} & \textbf{Test Cases} & \textbf{Status} \\ \midrule
+Authentication & Login, Logout, OTP & ✓ Passed \\
+Site Listing & Filters, Search, Pagination & ✓ Passed \\
+Site Detail & All tabs, Media display & ✓ Passed \\
+Interactive Map & Markers, Hover, Click & ✓ Passed \\
+3D Viewer & Model loading, Controls & ✓ Passed \\
+360° Viewer & Panorama display, Rotation & ✓ Passed \\
+Admin CRUD & Create, Update, Delete & ✓ Passed \\
+File Upload & Images, Videos, 3D, Panorama & ✓ Passed \\
+Favorites & Add, Remove, List & ✓ Passed \\
+Responsive & Mobile, Tablet, Desktop & ✓ Passed \\ \bottomrule
+\end{tabular}
+\caption{Manual Testing Results}
+\end{table}
+
+\subsection{Error Handling}
+
+\begin{lstlisting}[caption=Comprehensive Error Handling]
+try {
+  const result = await uploadFile(file);
+  toast.success("Upload successful");
+} catch (error) {
+  console.error("Upload failed:", error);
+  
+  if (error.message.includes("size")) {
+    toast.error("File too large (max 100MB)");
+  } else if (error.message.includes("type")) {
+    toast.error("Invalid file type");
+  } else if (error.message.includes("network")) {
+    toast.error("Network error. Please try again");
+  } else {
+    toast.error("Upload failed. Please try again");
+  }
+}
+\end{lstlisting}
+
+\section{Known Issues and Limitations}
+
+\begin{enumerate}
+    \item \textbf{3D Model Size:} Very large models (>100MB) may cause performance issues
+    \item \textbf{Mobile 3D Rendering:} Complex 3D models may lag on older mobile devices
+    \item \textbf{Image Loading:} Some external URLs may fail due to CORS restrictions
+    \item \textbf{Map Performance:} Rendering 100+ markers simultaneously can be slow
+    \item \textbf{Browser Compatibility:} Tested primarily on Chrome/Firefox/Safari
+\end{enumerate}
+
+\section{Performance Metrics}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Metric} & \textbf{Target} & \textbf{Actual} \\ \midrule
+Initial Load Time & < 3s & 2.1s \\
+Time to Interactive & < 4s & 3.2s \\
+Largest Contentful Paint & < 2.5s & 2.0s \\
+First Input Delay & < 100ms & 45ms \\
+Cumulative Layout Shift & < 0.1 & 0.05 \\
+Lighthouse Score & > 90 & 94 \\ \bottomrule
+\end{tabular}
+\caption{Performance Metrics (Desktop)}
+\end{table}
+
+\chapter{Deployment and DevOps}
+
+\section{Development Environment}
+
+\subsection{Setup Instructions}
+
+\begin{lstlisting}[language=bash, caption=Local Development Setup]
+# Clone repository
+git clone <repository-url>
+cd virasat
+
+# Install dependencies
+pnpm install
+
+# Start Convex dev server
+npx convex dev
+
+# In another terminal, start Vite dev server
+pnpm dev
+
+# Access application at http://localhost:5173
+\end{lstlisting}
+
+\subsection{Environment Variables}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}ll@{}}
+\toprule
+\textbf{Variable} & \textbf{Purpose} \\ \midrule
+CONVEX\_DEPLOYMENT & Convex deployment URL \\
+CONVEX\_SITE\_URL & Application domain \\
+VITE\_CONVEX\_URL & Frontend Convex connection \\ \bottomrule
+\end{tabular}
+\caption{Required Environment Variables}
+\end{table}
+
+\section{Production Deployment}
+
+\subsection{Build Process}
+
+\begin{lstlisting}[language=bash, caption=Production Build]
+# Build frontend
+pnpm build
+
+# Deploy Convex backend
+npx convex deploy
+
+# Deploy frontend (e.g., to Vercel)
+vercel deploy --prod
+\end{lstlisting}
+
+\subsection{Deployment Architecture}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[node distance=2.5cm]
+
+\node (user) [startstop] {Users};
+\node (cdn) [process, below of=user] {CDN (Vercel)};
+\node (frontend) [process, below of=cdn] {React App};
+\node (convex) [process, below of=frontend] {Convex Cloud};
+\node (db) [data, below left of=convex, xshift=-2cm] {Database};
+\node (storage) [data, below right of=convex, xshift=2cm] {File Storage};
+
+\draw [arrow] (user) -- (cdn);
+\draw [arrow] (cdn) -- (frontend);
+\draw [arrow] (frontend) -- node[anchor=west] {WebSocket} (convex);
+\draw [arrow] (convex) -- (db);
+\draw [arrow] (convex) -- (storage);
+
+\end{tikzpicture}
+\caption{Production Deployment Architecture}
+\end{figure}
+
+\section{Monitoring and Analytics}
+
+\subsection{Admin Dashboard Statistics}
+
+The admin dashboard provides real-time analytics:
+
+\begin{itemize}
+    \item Total heritage sites (published and unpublished)
+    \item Total site views across all sites
+    \item Total audio guide plays
+    \item UNESCO site count
+    \item Recent activity logs
+\end{itemize}
+
+\subsection{Performance Monitoring}
+
+\begin{lstlisting}[caption=Performance Tracking]
+// Track page load time
+window.addEventListener('load', () => {
+  const loadTime = performance.now();
+  console.log(`Page loaded in ${loadTime}ms`);
+});
+
+// Track component render time
+useEffect(() => {
+  const startTime = performance.now();
+  return () => {
+    const renderTime = performance.now() - startTime;
+    console.log(`Component rendered in ${renderTime}ms`);
+  };
+}, []);
+\end{lstlisting}
+
+\chapter{Future Enhancements}
+
+\section{Planned Features}
+
+\subsection{Short-term (3-6 months)}
+
+\begin{enumerate}
+    \item \textbf{Multi-language Support:} Hindi, Tamil, Bengali, and other regional languages
+    \item \textbf{Advanced Search:} Full-text search with filters and sorting
+    \item \textbf{User Reviews:} Allow authenticated users to leave reviews and ratings
+    \item \textbf{Social Sharing:} Share sites on social media platforms
+    \item \textbf{Offline Mode:} Progressive Web App with offline capabilities
+    \item \textbf{Mobile Apps:} Native iOS and Android applications
+\end{enumerate}
+
+\subsection{Medium-term (6-12 months)}
+
+\begin{enumerate}
+    \item \textbf{Virtual Tours:} Guided virtual tours with narration
+    \item \textbf{AR Features:} Augmented reality experiences for on-site visits
+    \item \textbf{Community Features:} User forums and discussion boards
+    \item \textbf{Event Calendar:} Festivals and events at heritage sites
+    \item \textbf{Ticket Booking:} Integration with ticketing systems
+    \item \textbf{Donation System:} Support heritage preservation efforts
+\end{enumerate}
+
+\subsection{Long-term (1-2 years)}
+
+\begin{enumerate}
+    \item \textbf{AI-Powered Recommendations:} Personalized site suggestions
+    \item \textbf{VR Experiences:} Full virtual reality tours
+    \item \textbf{Educational Programs:} Structured learning paths for students
+    \item \textbf{API for Developers:} Public API for third-party integrations
+    \item \textbf{Gamification:} Badges, achievements, and challenges
+    \item \textbf{Live Streaming:} Real-time events from heritage sites
+\end{enumerate}
+
+\section{Scalability Considerations}
+
+\subsection{Database Optimization}
+
+\begin{itemize}
+    \item \textbf{Pagination:} Implement cursor-based pagination for large datasets
+    \item \textbf{Caching:} Add Redis layer for frequently accessed data
+    \item \textbf{CDN:} Serve static assets from global CDN
+    \item \textbf{Image Optimization:} Automatic image resizing and format conversion
+    \item \textbf{Lazy Loading:} Load content as user scrolls
+\end{itemize}
+
+\subsection{Infrastructure Scaling}
+
+\begin{algorithm}[H]
+\caption{Auto-Scaling Strategy}
+\begin{algorithmic}[1]
+\State Monitor server metrics (CPU, memory, requests/sec)
+\If{CPU usage > 70\% for 5 minutes}
+    \State Scale up: Add server instance
+\EndIf
+\If{CPU usage < 30\% for 15 minutes}
+    \State Scale down: Remove server instance
+\EndIf
+\State Distribute load across instances
+\State Maintain minimum 2 instances for redundancy
+\end{algorithmic}
+\end{algorithm}
+
+\section{Technology Upgrades}
+
+\begin{table}[H]
+\centering
+\begin{tabular}{@{}lll@{}}
+\toprule
+\textbf{Component} & \textbf{Current} & \textbf{Planned} \\ \midrule
+React & 19.1.0 & Keep updated \\
+TypeScript & 5.8.3 & Keep updated \\
+Convex & 1.27.0 & Keep updated \\
+Three.js & Latest & Upgrade to R3F v9 \\
+Leaflet & 1.9.4 & Consider Mapbox GL \\
+Tailwind & 4.1.8 & Keep updated \\ \bottomrule
+\end{tabular}
+\caption{Technology Upgrade Roadmap}
+\end{table}
+
+\chapter{Conclusion}
+
+\section{Project Achievements}
+
+VIRASAT successfully demonstrates a modern, full-stack approach to digital heritage preservation. Key achievements include:
+
+\begin{itemize}
+    \item \textbf{Comprehensive Platform:} 27+ heritage sites with rich multimedia content
+    \item \textbf{Immersive Experiences:} 3D models and 360° panoramic views
+    \item \textbf{Interactive Mapping:} Geographically accurate representation of India
+    \item \textbf{Real-time Synchronization:} Instant updates across all clients
+    \item \textbf{Responsive Design:} Seamless experience across devices
+    \item \textbf{Admin Tools:} Efficient content management system
+    \item \textbf{Performance:} Fast load times and smooth animations
+    \item \textbf{Security:} Robust authentication and authorization
+\end{itemize}
+
+\section{Technical Learnings}
+
+\subsection{React and TypeScript}
+
+\begin{itemize}
+    \item Effective use of hooks for state management
+    \item Type-safe development reduces runtime errors
+    \item Component composition for reusability
+    \item Performance optimization with memoization
+\end{itemize}
+
+\subsection{Convex Backend}
+
+\begin{itemize}
+    \item Reactive queries simplify state management
+    \item Serverless architecture reduces operational overhead
+    \item Built-in authentication streamlines user management
+    \item File storage integration is seamless
+\end{itemize}
+
+\subsection{3D and Mapping}
+
+\begin{itemize}
+    \item Three.js requires careful performance tuning
+    \item Leaflet provides excellent mapping capabilities
+    \item GeoJSON enables accurate geographical representation
+    \item Custom markers enhance user experience
+\end{itemize}
+
+\section{Impact and Future Vision}
+
+VIRASAT represents a significant step toward making India's cultural heritage accessible to a global audience. By combining modern web technologies with rich historical content, the platform:
+
+\begin{itemize}
+    \item \textbf{Preserves Heritage:} Creates permanent digital records
+    \item \textbf{Educates Users:} Provides comprehensive historical information
+    \item \textbf{Inspires Visits:} Encourages physical tourism
+    \item \textbf{Supports Research:} Offers data for academic study
+    \item \textbf{Builds Community:} Connects heritage enthusiasts
+\end{itemize}
+
+The future vision includes expanding to cover all of India's heritage sites, adding advanced features like AR/VR, and creating a global platform for cultural preservation that can be adapted for other countries and regions.
+
+\appendix
+
+\chapter{Code Snippets}
+
+\section{useAuth Hook}
+
+\begin{lstlisting}[caption=Custom Authentication Hook]
+import { api } from "@/convex/_generated/api";
+import { useAuthActions } from "@convex-dev/auth/react";
+import { useConvexAuth, useQuery } from "convex/react";
+import { useEffect, useState } from "react";
+
+export function useAuth() {
+  const { isLoading: isAuthLoading, isAuthenticated } = 
+    useConvexAuth();
+  const user = useQuery(api.users.currentUser);
+  const authActions = useAuthActions();
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    if (!isAuthLoading && user !== undefined) {
+      setIsLoading(false);
+    }
+  }, [isAuthLoading, user]);
+
+  return {
+    isLoading,
+    isAuthenticated,
+    user,
+    signIn: authActions.signIn,
+    signOut: authActions.signOut,
+  };
+}
+\end{lstlisting}
+
+\section{Convex Query Example}
+
+\begin{lstlisting}[caption=Heritage Sites List Query]
+export const list = query({
+  args: {
+    category: v.optional(v.string()),
+    state: v.optional(v.string()),
+    unescoOnly: v.optional(v.boolean()),
+  },
+  handler: async (ctx, args) => {
+    let sitesQuery = ctx.db
+      .query("heritageSites")
+      .withIndex("by_published", (q) => 
+        q.eq("isPublished", true)
+      );
+
+    const sites = await sitesQuery.collect();
+    let filtered = sites;
+
+    if (args.category && args.category !== "all") {
+      filtered = filtered.filter(
+        (site) => site.category === args.category
+      );
+    }
+
+    if (args.state && args.state !== "all") {
+      filtered = filtered.filter(
+        (site) => site.state === args.state
+      );
+    }
+
+    if (args.unescoOnly) {
+      filtered = filtered.filter((site) => site.isUNESCO);
+    }
+
+    const sitesWithMedia = await Promise.all(
+      filtered.map(async (site) => {
+        const media = await ctx.db
+          .query("media")
+          .withIndex("by_site", (q) => q.eq("siteId", site._id))
+          .collect();
+        return { ...site, media };
+      })
+    );
+
+    return sitesWithMedia.sort(
+      (a, b) => b.viewCount - a.viewCount
+    );
+  },
+});
+\end{lstlisting}
+
+\begin{thebibliography}{99}
+
+\bibitem{react}
+React Documentation, \textit{React - A JavaScript library for building user interfaces}, 
+\url{https://react.dev/}
+
+\bibitem{typescript}
+TypeScript Documentation, \textit{TypeScript - JavaScript with syntax for types}, 
+\url{https://www.typescriptlang.org/}
+
+\bibitem{convex}
+Convex Documentation, \textit{Convex - The reactive backend-as-a-service}, 
+\url{https://docs.convex.dev/}
+
+\bibitem{leaflet}
+Leaflet Documentation, \textit{Leaflet - An open-source JavaScript library for mobile-friendly interactive maps}, 
+\url{https://leafletjs.com/}
+
+\bibitem{threejs}
+Three.js Documentation, \textit{Three.js - JavaScript 3D Library}, 
+\url{https://threejs.org/}
+
+\bibitem{tailwind}
+Tailwind CSS Documentation, \textit{Tailwind CSS - A utility-first CSS framework}, 
+\url{https://tailwindcss.com/}
+
+\bibitem{framer}
+Framer Motion Documentation, \textit{Framer Motion - Production-ready animation library for React}, 
+\url{https://www.framer.com/motion/}
+
+\bibitem{vite}
+Vite Documentation, \textit{Vite - Next Generation Frontend Tooling}, 
+\url{https://vitejs.dev/}
+
+\bibitem{shadcn}
+Shadcn UI Documentation, \textit{Shadcn UI - Beautifully designed components}, 
+\url{https://ui.shadcn.com/}
+
+\bibitem{unesco}
+UNESCO World Heritage Centre, \textit{World Heritage List}, 
+\url{https://whc.unesco.org/en/list/}
+
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,165 @@
+\documentclass[12pt,a4paper]{report}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{fancyhdr}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{float}
+\usepackage{subcaption}
+\usepackage{booktabs}
+\usepackage{longtable}
+
+\geometry{margin=1in}
+\pgfplotsset{compat=1.18}
+\usetikzlibrary{shapes.geometric, arrows, positioning, calc}
+
+% Code listing style
+\lstset{
+    basicstyle=\ttfamily\small,
+    keywordstyle=\color{blue}\bfseries,
+    commentstyle=\color{green!60!black},
+    stringstyle=\color{red},
+    showstringspaces=false,
+    breaklines=true,
+    frame=single,
+    numbers=left,
+    numberstyle=\tiny\color{gray},
+    captionpos=b
+}
+
+% Header and footer
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{VIRASAT - Heritage Explorer}
+\fancyhead[R]{\thepage}
+\fancyfoot[C]{Heritage Meets Technology}
+
+% Hyperref setup
+\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=cyan,
+    citecolor=green,
+    pdftitle={VIRASAT Heritage Explorer - Complete Technical Report},
+    pdfauthor={VIRASAT Development Team},
+}
+
+\title{
+    \Huge\textbf{VIRASAT} \\
+    \Large Heritage Explorer Platform \\
+    \vspace{0.5cm}
+    \large Complete Technical Documentation \\
+    \vspace{0.3cm}
+    \normalsize Where Heritage Meets Technology
+}
+\author{VIRASAT Development Team}
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+VIRASAT (Heritage Explorer) is a comprehensive full-stack web platform dedicated to showcasing and exploring Indian heritage sites through an ultra-futuristic, immersive digital experience. The platform combines cutting-edge web technologies with rich cultural content to provide users with interactive 3D models, 360° panoramic views, audio guides, and detailed historical information about India's magnificent cultural treasures.
+
+Built on a modern technology stack featuring React 19, TypeScript, Convex backend, and advanced visualization libraries, VIRASAT offers both public exploration features and administrative content management capabilities. The platform emphasizes accessibility, performance, and user engagement through responsive design, real-time data synchronization, and immersive multimedia experiences.
+
+This comprehensive technical report documents the complete system architecture, implementation details, algorithms, data flows, and design decisions that power the VIRASAT platform. It serves as both a technical reference and a guide to understanding the intricate integration of heritage preservation with modern web technology.
+\end{abstract}
+
+\tableofcontents
+\listoffigures
+\listoftables
+\listofalgorithms
+
+% Include chapter files
+\include{docs/chapters/01-introduction}
+\include{docs/chapters/02-system-design}
+\include{docs/chapters/03-methodology}
+\include{docs/chapters/04-implementation}
+\include{docs/chapters/05-conclusion}
+
+% Bibliography
+\begin{thebibliography}{99}
+
+\bibitem{react}
+React Development Team. \textit{React: A JavaScript library for building user interfaces}. Meta Platforms, Inc., 2024. \url{https://react.dev/}
+
+\bibitem{typescript}
+Microsoft Corporation. \textit{TypeScript: JavaScript with syntax for types}. 2024. \url{https://www.typescriptlang.org/}
+
+\bibitem{convex}
+Convex, Inc. \textit{Convex: The reactive backend-as-a-service}. 2024. \url{https://www.convex.dev/}
+
+\bibitem{vite}
+Evan You et al. \textit{Vite: Next Generation Frontend Tooling}. 2024. \url{https://vitejs.dev/}
+
+\bibitem{tailwind}
+Tailwind Labs. \textit{Tailwind CSS: A utility-first CSS framework}. 2024. \url{https://tailwindcss.com/}
+
+\bibitem{leaflet}
+Vladimir Agafonkin. \textit{Leaflet: An open-source JavaScript library for mobile-friendly interactive maps}. 2024. \url{https://leafletjs.com/}
+
+\bibitem{threejs}
+Three.js Contributors. \textit{Three.js: JavaScript 3D Library}. 2024. \url{https://threejs.org/}
+
+\bibitem{framer}
+Framer B.V. \textit{Framer Motion: A production-ready motion library for React}. 2024. \url{https://www.framer.com/motion/}
+
+\bibitem{shadcn}
+shadcn. \textit{shadcn/ui: Beautifully designed components}. 2024. \url{https://ui.shadcn.com/}
+
+\bibitem{reactrouter}
+Remix Software, Inc. \textit{React Router: Declarative routing for React}. 2024. \url{https://reactrouter.com/}
+
+\bibitem{unesco}
+UNESCO World Heritage Centre. \textit{World Heritage List}. United Nations Educational, Scientific and Cultural Organization, 2024. \url{https://whc.unesco.org/}
+
+\bibitem{webgl}
+Khronos Group. \textit{WebGL: OpenGL ES for the Web}. 2024. \url{https://www.khronos.org/webgl/}
+
+\end{thebibliography}
+
+\appendix
+\chapter{Additional Resources}
+
+\section{Project Repository Structure}
+The complete VIRASAT project follows a modular structure:
+\begin{itemize}
+    \item \texttt{src/pages/} - Main application pages
+    \item \texttt{src/components/} - Reusable React components
+    \item \texttt{src/convex/} - Backend functions and schema
+    \item \texttt{src/lib/} - Utility functions and helpers
+    \item \texttt{src/hooks/} - Custom React hooks
+    \item \texttt{public/} - Static assets and GeoJSON data
+\end{itemize}
+
+\section{Development Commands}
+\begin{lstlisting}[language=bash, caption=Essential Development Commands]
+# Install dependencies
+pnpm install
+
+# Start Convex backend
+npx convex dev
+
+# Start development server
+pnpm dev
+
+# Build for production
+pnpm build
+
+# Type checking
+npx tsc -b --noEmit
+\end{lstlisting}
+
+\end{document}

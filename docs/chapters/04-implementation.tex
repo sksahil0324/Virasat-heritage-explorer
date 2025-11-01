@@ -1,0 +1,738 @@
+\chapter{Implementation Details}
+
+\section{Frontend Implementation}
+
+\subsection{Landing Page Architecture}
+
+The Landing page serves as the entry point and showcases the platform's futuristic aesthetic.
+
+\subsubsection{Particle Background System}
+
+\begin{lstlisting}[language=JavaScript, caption=Particle Animation Implementation]
+// ParticleBackground.tsx
+const particles: Particle[] = [];
+const particleCount = 80;
+
+// Initialize particles with random positions and velocities
+for (let i = 0; i < particleCount; i++) {
+  particles.push({
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    vx: (Math.random() - 0.5) * 0.5,
+    vy: (Math.random() - 0.5) * 0.5,
+    size: Math.random() * 2 + 1,
+    opacity: Math.random() * 0.5 + 0.2,
+  });
+}
+
+// Animation loop with particle movement and connections
+const animate = () => {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+  particles.forEach((particle) => {
+    // Update position
+    particle.x += particle.vx;
+    particle.y += particle.vy;
+    
+    // Wrap around edges
+    if (particle.x < 0) particle.x = canvas.width;
+    if (particle.x > canvas.width) particle.x = 0;
+    if (particle.y < 0) particle.y = canvas.height;
+    if (particle.y > canvas.height) particle.y = 0;
+    
+    // Draw particle
+    ctx.beginPath();
+    ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+    ctx.fillStyle = `rgba(100, 100, 255, ${particle.opacity})`;
+    ctx.fill();
+  });
+  
+  // Draw connections between nearby particles
+  particles.forEach((p1, i) => {
+    particles.slice(i + 1).forEach((p2) => {
+      const distance = Math.sqrt(
+        (p1.x - p2.x) ** 2 + (p1.y - p2.y) ** 2
+      );
+      if (distance < 150) {
+        ctx.beginPath();
+        ctx.moveTo(p1.x, p1.y);
+        ctx.lineTo(p2.x, p2.y);
+        ctx.strokeStyle = `rgba(100, 100, 255, ${0.15 * (1 - distance / 150)})`;
+        ctx.lineWidth = 0.5;
+        ctx.stroke();
+      }
+    });
+  });
+  
+  requestAnimationFrame(animate);
+};
+\end{lstlisting}
+
+\subsubsection{Rotating Background Images}
+
+\begin{lstlisting}[language=JavaScript, caption=Hero Background Image Rotation]
+// Extract images from heritage sites
+const monumentImages = sites
+  ?.flatMap((site) => 
+    site.media
+      ?.filter((m) => m.type === "image" && m.storageId)
+      .map((m) => ({
+        url: m.url,
+        name: site.name,
+        location: `${site.city}, ${site.state}`,
+      }))
+  )
+  .filter(Boolean) || [];
+
+// Rotate images every 30 seconds
+useEffect(() => {
+  if (monumentImages.length === 0) return;
+  
+  const interval = setInterval(() => {
+    setCurrentImageIndex((prev) => (prev + 1) % monumentImages.length);
+  }, 30000);
+  
+  return () => clearInterval(interval);
+}, [monumentImages.length]);
+
+// Render with AnimatePresence for smooth transitions
+<AnimatePresence mode="wait">
+  {monumentImages.length > 0 && (
+    <motion.div
+      key={currentImageIndex}
+      initial={{ opacity: 0, scale: 1.1 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 1.5 }}
+    >
+      <img src={monumentImages[currentImageIndex]?.url} />
+    </motion.div>
+  )}
+</AnimatePresence>
+\end{lstlisting}
+
+\subsection{Explore Page Implementation}
+
+\subsubsection{Dynamic Section Rendering}
+
+\begin{lstlisting}[language=JavaScript, caption=URL-Based Section Navigation]
+// Get active section from URL params
+const [searchParams, setSearchParams] = useSearchParams();
+const activeSection = searchParams.get("section") || "explore";
+
+// Handle section changes
+const handleSectionChange = (section: string) => {
+  setSearchParams({ section });
+};
+
+// Conditional rendering based on active section
+{activeSection === "explore" && <ExploreSection />}
+{activeSection === "map" && <InteractiveMap />}
+{activeSection === "360" && <PanoramaSection />}
+{activeSection === "gallery" && <GallerySection />}
+{activeSection === "stories" && <StoriesSection />}
+{activeSection === "community" && <CommunitySection />}
+{activeSection === "about" && <AboutSection />}
+\end{lstlisting}
+
+\subsubsection{Advanced Filtering System}
+
+\begin{lstlisting}[language=JavaScript, caption=Multi-Criteria Site Filtering]
+// Query with filters
+const sites = useQuery(api.heritageSites.list, {
+  category: category === "all" ? undefined : category,
+  state: state === "all" ? undefined : state,
+  unescoOnly,
+});
+
+// Search functionality
+const searchResults = useQuery(
+  api.heritageSites.search,
+  searchTerm.length > 2 ? { searchTerm } : "skip"
+);
+
+// Display appropriate results
+const displaySites = searchTerm.length > 2 ? searchResults : sites;
+\end{lstlisting}
+
+\subsection{Interactive Map Implementation}
+
+\subsubsection{GeoJSON Integration}
+
+\begin{lstlisting}[language=JavaScript, caption=India States GeoJSON Rendering]
+// Load GeoJSON data
+useEffect(() => {
+  fetch("/india-states.geojson")
+    .then((response) => response.json())
+    .then((data) => setIndiaGeoJson(data))
+    .catch((error) => console.error("Error loading GeoJSON:", error));
+}, []);
+
+// Style function for features
+const geoJsonStyle = (feature: any) => {
+  const isSelected = selectedState === feature.properties.NAME_1;
+  return {
+    fillColor: isSelected ? "#ffd166" : "#4a6fa5",
+    weight: 2,
+    opacity: 1,
+    color: "white",
+    fillOpacity: isSelected ? 0.7 : 0.5,
+  };
+};
+
+// Event handlers for interactions
+const onEachFeature = (feature: any, layer: any) => {
+  layer.on({
+    mouseover: (e: any) => {
+      e.target.setStyle({
+        weight: 3,
+        fillOpacity: 0.7,
+      });
+    },
+    mouseout: (e: any) => {
+      e.target.setStyle(geoJsonStyle(feature));
+    },
+    click: () => {
+      setSelectedState(feature.properties.NAME_1);
+    },
+  });
+};
+\end{lstlisting}
+
+\subsubsection{Custom Marker System}
+
+\begin{lstlisting}[language=JavaScript, caption=Dynamic Map Markers]
+// Create custom icon based on UNESCO status
+const createCustomIcon = (isUNESCO: boolean) => {
+  return L.divIcon({
+    className: "custom-marker",
+    html: `<div style="
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: ${isUNESCO ? "#ffd166" : "#5bc0be"};
+      border: 3px solid white;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      animation: pulse 2s infinite;
+    "></div>`,
+    iconSize: [24, 24],
+    iconAnchor: [12, 12],
+  });
+};
+
+// Render markers with hover interactions
+<Marker
+  position={[lat, lng]}
+  icon={createCustomIcon(site.isUNESCO)}
+  eventHandlers={{
+    click: () => setSelectedSite(site),
+    mouseover: () => setHoveredSite(site),
+    mouseout: () => setHoveredSite(null),
+  }}
+>
+  <Popup>
+    <div>
+      <h3>{site.name}</h3>
+      <p>{site.city}, {site.state}</p>
+      <Button onClick={() => navigate(`/site/${site._id}`)}>
+        View Details
+      </Button>
+    </div>
+  </Popup>
+</Marker>
+\end{lstlisting}
+
+\subsubsection{Smooth Map Interactions}
+
+\begin{lstlisting}[language=JavaScript, caption=Optimized Map Configuration]
+<MapContainer
+  center={[22.9734, 78.6569]}
+  zoom={5}
+  zoomSnap={0.5}
+  zoomDelta={0.5}
+  wheelPxPerZoomLevel={120}
+  zoomControl={true}
+  doubleClickZoom={true}
+  touchZoom={true}
+  dragging={true}
+  zoomAnimation={true}
+  fadeAnimation={true}
+  markerZoomAnimation={true}
+>
+  <TileLayer
+    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+  />
+  <GeoJSON
+    data={indiaGeoJson}
+    style={geoJsonStyle}
+    onEachFeature={onEachFeature}
+  />
+  {/* Markers */}
+</MapContainer>
+\end{lstlisting}
+
+\subsection{Site Detail Page}
+
+\subsubsection{3D Model Viewer}
+
+\begin{lstlisting}[language=JavaScript, caption=Three.js 3D Model Rendering]
+// Model3DViewer.tsx
+import { Canvas } from '@react-three/fiber';
+import { OrbitControls, useGLTF } from '@react-three/drei';
+
+function Model({ url }: { url: string }) {
+  const { scene } = useGLTF(url);
+  
+  // Calculate bounding box for proper scaling
+  const box = new THREE.Box3().setFromObject(scene);
+  const center = box.getCenter(new THREE.Vector3());
+  const size = box.getSize(new THREE.Vector3());
+  const maxDim = Math.max(size.x, size.y, size.z);
+  const scale = 10 / maxDim;
+  
+  scene.scale.set(scale, scale, scale);
+  scene.position.set(-center.x * scale, -center.y * scale, -center.z * scale);
+  
+  return <primitive object={scene} />;
+}
+
+export default function Model3DViewer({ modelUrl }: { modelUrl: string }) {
+  return (
+    <Canvas camera={{ position: [0, 0, 15], fov: 75 }}>
+      <ambientLight intensity={0.5} />
+      <directionalLight position={[10, 10, 5]} intensity={1} />
+      <Model url={modelUrl} />
+      <OrbitControls
+        minDistance={3}
+        maxDistance={50}
+        zoomSpeed={1.5}
+        rotateSpeed={1}
+        panSpeed={1}
+        enableDamping={true}
+        dampingFactor={0.05}
+      />
+    </Canvas>
+  );
+}
+\end{lstlisting}
+
+\subsubsection{360° Panorama Viewer}
+
+\begin{lstlisting}[language=JavaScript, caption=Panoramic Image Viewer]
+// PanoramaViewer.tsx
+function PanoramaSphere({ imageUrl }: { imageUrl: string }) {
+  const texture = useTexture(imageUrl);
+  
+  return (
+    <mesh>
+      <sphereGeometry args={[500, 60, 40]} scale={[-1, 1, 1]} />
+      <meshBasicMaterial map={texture} side={THREE.BackSide} />
+    </mesh>
+  );
+}
+
+export default function PanoramaViewer({ imageUrl }: { imageUrl: string }) {
+  return (
+    <Canvas camera={{ position: [0, 0, 0], fov: 75 }}>
+      <PanoramaSphere imageUrl={imageUrl} />
+      <OrbitControls
+        enableZoom={true}
+        enablePan={false}
+        rotateSpeed={-0.5}
+        minDistance={0.1}
+        maxDistance={0.1}
+      />
+    </Canvas>
+  );
+}
+\end{lstlisting}
+
+\section{Backend Implementation}
+
+\subsection{Convex Query Functions}
+
+\subsubsection{Heritage Sites List Query}
+
+\begin{lstlisting}[language=JavaScript, caption=Filtered Sites Query]
+export const list = query({
+  args: {
+    category: v.optional(v.string()),
+    state: v.optional(v.string()),
+    unescoOnly: v.optional(v.boolean()),
+  },
+  handler: async (ctx, args) => {
+    // Start with published sites index
+    let sitesQuery = ctx.db
+      .query("heritageSites")
+      .withIndex("by_published", (q) => q.eq("isPublished", true));
+    
+    const sites = await sitesQuery.collect();
+    
+    // Apply filters
+    let filtered = sites;
+    if (args.category && args.category !== "all") {
+      filtered = filtered.filter((site) => site.category === args.category);
+    }
+    if (args.state && args.state !== "all") {
+      filtered = filtered.filter((site) => site.state === args.state);
+    }
+    if (args.unescoOnly) {
+      filtered = filtered.filter((site) => site.isUNESCO);
+    }
+    
+    // Fetch media for each site
+    const sitesWithMedia = await Promise.all(
+      filtered.map(async (site) => {
+        const media = await ctx.db
+          .query("media")
+          .withIndex("by_site", (q) => q.eq("siteId", site._id))
+          .collect();
+        return { ...site, media };
+      })
+    );
+    
+    // Sort by popularity
+    return sitesWithMedia.sort((a, b) => b.viewCount - a.viewCount);
+  },
+});
+\end{lstlisting}
+
+\subsubsection{Site Detail Query}
+
+\begin{lstlisting}[language=JavaScript, caption=Comprehensive Site Data Retrieval]
+export const getById = query({
+  args: { id: v.id("heritageSites") },
+  handler: async (ctx, args) => {
+    const site = await ctx.db.get(args.id);
+    if (!site) return null;
+    
+    // Fetch all related data
+    const media = await ctx.db
+      .query("media")
+      .withIndex("by_site", (q) => q.eq("siteId", args.id))
+      .collect();
+    
+    const audio = await ctx.db
+      .query("audioSummaries")
+      .withIndex("by_site", (q) => q.eq("siteId", args.id))
+      .collect();
+    
+    return {
+      ...site,
+      media,
+      audio,
+    };
+  },
+});
+\end{lstlisting}
+
+\subsection{Mutation Functions}
+
+\subsubsection{Create Heritage Site}
+
+\begin{lstlisting}[language=JavaScript, caption=Site Creation with Authorization]
+export const create = mutation({
+  args: {
+    name: v.string(),
+    description: v.string(),
+    historicalSignificance: v.string(),
+    category: categoryValidator,
+    state: v.string(),
+    city: v.string(),
+    // ... other fields
+  },
+  handler: async (ctx, args) => {
+    // Check authorization
+    const user = await getCurrentUser(ctx);
+    if (!user || user.role !== "admin") {
+      throw new Error("Unauthorized");
+    }
+    
+    // Create site
+    const siteId = await ctx.db.insert("heritageSites", {
+      ...args,
+      viewCount: 0,
+      createdBy: user._id,
+    });
+    
+    return siteId;
+  },
+});
+\end{lstlisting}
+
+\subsubsection{Media Upload}
+
+\begin{lstlisting}[language=JavaScript, caption=File Upload with Storage]
+export const add = mutation({
+  args: {
+    siteId: v.id("heritageSites"),
+    type: v.union(
+      v.literal("image"),
+      v.literal("video"),
+      v.literal("model3d"),
+      v.literal("panorama")
+    ),
+    storageId: v.optional(v.id("_storage")),
+    url: v.string(),
+    caption: v.optional(v.string()),
+    isPrimary: v.boolean(),
+  },
+  handler: async (ctx, args) => {
+    const user = await getCurrentUser(ctx);
+    if (!user || user.role !== "admin") {
+      throw new Error("Unauthorized");
+    }
+    
+    const mediaId = await ctx.db.insert("media", args);
+    return mediaId;
+  },
+});
+
+export const generateUploadUrl = mutation({
+  args: {},
+  handler: async (ctx) => {
+    const user = await getCurrentUser(ctx);
+    if (!user || user.role !== "admin") {
+      throw new Error("Unauthorized");
+    }
+    
+    return await ctx.storage.generateUploadUrl();
+  },
+});
+\end{lstlisting}
+
+\subsection{Favorites System}
+
+\begin{lstlisting}[language=JavaScript, caption=Toggle Favorite Implementation]
+export const toggle = mutation({
+  args: {
+    siteId: v.id("heritageSites"),
+  },
+  handler: async (ctx, args) => {
+    const user = await getCurrentUser(ctx);
+    if (!user) {
+      throw new Error("Must be logged in to favorite sites");
+    }
+    
+    // Check if already favorited
+    const existing = await ctx.db
+      .query("favorites")
+      .withIndex("by_user_and_site", (q) =>
+        q.eq("userId", user._id).eq("siteId", args.siteId)
+      )
+      .unique();
+    
+    if (existing) {
+      // Remove favorite
+      await ctx.db.delete(existing._id);
+      return false;
+    } else {
+      // Add favorite
+      await ctx.db.insert("favorites", {
+        userId: user._id,
+        siteId: args.siteId,
+      });
+      return true;
+    }
+  },
+});
+\end{lstlisting}
+
+\section{UI Component System}
+
+\subsection{Holographic Card Component}
+
+\begin{lstlisting}[language=JavaScript, caption=Animated Card with Glass Morphism]
+export default function HolographicCard({ 
+  children, 
+  className, 
+  delay = 0 
+}: HolographicCardProps) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6, delay }}
+      whileHover={{ scale: 1.02, rotateY: 2 }}
+      style={{ transformStyle: "preserve-3d" }}
+    >
+      <Card className={cn(
+        "glass-morph holo-border relative overflow-hidden group", 
+        className
+      )}>
+        <div className="absolute inset-0 shimmer opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+        <div className="relative z-10">{children}</div>
+      </Card>
+    </motion.div>
+  );
+}
+\end{lstlisting}
+
+\subsection{Floating Element Animation}
+
+\begin{lstlisting}[language=JavaScript, caption=Continuous Float Animation]
+export default function FloatingElement({ 
+  children, 
+  delay = 0, 
+  duration = 6 
+}: FloatingElementProps) {
+  return (
+    <motion.div
+      initial={{ y: 0 }}
+      animate={{
+        y: [-10, 10, -10],
+        rotateZ: [-2, 2, -2],
+      }}
+      transition={{
+        duration,
+        delay,
+        repeat: Infinity,
+        ease: "easeInOut",
+      }}
+      style={{ transformStyle: "preserve-3d" }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+\end{lstlisting}
+
+\section{Authentication Implementation}
+
+\subsection{Custom Auth Hook}
+
+\begin{lstlisting}[language=JavaScript, caption=useAuth Hook]
+export function useAuth() {
+  const { isLoading: isAuthLoading, isAuthenticated } = useConvexAuth();
+  const user = useQuery(api.users.currentUser);
+  const authActions = useAuthActions();
+  const [isLoading, setIsLoading] = useState(true);
+  
+  useEffect(() => {
+    if (!isAuthLoading && user !== undefined) {
+      setIsLoading(false);
+    }
+  }, [isAuthLoading, user]);
+  
+  return {
+    isLoading,
+    isAuthenticated,
+    user,
+    signIn: authActions.signIn,
+    signOut: authActions.signOut,
+  };
+}
+\end{lstlisting}
+
+\section{Performance Optimizations}
+
+\subsection{Image Loading with Error Handling}
+
+\begin{lstlisting}[language=JavaScript, caption=Robust Image Display]
+<img
+  src={primaryImage.url}
+  alt={site.name}
+  onError={(e) => {
+    console.error(`Failed to load image for ${site.name}`);
+    e.currentTarget.style.display = 'none';
+    const parent = e.currentTarget.parentElement;
+    if (parent) {
+      parent.innerHTML = `
+        <div class="aspect-video bg-muted flex items-center justify-center">
+          <svg><!-- Fallback SVG icon --></svg>
+        </div>
+      `;
+    }
+  }}
+/>
+\end{lstlisting}
+
+\subsection{Debounced Search}
+
+\begin{lstlisting}[language=JavaScript, caption=Search Optimization]
+const searchResults = useQuery(
+  api.heritageSites.search,
+  searchTerm.length > 2 ? { searchTerm } : "skip"
+);
+\end{lstlisting}
+
+\section{Responsive Design Implementation}
+
+\subsection{Tailwind Responsive Classes}
+
+\begin{lstlisting}[language=HTML, caption=Mobile-First Responsive Grid]
+<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+  {sites.map((site) => (
+    <Card key={site._id}>
+      {/* Card content */}
+    </Card>
+  ))}
+</div>
+\end{lstlisting}
+
+\subsection{Mobile Navigation}
+
+\begin{lstlisting}[language=JavaScript, caption=Responsive Navigation Menu]
+<div className="hidden lg:flex items-center gap-1">
+  {menuItems.map((item) => (
+    <Button variant="ghost" onClick={() => navigate(item.path)}>
+      {item.label}
+    </Button>
+  ))}
+</div>
+\end{lstlisting}
+
+\section{Error Handling and Logging}
+
+\subsection{Comprehensive Error Boundaries}
+
+\begin{lstlisting}[language=JavaScript, caption=Error Logging Strategy]
+try {
+  const result = await uploadFile(file, uploadUrl);
+  toast.success(`${file.name} uploaded successfully`);
+} catch (error) {
+  console.error("Upload failed:", error);
+  toast.error(`Failed to upload ${file.name}`);
+}
+\end{lstlisting}
+
+\section{Analytics and Tracking}
+
+\subsection{View Count Tracking}
+
+\begin{lstlisting}[language=JavaScript, caption=Automatic View Tracking]
+useEffect(() => {
+  if (site) {
+    incrementViewCount({ id: site._id });
+  }
+}, [site?._id]);
+\end{lstlisting}
+
+\subsection{Admin Statistics}
+
+\begin{lstlisting}[language=JavaScript, caption=Platform Analytics]
+export const getStats = query({
+  args: {},
+  handler: async (ctx) => {
+    const user = await getCurrentUser(ctx);
+    if (!user || user.role !== "admin") {
+      throw new Error("Unauthorized");
+    }
+    
+    const sites = await ctx.db.query("heritageSites").collect();
+    const totalViews = sites.reduce((sum, site) => sum + site.viewCount, 0);
+    
+    const audio = await ctx.db.query("audioSummaries").collect();
+    const totalPlays = audio.reduce((sum, a) => sum + a.playCount, 0);
+    
+    return {
+      totalSites: sites.length,
+      publishedSites: sites.filter((s) => s.isPublished).length,
+      totalViews,
+      totalAudioPlays: totalPlays,
+      unescoSites: sites.filter((s) => s.isUNESCO).length,
+    };
+  },
+});
+\end{lstlisting}

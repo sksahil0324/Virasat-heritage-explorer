@@ -8,11 +8,6 @@
  * @module
  */
 
-import type {
-  ApiFromModules,
-  FilterApi,
-  FunctionReference,
-} from "convex/server";
 import type * as addMorePhotos from "../addMorePhotos.js";
 import type * as addSampleImages from "../addSampleImages.js";
 import type * as audio from "../audio.js";
@@ -29,6 +24,12 @@ import type * as seedData from "../seedData.js";
 import type * as updateKonarkModel from "../updateKonarkModel.js";
 import type * as updateRemainingUrls from "../updateRemainingUrls.js";
 import type * as users from "../users.js";
+
+import type {
+  ApiFromModules,
+  FilterApi,
+  FunctionReference,
+} from "convex/server";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -56,11 +57,15 @@ declare const fullApi: ApiFromModules<{
   updateRemainingUrls: typeof updateRemainingUrls;
   users: typeof users;
 }>;
+declare const fullApiWithMounts: typeof fullApi;
+
 export declare const api: FilterApi<
-  typeof fullApi,
+  typeof fullApiWithMounts,
   FunctionReference<any, "public">
 >;
 export declare const internal: FilterApi<
-  typeof fullApi,
+  typeof fullApiWithMounts,
   FunctionReference<any, "internal">
 >;
+
+export declare const components: {};

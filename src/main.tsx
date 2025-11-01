@@ -45,41 +45,6 @@ function RouteSyncer() {
 }
 
 
-const router = createBrowserRouter([
-  {
-    path: "/",
-    element: <Landing />,
-  },
-  {
-    path: "/auth",
-    element: <AuthPage redirectAfterAuth="/explore" />,
-  },
-  {
-    path: "/explore",
-    element: <Explore />,
-  },
-  {
-    path: "/site/:id",
-    element: <SiteDetail />,
-  },
-  {
-    path: "/favorites",
-    element: <Favorites />,
-  },
-  {
-    path: "/admin",
-    element: <AdminDashboard />,
-  },
-  {
-    path: "/panorama/:id",
-    element: <PanoramaFullscreen />,
-  },
-  {
-    path: "*",
-    element: <NotFound />,
-  },
-]);
-
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <VlyToolbar />
@@ -93,6 +58,7 @@ createRoot(document.getElementById("root")!).render(
           <Route path="/site/:id" element={<SiteDetail />} />
           <Route path="/favorites" element={<Favorites />} />
           <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/panorama/:id" element={<PanoramaFullscreen />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         <Toaster />

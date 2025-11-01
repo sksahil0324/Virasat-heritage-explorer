@@ -4,13 +4,21 @@ import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import PanoramaViewer from "@/components/PanoramaViewer";
 import { Button } from "@/components/ui/button";
-import { X } from "lucide-react";
+import { X, Loader2 } from "lucide-react";
 
 export default function PanoramaFullscreen() {
   const { id } = useParams<{ id: string }>();
   const site = useQuery(api.heritageSites.getById, id ? { id: id as Id<"heritageSites"> } : "skip");
   
-  const panoramaImage = site?.media?.find((m) => m.type === "panorama");
+  if (!site) {
+    return (
+      <div className="w-screen h-screen bg-black flex items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-white" />
+      </div>
+    );
+  }
+
+  const panoramaImage = site.media?.find((m) => m.type === "panorama");
 
   if (!panoramaImage) {
     return (

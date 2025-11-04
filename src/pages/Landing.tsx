@@ -119,11 +119,11 @@ export default function Landing() {
                   <Button 
                     variant="ghost" 
                     onClick={() => item === "Home" ? navigate("/") : navigate("/explore")} 
-                    className="text-sm relative group px-3 py-2"
+                    className="text-sm relative group px-3 py-2 hover:bg-primary/10 transition-colors duration-300"
                   >
                     <motion.span 
                       className="relative"
-                      whileHover={{ scale: 1.05 }}
+                      whileHover={{ scale: 1.1, color: "hsl(var(--primary))" }}
                       whileTap={{ scale: 0.95 }}
                     >
                       {item}

@@ -8,19 +8,18 @@ import { Id } from "@/convex/_generated/dataModel";
 import { useAuth } from "@/hooks/use-auth";
 import { useMutation, useQuery } from "convex/react";
 import { motion } from "framer-motion";
-import { ArrowLeft, Heart, Loader2, MapPin, Play, Volume2, Clock, Ticket, Calendar, Globe } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { ArrowLeft, Heart, Loader2, MapPin, Clock, Ticket, Calendar, Globe } from "lucide-react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
 import PanoramaViewer from "@/components/PanoramaViewer";
 import Model3DViewer from "@/components/Model3DViewer";
+import AudioGuideSection from "@/components/AudioGuideSection";
 
 export default function SiteDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { isAuthenticated, user } = useAuth();
-  const audioRef = useRef<HTMLAudioElement>(null);
-  const [isPlaying, setIsPlaying] = useState(false);
   const [iframe360Error, setIframe360Error] = useState(false);
   const [iframe3dError, setIframe3dError] = useState(false);
 
@@ -32,7 +31,6 @@ export default function SiteDetail() {
 
   const incrementView = useMutation(api.heritageSites.incrementViewCount);
   const toggleFavorite = useMutation(api.favorites.toggle);
-  const incrementPlayCount = useMutation(api.audio.incrementPlayCount);
 
   useEffect(() => {
     if (id) {
@@ -52,19 +50,6 @@ export default function SiteDetail() {
       toast.success(result.favorited ? "Added to favorites" : "Removed from favorites");
     } catch (error) {
       toast.error("Failed to update favorites");
-    }
-  };
-
-  const handlePlayAudio = (audioId: Id<"audioSummaries">) => {
-    if (audioRef.current) {
-      if (isPlaying) {
-        audioRef.current.pause();
-        setIsPlaying(false);
-      } else {
-        audioRef.current.play();
-        setIsPlaying(true);
-        incrementPlayCount({ id: audioId });
-      }
     }
   };
 
@@ -367,30 +352,11 @@ export default function SiteDetail() {
             <div className="space-y-6">
               {/* Audio Guide */}
               {site.audio && site.audio.length > 0 && (
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
-                      <Volume2 className="h-5 w-5" />
-                      Audio Guide
-                    </CardTitle>
-                    <CardDescription>Listen to the site's story</CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    {site.audio.map((audio) => (
-                      <div key={audio._id}>
-                        <Button
-                          variant="outline"
-                          className="w-full"
-                          onClick={() => handlePlayAudio(audio._id)}
-                        >
-                          <Play className="h-4 w-4 mr-2" />
-                          {isPlaying ? "Pause" : "Play"} Audio ({audio.language})
-                        </Button>
-                        <audio ref={audioRef} src={audio.url} onEnded={() => setIsPlaying(false)} />
-                      </div>
-                    ))}
-                  </CardContent>
-                </Card>
+                <AudioGuideSection
+                  siteId={id as Id<"heritageSites">}
+                  audios={site.audio}
+                  isAdmin={user?.role === "admin"}
+                />
               )}
 
               {/* Quick Info */}

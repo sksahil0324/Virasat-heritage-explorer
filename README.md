@@ -1,17 +1,69 @@
+# VIRASAT - Virtual Heritage Exploration Platform
+
 ## Overview
 
-This project uses the following tech stack:
-- Vite
-- Typescript
-- React Router v7 (all imports from `react-router` instead of `react-router-dom`)
-- React 19 (for frontend components)
-- Tailwind v4 (for styling)
-- Shadcn UI (for UI components library)
-- Lucide Icons (for icons)
-- Convex (for backend & database)
-- Convex Auth (for authentication)
-- Framer Motion (for animations)
-- Three js (for 3d models)
+VIRASAT is an innovative web platform designed to preserve and showcase India's rich cultural heritage through immersive digital experiences. The platform combines cutting-edge technology with historical preservation, allowing users to explore heritage sites through interactive 3D models, 360° panoramic views, multilingual audio guides, and curated content.
+
+## Project Vision
+
+VIRASAT bridges the gap between technology and cultural preservation by making India's heritage sites accessible to a global audience. Whether you're a history enthusiast, student, or cultural explorer, VIRASAT provides an engaging way to discover and learn about India's magnificent monuments and historical sites.
+
+## Key Features
+
+### 🌐 Immersive Experiences
+- **360° Panoramic Views**: Explore heritage sites from every angle with interactive panorama viewers
+- **3D Models**: Interactive 3D representations of monuments and structures
+- **High-Quality Media**: Extensive galleries of professional photographs and videos
+
+### 🎧 Multilingual Audio Guides
+- Audio summaries available in multiple languages (English, Hindi, Spanish, French, German, Japanese, Chinese, Arabic)
+- Play count tracking to understand user engagement
+- Admin-managed audio content with easy upload and removal
+
+### 🗺️ Interactive Discovery
+- **Interactive Maps**: Discover sites by location with integrated mapping
+- **Site Filtering**: Browse by category, UNESCO status, state, and more
+- **Search Functionality**: Find heritage sites by name, location, or category
+
+### 📚 Rich Content
+- Detailed historical information and significance
+- Cultural heritage details including folk tales, cuisine, and community stories
+- Visitor guidelines, opening hours, ticket prices, and best times to visit
+- UNESCO World Heritage Site recognition
+
+### 👥 Community Features
+- User-submitted stories and experiences
+- Community contributions with admin moderation
+- Favorites system to save preferred sites
+
+### 🛡️ Admin Dashboard
+- Complete site management (CRUD operations)
+- Media management (upload, organize, set primary images)
+- Audio guide management
+- User story and community content moderation
+- Site statistics and analytics
+
+## Tech Stack
+
+### Frontend
+- **React 19**: Modern UI framework
+- **Vite**: Fast build tool and dev server
+- **React Router v7**: Client-side routing
+- **Tailwind CSS v4**: Utility-first styling
+- **Shadcn UI**: High-quality component library
+- **Framer Motion**: Smooth animations and transitions
+- **Three.js**: 3D graphics and model rendering
+- **Lucide Icons**: Beautiful icon library
+
+### Backend
+- **Convex**: Real-time database and backend functions
+- **Convex Auth**: Email OTP authentication
+- **Node.js**: Server-side runtime for actions
+
+### Integrations
+- **Unsplash API**: Access to millions of free, high-resolution photos
+
+## Project Structure
 
 All relevant files live in the 'src' directory.
 
@@ -28,7 +80,6 @@ The project is set up with project specific CONVEX_DEPLOYMENT and VITE_CONVEX_UR
 The convex server has a separate set of environment variables that are accessible by the convex backend.
 
 Currently, these variables include auth-specific keys: JWKS, JWT_PRIVATE_KEY, and SITE_URL.
-
 
 # Using Authentication (Important!)
 
@@ -101,7 +152,6 @@ Follow these conventions when using Shad CN components, which you should use by 
 - AVOID SHADOWS. Avoid adding any shadows to components. stick with a thin border without the shadow.
 - Avoid skeletons; instead, use the loader2 component to show a spinning loading state when loading data.
 
-
 ## Landing Pages
 
 You must always create good-looking designer-level styles to your application. 
@@ -127,7 +177,6 @@ You must add animations to components using Framer Motion. It is already install
 
 To use it, import the `motion` component from `framer-motion` and use it to wrap the component you want to animate.
 
-
 ### Other Items to animate
 - Fade in and Fade Out
 - Slide in and Slide Out animations
@@ -139,7 +188,6 @@ Animate for all components, including on landing page and app pages.
 ## Three JS Graphics
 
 Your app comes with three js by default. You can use it to create 3D graphics for landing pages, games, etc.
-
 
 ## Colors
 
@@ -214,7 +262,6 @@ The schema is defined in `src/convex/schema.ts`.
 Do not include the `_id` and `_creationTime` fields in your queries (it is included by default for each table).
 Do not index `_creationTime` as it is indexed for you. Never have duplicate indexes.
 
-
 ## Convex Actions: Using CRUD operations
 
 When running anything that involves external connections, you must use a convex action with "use node" at the top of the file.
@@ -240,7 +287,6 @@ await ctx.runMutation(internal.users.update, {
   },
 });
 ```
-
 
 ## Common Convex Mistakes To Avoid
 

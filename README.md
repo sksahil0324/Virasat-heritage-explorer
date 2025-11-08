@@ -1,303 +1,235 @@
 # VIRASAT - Virtual Heritage Exploration Platform
 
-## Overview
+[![React](https://img.shields.io/badge/React-19-blue)](https://reactjs.org/)
+[![Convex](https://img.shields.io/badge/Convex-Backend-orange)](https://convex.dev/)
+[![Tailwind](https://img.shields.io/badge/Tailwind-CSS4-cyan)](https://tailwindcss.com/)
 
-VIRASAT is an innovative web platform designed to preserve and showcase India's rich cultural heritage through immersive digital experiences. The platform combines cutting-edge technology with historical preservation, allowing users to explore heritage sites through interactive 3D models, 360° panoramic views, multilingual audio guides, and curated content.
+> **Experience India's Cultural Heritage in Immersive Digital Reality**
 
-## Project Vision
+VIRASAT is an innovative web platform that brings India's rich cultural heritage to life through cutting-edge technology. Explore ancient monuments, historical sites, and cultural treasures through interactive 3D models, 360° panoramic tours, and multilingual audio guides.
 
-VIRASAT bridges the gap between technology and cultural preservation by making India's heritage sites accessible to a global audience. Whether you're a history enthusiast, student, or cultural explorer, VIRASAT provides an engaging way to discover and learn about India's magnificent monuments and historical sites.
+## ✨ Features
 
-## Key Features
+### 🏛️ Immersive Exploration
+- **360° Panoramic Views** - Virtual tours that let you explore heritage sites from every angle
+- **Interactive 3D Models** - Detailed 3D representations of monuments and structures
+- **High-Quality Media Gallery** - Professional photographs and videos
 
-### 🌐 Immersive Experiences
-- **360° Panoramic Views**: Explore heritage sites from every angle with interactive panorama viewers
-- **3D Models**: Interactive 3D representations of monuments and structures
-- **High-Quality Media**: Extensive galleries of professional photographs and videos
+### 🎧 Multilingual Experience
+- **Audio Guides** - Available in 8+ languages (English, Hindi, Spanish, French, German, Japanese, Chinese, Arabic)
+- **Play Tracking** - Monitor engagement with audio content
+- **Admin Management** - Easy upload and management of audio files
 
-### 🎧 Multilingual Audio Guides
-- Audio summaries available in multiple languages (English, Hindi, Spanish, French, German, Japanese, Chinese, Arabic)
-- Play count tracking to understand user engagement
-- Admin-managed audio content with easy upload and removal
+### 🔍 Smart Discovery
+- **Interactive Maps** - Discover sites by location with integrated mapping
+- **Advanced Filtering** - Browse by category, UNESCO status, state, and more
+- **Powerful Search** - Find heritage sites by name, location, or category
 
-### 🗺️ Interactive Discovery
-- **Interactive Maps**: Discover sites by location with integrated mapping
-- **Site Filtering**: Browse by category, UNESCO status, state, and more
-- **Search Functionality**: Find heritage sites by name, location, or category
+### 📚 Rich Content Library
+- **Historical Documentation** - Detailed information and significance
+- **Cultural Insights** - Folk tales, cuisine, and community stories
+- **Visitor Information** - Hours, tickets, guidelines, and best times to visit
 
-### 📚 Rich Content
-- Detailed historical information and significance
-- Cultural heritage details including folk tales, cuisine, and community stories
-- Visitor guidelines, opening hours, ticket prices, and best times to visit
-- UNESCO World Heritage Site recognition
+### 👥 Community Engagement
+- **User Stories** - Share and read personal experiences
+- **Content Moderation** - Admin-reviewed community contributions
+- **Favorites System** - Save and organize preferred sites
 
-### 👥 Community Features
-- User-submitted stories and experiences
-- Community contributions with admin moderation
-- Favorites system to save preferred sites
+### ⚡ Admin Dashboard
+- **Complete Site Management** - Full CRUD operations for heritage sites
+- **Media Management** - Upload, organize, and set primary images
+- **Audio Management** - Handle multilingual audio guides
+- **Content Moderation** - Review user submissions
+- **Analytics** - Track site statistics and user engagement
 
-### 🛡️ Admin Dashboard
-- Complete site management (CRUD operations)
-- Media management (upload, organize, set primary images)
-- Audio guide management
-- User story and community content moderation
-- Site statistics and analytics
+## 🚀 Quick Start
 
-## Tech Stack
+### Prerequisites
+- Node.js (v18 or higher)
+- pnpm package manager
+- Convex account for backend
+
+### Installation
+
+```bash
+# Clone the repository
+git clone <repository-url>
+cd virasat
+
+# Install dependencies
+pnpm install
+
+# Set up environment variables
+cp .env.example .env.local
+# Add your Convex deployment URL and Unsplash API key
+
+# Start development server
+pnpm dev
+
+# Build for production
+pnpm build
+```
+
+### Environment Setup
+
+Create a `.env.local` file with:
+
+```env
+VITE_CONVEX_URL=your_convex_deployment_url
+CONVEX_DEPLOYMENT=your_deployment_id
+UNSPLASH_ACCESS_KEY=your_unsplash_api_key
+```
+
+## 🏗️ Tech Stack
 
 ### Frontend
-- **React 19**: Modern UI framework
-- **Vite**: Fast build tool and dev server
-- **React Router v7**: Client-side routing
-- **Tailwind CSS v4**: Utility-first styling
-- **Shadcn UI**: High-quality component library
-- **Framer Motion**: Smooth animations and transitions
-- **Three.js**: 3D graphics and model rendering
-- **Lucide Icons**: Beautiful icon library
+- **React 19** - Modern UI framework with latest features
+- **Vite** - Fast build tool and development server
+- **React Router v7** - Client-side routing
+- **Tailwind CSS v4** - Utility-first CSS framework
+- **Shadcn UI** - High-quality component library
+- **Framer Motion** - Smooth animations and transitions
+- **Three.js** - 3D graphics and model rendering
+- **Lucide Icons** - Beautiful icon library
 
 ### Backend
-- **Convex**: Real-time database and backend functions
-- **Convex Auth**: Email OTP authentication
-- **Node.js**: Server-side runtime for actions
+- **Convex** - Real-time database and backend functions
+- **Convex Auth** - Email OTP authentication
+- **Node.js** - Server-side runtime for actions
 
 ### Integrations
-- **Unsplash API**: Access to millions of free, high-resolution photos
+- **Unsplash API** - Access to millions of high-quality photos
 
-## Project Structure
-
-All relevant files live in the 'src' directory.
-
-Use pnpm for the package manager.
-
-## Setup
-
-This project is set up already and running on a cloud environment, as well as a convex development in the sandbox.
-
-## Environment Variables
-
-The project is set up with project specific CONVEX_DEPLOYMENT and VITE_CONVEX_URL environment variables on the client side.
-
-The convex server has a separate set of environment variables that are accessible by the convex backend.
-
-Currently, these variables include auth-specific keys: JWKS, JWT_PRIVATE_KEY, and SITE_URL.
-
-# Using Authentication (Important!)
-
-You must follow these conventions when using authentication.
-
-## Auth is already set up.
-
-All convex authentication functions are already set up. The auth currently uses email OTP and anonymous users, but can support more.
-
-The email OTP configuration is defined in `src/convex/auth/emailOtp.ts`. DO NOT MODIFY THIS FILE.
-
-Also, DO NOT MODIFY THESE AUTH FILES: `src/convex/auth.config.ts` and `src/convex/auth.ts`.
-
-## Using Convex Auth on the backend
-
-On the `src/convex/users.ts` file, you can use the `getCurrentUser` function to get the current user's data.
-
-## Using Convex Auth on the frontend
-
-The `/auth` page is already set up to use auth. Navigate to `/auth` for all log in / sign up sequences.
-
-You MUST use this hook to get user data. Never do this yourself without the hook:
-```typescript
-import { useAuth } from "@/hooks/use-auth";
-
-const { isLoading, isAuthenticated, user, signIn, signOut } = useAuth();
-```
-
-## Protected Routes
-
-When protecting a page, use the auth hooks to check for authentication and redirect to /auth.
-
-## Auth Page
-
-The auth page is defined in `src/pages/Auth.tsx`. Redirect authenticated pages and sign in / sign up to /auth.
-
-## Authorization
-
-You can perform authorization checks on the frontend and backend.
-
-On the frontend, you can use the `useAuth` hook to get the current user's data and authentication state.
-
-You should also be protecting queries, mutations, and actions at the base level, checking for authorization securely.
-
-## Adding a redirect after auth
-
-In `src/main.tsx`, you must add a redirect after auth URL to redirect to the correct dashboard/profile/page that should be created after authentication.
-
-# Frontend Conventions
-
-You will be using the Vite frontend with React 19, Tailwind v4, and Shadcn UI.
-
-Generally, pages should be in the `src/pages` folder, and components should be in the `src/components` folder.
-
-Shadcn primitives are located in the `src/components/ui` folder and should be used by default.
-
-## Page routing
-
-Your page component should go under the `src/pages` folder.
-
-When adding a page, update the react router configuration in `src/main.tsx` to include the new route you just added.
-
-## Shad CN conventions
-
-Follow these conventions when using Shad CN components, which you should use by default.
-- Remember to use "cursor-pointer" to make the element clickable
-- For title text, use the "tracking-tight font-bold" class to make the text more readable
-- Always make apps MOBILE RESPONSIVE. This is important
-- AVOID NESTED CARDS. Try and not to nest cards, borders, components, etc. Nested cards add clutter and make the app look messy.
-- AVOID SHADOWS. Avoid adding any shadows to components. stick with a thin border without the shadow.
-- Avoid skeletons; instead, use the loader2 component to show a spinning loading state when loading data.
-
-## Landing Pages
-
-You must always create good-looking designer-level styles to your application. 
-- Make it well animated and fit a certain "theme", ie neo brutalist, retro, neumorphism, glass morphism, etc
-
-Use known images and emojis from online.
-
-If the user is logged in already, show the get started button to say "Dashboard" or "Profile" instead to take them there.
-
-## Responsiveness and formatting
-
-Make sure pages are wrapped in a container to prevent the width stretching out on wide screens. Always make sure they are centered aligned and not off-center.
-
-Always make sure that your designs are mobile responsive. Verify the formatting to ensure it has correct max and min widths as well as mobile responsiveness.
-
-- Always create sidebars for protected dashboard pages and navigate between pages
-- Always create navbars for landing pages
-- On these bars, the created logo should be clickable and redirect to the index page
-
-## Animating with Framer Motion
-
-You must add animations to components using Framer Motion. It is already installed and configured in the project.
-
-To use it, import the `motion` component from `framer-motion` and use it to wrap the component you want to animate.
-
-### Other Items to animate
-- Fade in and Fade Out
-- Slide in and Slide Out animations
-- Rendering animations
-- Button clicks and UI elements
-
-Animate for all components, including on landing page and app pages.
-
-## Three JS Graphics
-
-Your app comes with three js by default. You can use it to create 3D graphics for landing pages, games, etc.
-
-## Colors
-
-You can override colors in: `src/index.css`
-
-This uses the oklch color format for tailwind v4.
-
-Always use these color variable names.
-
-Make sure all ui components are set up to be mobile responsive and compatible with both light and dark mode.
-
-Set theme using `dark` or `light` variables at the parent className.
-
-## Styling and Theming
-
-When changing the theme, always change the underlying theme of the shad cn components app-wide under `src/components/ui` and the colors in the index.css file.
-
-Avoid hardcoding in colors unless necessary for a use case, and properly implement themes through the underlying shad cn ui components.
-
-When styling, ensure buttons and clickable items have pointer-click on them (don't by default).
-
-Always follow a set theme style and ensure it is tuned to the user's liking.
-
-## Toasts
-
-You should always use toasts to display results to the user, such as confirmations, results, errors, etc.
-
-Use the shad cn Sonner component as the toaster. For example:
+## 📁 Project Structure
 
 ```
-import { toast } from "sonner"
-
-import { Button } from "@/components/ui/button"
-export function SonnerDemo() {
-  return (
-    <Button
-      variant="outline"
-      onClick={() =>
-        toast("Event has been created", {
-          description: "Sunday, December 03, 2023 at 9:00 AM",
-          action: {
-            label: "Undo",
-            onClick: () => console.log("Undo"),
-          },
-        })
-      }
-    >
-      Show Toast
-    </Button>
-  )
-}
+src/
+├── components/           # Reusable UI components
+│   ├── ui/              # Shadcn UI components
+│   ├── AudioGuideSection.tsx
+│   ├── Model3DViewer.tsx
+│   ├── PanoramaViewer.tsx
+│   └── ...
+├── convex/              # Backend functions and schema
+│   ├── schema.ts
+│   ├── heritageSites.ts
+│   ├── audio.ts
+│   └── ...
+├── pages/               # Application pages
+│   ├── Landing.tsx
+│   ├── Explore.tsx
+│   ├── SiteDetail.tsx
+│   └── ...
+├── hooks/               # Custom React hooks
+├── lib/                 # Utilities and configurations
+└── index.css           # Global styles and theme
 ```
 
-Remember to import { toast } from "sonner". Usage: `toast("Event has been created.")`
+## 🎯 Core Pages
 
-## Dialogs
+### 🏠 Landing Page (`/`)
+- Hero section with rotating heritage site showcase
+- Feature highlights with interactive holographic cards
+- Call-to-action for exploration
+- Animated particle background effects
 
-Always ensure your larger dialogs have a scroll in its content to ensure that its content fits the screen size. Make sure that the content is not cut off from the screen.
+### 🔐 Authentication (`/auth`)
+- Secure email OTP verification
+- Seamless login/registration flow
+- Automatic redirect to user dashboard
 
-Ideally, instead of using a new page, use a Dialog instead. 
+### 🌍 Explore (`/explore`)
+- Comprehensive site browsing
+- Advanced filtering and search
+- Interactive map integration
+- Responsive site cards with key information
 
-# Using the Convex backend
+### 📖 Site Details (`/site/:id`)
+- Complete site information and history
+- Interactive 360° panoramic viewer
+- 3D model exploration
+- Multilingual audio guides
+- Photo galleries and visitor info
+- Community stories and favorites
 
-You will be implementing the convex backend. Follow your knowledge of convex and the documentation to implement the backend.
+### ⭐ Favorites (`/favorites`)
+- Personalized collection of saved sites
+- Quick access to preferred locations
+- Easy management of saved content
 
-## The Convex Schema
+### 👨‍💼 Admin Dashboard (`/admin`)
+- Comprehensive content management
+- Media and audio file handling
+- User story moderation
+- Analytics and statistics
 
-You must correctly follow the convex schema implementation.
+## 🗃️ Database Schema
 
-The schema is defined in `src/convex/schema.ts`.
+### Core Collections
+- **users** - User profiles and authentication data
+- **heritageSites** - Complete heritage site information
+- **media** - Images, videos, 3D models, and panoramas
+- **audioSummaries** - Multilingual audio guide content
+- **favorites** - User favorite site relationships
+- **userStories** - Community-submitted stories and experiences
 
-Do not include the `_id` and `_creationTime` fields in your queries (it is included by default for each table).
-Do not index `_creationTime` as it is indexed for you. Never have duplicate indexes.
+## 🎨 Design System
 
-## Convex Actions: Using CRUD operations
+VIRASAT features a modern, immersive design with:
 
-When running anything that involves external connections, you must use a convex action with "use node" at the top of the file.
+- **Glass Morphism** - Frosted glass effects for UI depth
+- **Gradient Text** - Eye-catching typography treatments
+- **Particle Animations** - Dynamic background elements
+- **Holographic Cards** - Shimmering, interactive components
+- **Smooth Transitions** - Fluid animations throughout
+- **Theme Support** - Full dark/light mode compatibility
 
-You cannot have queries or mutations in the same file as a "use node" action file. Thus, you must use pre-built queries and mutations in other files.
+## ⚡ Performance
 
-You can also use the pre-installed internal crud functions for the database:
+- Real-time data synchronization with Convex
+- Lazy loading for images and media content
+- Optimized 3D model rendering
+- Efficient pagination and data fetching
+- Code splitting with dynamic imports
 
-```ts
-// in convex/users.ts
-import { crud } from "convex-helpers/server/crud";
-import schema from "./schema.ts";
+## 🔮 Roadmap
 
-export const { create, read, update, destroy } = crud(schema, "users");
+### Planned Enhancements
+- [ ] Virtual Reality (VR) support for immersive experiences
+- [ ] Augmented Reality (AR) features for on-site exploration
+- [ ] Multi-language UI support
+- [ ] Advanced analytics dashboard
+- [ ] Social sharing capabilities
+- [ ] Guided tour collections
+- [ ] Mobile application
 
-// in some file, in an action:
-const user = await ctx.runQuery(internal.users.read, { id: userId });
+## 🤝 Contributing
 
-await ctx.runMutation(internal.users.update, {
-  id: userId,
-  patch: {
-    status: "inactive",
-  },
-});
-```
+We welcome contributions from the community! Please feel free to submit issues, feature requests, or pull requests.
 
-## Common Convex Mistakes To Avoid
+### Development Workflow
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
 
-When using convex, make sure:
-- Document IDs are referenced as `_id` field, not `id`.
-- Document ID types are referenced as `Id<"TableName">`, not `string`.
-- Document object types are referenced as `Doc<"TableName">`.
-- Keep schemaValidation to false in the schema file.
-- You must correctly type your code so that it passes the type checker.
-- You must handle null / undefined cases of your convex queries for both frontend and backend, or else it will throw an error that your data could be null or undefined.
-- Always use the `@/folder` path, with `@/convex/folder/file.ts` syntax for importing convex files.
-- This includes importing generated files like `@/convex/_generated/server`, `@/convex/_generated/api`
-- Remember to import functions like useQuery, useMutation, useAction, etc. from `convex/react`
-- NEVER have return type validators.
+## 📄 License
+
+This project is licensed under the VIRASAT Platform License.
+
+## 🆘 Support
+
+- **Documentation**: [Link to documentation]
+- **Issues**: [GitHub Issues]
+- **Email**: support@virasat.com
+
+---
+
+<div align="center">
+
+**VIRASAT** - *Preserving Heritage Through Technology*
+
+*Experience India's cultural legacy like never before*
+
+</div>

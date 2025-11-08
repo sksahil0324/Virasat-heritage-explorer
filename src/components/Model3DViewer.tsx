@@ -11,9 +11,12 @@ interface Model3DViewerProps {
 function Model({ url }: { url: string }) {
   const { scene } = useGLTF(url);
   const { camera, controls } = useThree();
+  const controlsRef = useRef<any>(null);
   
   useEffect(() => {
     if (scene && camera && controls) {
+      controlsRef.current = controls;
+      
       // Calculate bounding box to understand model size
       const box = new THREE.Box3().setFromObject(scene);
       const size = box.getSize(new THREE.Vector3());
@@ -28,13 +31,18 @@ function Model({ url }: { url: string }) {
       box.setFromObject(scene);
       box.getCenter(center);
       
+      // Position camera to view the model
+      const distance = maxDim * 1.5;
+      camera.position.set(distance, distance * 0.5, distance);
+      camera.lookAt(center);
+      
       // Set controls target to model center
       if (controls && 'target' in controls) {
         (controls as any).target.copy(center);
         (controls as any).update();
       }
     }
-  }, [scene, camera, controls]);
+  }, [scene, camera, controls, url]);
   
   return <primitive object={scene} />;
 }
